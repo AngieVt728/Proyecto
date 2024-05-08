@@ -18,10 +18,9 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
-        "datatables.net": "^2.0.6",
-        "datatables.net-responsive": "^3.0.2",
-        "datatables.net-select": "^2.0.2",
-        "datatables.net-vue3": "^3.0.1",
-        "oh-vue-icons": "^1.0.0-rc3"
+        "@formkit/tempo": "^0.1.1",
+        "@popperjs/core": "^2.11.8",
+        "oh-vue-icons": "^1.0.0-rc3",
+        "vue3-popper": "^1.5.0"
     }
 }

@@ -29,7 +29,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <guest-layout>
         <Head title="Inicio de sesión" />
 
         <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
@@ -78,6 +78,6 @@ const submit = () => {
                     </div>
                 </form>
             </div>
-        </div></GuestLayout
+        </div></guest-layout
     >
 </template>

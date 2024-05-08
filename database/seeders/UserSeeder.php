@@ -31,5 +31,13 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
         $staff->assignRole('staff');
+
+        User::factory()
+            ->count(100)
+            ->create()
+            ->each(function (User $user) {
+                $role = rand(0, 1) === 0 ? 'staff' : 'admin';
+                $user->assignRole($role);
+            });
     }
 }

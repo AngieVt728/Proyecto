@@ -6,7 +6,7 @@ import { Head } from "@inertiajs/vue3";
 <template>
     <Head title="Dashboard" />
 
-    <AuthenticatedLayout>
+    <authenticated-layout>
         <template #header>
             <h2
                 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
@@ -26,5 +26,5 @@ import { Head } from "@inertiajs/vue3";
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
+    </authenticated-layout>
 </template>
