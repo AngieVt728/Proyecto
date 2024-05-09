@@ -47,6 +47,72 @@ const inactiveClass = ref(
                     icon="hi-solid-user-group"
                     name="Usuarios"
                 />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-users"
+                    name="Clientes"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-users"
+                    name="Proveedores"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-map"
+                    name="Puntos de Venta"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-inbox"
+                    name="Inventario Productos"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-clipboard-copy"
+                    name="Ingresos"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-clipboard-check"
+                    name="Ventas"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-hand"
+                    name="Pedidos"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-currency-dollar"
+                    name="Pagos"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-inbox"
+                    name="Inventario Materia Prima"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-login"
+                    name="Entradas"
+                />
+                <Anchor
+                    :href="route('users.index')"
+                    :active="route().current('users.index')"
+                    icon="hi-solid-logout"
+                    name="Salidas"
+                />
             </nav>
         </div>
     </div>
