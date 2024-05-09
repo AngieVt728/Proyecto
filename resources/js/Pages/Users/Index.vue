@@ -5,9 +5,11 @@ import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, router } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
-defineProps(["users"]);
+const props = defineProps(["users"]);
+const items = ref(props.users);
+const itemsDisplay = ref(props.users);
 const searchQuery = ref("");
 
 const columns = ref([
@@ -25,6 +27,25 @@ const options = ref([
     { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
     { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
 ]);
+
+watch(searchQuery, () => {
+    searchItems();
+});
+
+function searchItems() {
+    const filteredItems = items.value.filter(
+        (item) =>
+            item.first_name
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase()) ||
+            item.last_name
+                .toLowerCase()
+                .includes(searchQuery.value.toLowerCase()) ||
+            item.ci.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+    itemsDisplay.value = filteredItems;
+}
 
 const action = (action) => {
     switch (action.action) {
@@ -55,7 +76,7 @@ const action = (action) => {
                 </div> </template
             ><DataTable
                 :columns="columns"
-                :items="users"
+                :items="itemsDisplay"
                 :options="options"
                 @action="action"
             ></DataTable

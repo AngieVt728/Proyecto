@@ -1,17 +1,9 @@
 <script setup>
-import { ref } from "vue";
-import { useSidebar } from "@/Composables/useSidebar";
 import Anchor from "@/Components/anchors/Anchor.vue";
-import AnchorAccordion from "@/Components/anchors/AnchorAccordion.vue";
 import Logo from "@/Components/branding/Logo.vue";
-
+import { useSidebar } from "@/Composables/useSidebar";
+import AnchorAccordion from "@/Components/anchors/AnchorAccordion.vue";
 const { isOpen } = useSidebar();
-const activeClass = ref(
-    "bg-gray-600 bg-opacity-25 text-gray-100 border-gray-100"
-);
-const inactiveClass = ref(
-    "border-gray-900 text-gray-500 hover:bg-gray-600 hover:bg-opacity-25 hover:text-gray-100"
-);
 </script>
 
 <template>
@@ -48,14 +40,14 @@ const inactiveClass = ref(
                     name="Usuarios"
                 />
                 <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
+                    :href="route('dashboard')"
+                    :active="route().current('dashboard')"
                     icon="hi-solid-users"
                     name="Clientes"
                 />
                 <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
+                    :href="route('suppliers.index')"
+                    :active="route().current('suppliers.index')"
                     icon="hi-users"
                     name="Proveedores"
                 />
@@ -65,24 +57,49 @@ const inactiveClass = ref(
                     icon="hi-solid-map"
                     name="Puntos de Venta"
                 />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-inbox"
-                    name="Inventario Productos"
-                />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-solid-clipboard-copy"
-                    name="Ingresos"
-                />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-solid-clipboard-check"
-                    name="Ventas"
-                />
+                <anchor-accordion name="Inventario Productos" icon="hi-inbox">
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-inbox"
+                        name="Productos"
+                    />
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-solid-clipboard-copy"
+                        name="Ingresos"
+                    />
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-solid-clipboard-check"
+                        name="Ventas"
+                    />
+                </anchor-accordion>
+                <anchor-accordion
+                    name="Inventario Materia Prima"
+                    icon="hi-solid-inbox"
+                >
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-solid-inbox"
+                        name="Materia Prima"
+                    />
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-solid-login"
+                        name="Entradas"
+                    />
+                    <Anchor
+                        :href="route('users.index')"
+                        :active="route().current('users.index')"
+                        icon="hi-solid-logout"
+                        name="Salidas"
+                    />
+                </anchor-accordion>
                 <Anchor
                     :href="route('users.index')"
                     :active="route().current('users.index')"
@@ -94,24 +111,6 @@ const inactiveClass = ref(
                     :active="route().current('users.index')"
                     icon="hi-solid-currency-dollar"
                     name="Pagos"
-                />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-solid-inbox"
-                    name="Inventario Materia Prima"
-                />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-solid-login"
-                    name="Entradas"
-                />
-                <Anchor
-                    :href="route('users.index')"
-                    :active="route().current('users.index')"
-                    icon="hi-solid-logout"
-                    name="Salidas"
                 />
             </nav>
         </div>

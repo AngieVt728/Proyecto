@@ -6,8 +6,6 @@ import { Head, useForm } from "@inertiajs/vue3";
 
 const props = defineProps(["user"]);
 
-console.log(props.user);
-
 const form = useForm({
     first_name: props.user ? props.user.first_name : "",
     last_name: props.user ? props.user.last_name : "",
