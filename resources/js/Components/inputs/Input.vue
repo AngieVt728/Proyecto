@@ -13,9 +13,8 @@ const props = defineProps({
         type: [String, Number, Boolean],
         required: true,
     },
-    errors: {
-        type: Array,
-        default: () => [],
+    error: {
+        type: String,
     },
     type: {
         type: String,
@@ -44,9 +43,9 @@ const props = defineProps({
         <label :for="id" class="text-sm text-gray-700">
             {{ labelText }}
         </label>
-        <div class="p-1 mb-1" v-for="(error, index) of errors" :key="index">
+        <div class="p-1 mb-1">
             <p class="text-sm text-red-500">
-                {{ error.$message }}
+                {{ error }}
             </p>
         </div>
         <input

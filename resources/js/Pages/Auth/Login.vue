@@ -43,14 +43,14 @@ const submit = () => {
                         id="email"
                         label-text="Correo electrónico"
                         v-model="form.email"
-                        :errors="form.errors.email"
+                        :error="form.errors.email"
                         type="email"
                     />
                     <Input
                         id="password"
                         label-text="Contraseña"
                         v-model="form.password"
-                        :errors="form.errors.password"
+                        :error="form.errors.password"
                         type="password"
                     />
 

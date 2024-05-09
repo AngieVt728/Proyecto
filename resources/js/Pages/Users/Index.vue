@@ -4,7 +4,7 @@ import CardData from "@/Components/cards/CardData.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 defineProps(["users"]);
@@ -16,13 +16,28 @@ const columns = ref([
     { key: "last_name", label: "Apellidos" },
     { key: "email", label: "Correo electrónico" },
     { key: "ci", label: "CI" },
+    { key: "role", label: "Rol" },
+    { key: "address", label: "Dirección" },
     { key: "created_at", label: "Fecha creación", date: true },
     { key: "updated_at", label: "Fecha actualización", date: true },
 ]);
 const options = ref([
-    { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "delete", name: "Eliminar", icon: "hi-solid-exclamation" },
+    { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
+    { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
 ]);
+
+const action = (action) => {
+    switch (action.action) {
+        case "edit":
+            router.get(`/users/${action.id}/edit`);
+            break;
+        case "destroy":
+            router.delete(`/users/${action.id}`);
+            break;
+        default:
+            break;
+    }
+};
 </script>
 
 <template>
