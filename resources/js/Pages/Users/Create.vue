@@ -18,7 +18,7 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    if (props.user.id)
+    if (props.user?.id)
         form.patch(route("users.update", { id: props.user.id }), {
             onFinish: () =>
                 form.reset(
