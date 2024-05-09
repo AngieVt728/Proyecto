@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\RawMaterial;
 use App\Models\Supplier;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([RoleSeeder::class, UserSeeder::class]);
-        Supplier::factory(50)->create();
+        // Supplier::factory(50)->create();
+        // RawMaterial::factory(10)->create();
     }
 }

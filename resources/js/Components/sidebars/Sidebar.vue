@@ -82,8 +82,8 @@ const { isOpen } = useSidebar();
                     icon="hi-solid-inbox"
                 >
                     <Anchor
-                        :href="route('users.index')"
-                        :active="route().current('users.index')"
+                        :href="route('raw-materials.index')"
+                        :active="route().current('raw-materials.index')"
                         icon="hi-solid-inbox"
                         name="Materia Prima"
                     />

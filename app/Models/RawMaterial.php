@@ -8,4 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class RawMaterial extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+    ];
+
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class);
+    }
 }
