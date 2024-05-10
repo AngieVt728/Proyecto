@@ -7,7 +7,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-defineProps(["users"]);
+const props = defineProps(["outflows"]);
+const items = ref(props.outflows);
+const itemsDisplay = ref(props.outflows);
 const searchQuery = ref("");
 
 const columnsExits = ref([
@@ -18,8 +20,6 @@ const columnsExits = ref([
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
-
 
 const options = ref([
     { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
@@ -36,13 +36,13 @@ const options = ref([
                     class="flex flex-col justify-between md:flex-row gap-2 w-full"
                 >
                     <Search v-model="searchQuery" />
-                    <button-add :href="route('users.create')"
+                    <button-add :href="route('outflows.create')"
                         >Registrar salida de Materia Prima</button-add
                     >
                 </div> </template
             ><DataTable
                 :columns="columns"
-                :items="users"
+                :items="itemsDisplay"
                 :options="options"
                 @action="action"
             ></DataTable

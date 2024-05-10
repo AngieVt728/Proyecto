@@ -7,7 +7,9 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { ref } from "vue";
 
-defineProps(["users"]);
+const props = defineProps(["payments"]);
+const items = ref(props.payments);
+const itemsDisplay = ref(props.payments);
 const searchQuery = ref("");
 
 const columnsPayments = ref([
@@ -19,7 +21,6 @@ const columnsPayments = ref([
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
 
 const options = ref([
     { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
@@ -36,13 +37,13 @@ const options = ref([
                     class="flex flex-col justify-between md:flex-row gap-2 w-full"
                 >
                     <Search v-model="searchQuery" />
-                    <button-add :href="route('users.create')"
+                    <button-add :href="route('payments.create')"
                         >Agregar Pago</button-add
                     >
                 </div> </template
             ><DataTable
                 :columns="columns"
-                :items="users"
+                :items="itemsDisplay"
                 :options="options"
                 @action="action"
             ></DataTable

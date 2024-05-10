@@ -4,23 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Revenue;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class RevenueController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        $revenues = Revenue::all();
+
+        return Inertia::render('Revenues/Index', ['revenues' => $revenues]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Revenues/Create');
     }
 
     /**

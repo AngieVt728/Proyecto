@@ -4,23 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Entry;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class EntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        $entries = Entry::all();
+
+        return Inertia::render('Entries/Index', ['entries' => $entries]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Entries/Create');
     }
 
     /**
