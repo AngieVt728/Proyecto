@@ -57,16 +57,16 @@ const action = (action) => {
 </script>
 
 <template>
-    <Head title="Salidas de Materia Prima" />
+    <Head title="Productos de Materia Prima" />
     <authenticated-layout>
-        <card-data title="Salidas de Materia Prima">
+        <card-data title="Productos de Materia Prima">
             <template v-slot:filters>
                 <div
                     class="flex flex-col justify-between md:flex-row gap-2 w-full"
                 >
                     <Search v-model="searchQuery" />
                     <button-add :href="route('raw-materials.create')"
-                        >Registrar salida de Materia Prima</button-add
+                        >Registrar Producto de Materia Prima</button-add
                     >
                 </div> </template
             ><DataTable

@@ -21,6 +21,7 @@
         "@formkit/tempo": "^0.1.1",
         "@popperjs/core": "^2.11.8",
         "oh-vue-icons": "^1.0.0-rc3",
+        "vue3-google-map": "^0.20.0",
         "vue3-popper": "^1.5.0"
     }
 }
