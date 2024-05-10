@@ -17,9 +17,4 @@ class Supplier extends Model
         'phone_number',
         'address'
     ];
-
-    public function raw_materials()
-    {
-        return $this->belongsToMany(RawMaterial::class);
-    }
 }

@@ -32,7 +32,7 @@ watch(searchQuery, () => {
     searchItems();
 });
 
-function searchItems() {
+const searchItems = () => {
     const filteredItems = items.value.filter(
         (item) =>
             item.first_name
@@ -45,7 +45,7 @@ function searchItems() {
             item.email.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
     itemsDisplay.value = filteredItems;
-}
+};
 
 const action = (action) => {
     switch (action.action) {
