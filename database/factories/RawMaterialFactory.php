@@ -18,7 +18,7 @@ class RawMaterialFactory extends Factory
     {
 
         return [
-            'name' => fake()->word(),
+            'name' => fake()->words(),
             'description' => fake()->paragraphs(1, true),
             'price' => fake()->randomFloat(2, 1, 100),
             'stock' => fake()->randomNumber()

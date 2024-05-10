@@ -19,9 +19,11 @@ const mpExist = ref(false);
 
 const rawMaterialsId = () => {
     const array = ref([]);
-    props.raw_materials_product.forEach((element) => {
-        array.value.push(element.id);
-    });
+    console.log(props.raw_materials_product);
+    if (props.raw_materials_product)
+        props.raw_materials_product.forEach((element) => {
+            array.value.push(element.id);
+        });
     return array.value;
 };
 

@@ -13,6 +13,6 @@ class RawMaterialSeeder extends Seeder
      */
     public function run(): void
     {
-        RawMaterial::factory(150)->create();
+        RawMaterial::factory(10)->create();
     }
 }

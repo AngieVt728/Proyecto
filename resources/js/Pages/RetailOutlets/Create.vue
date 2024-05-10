@@ -3,7 +3,10 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import { GoogleMap, Marker } from "vue3-google-map";
 
+const mapsApiKey = import.meta.env.VITE_MAPS_API_KEY;
+const center = { lat: -16.5005293, lng: -68.1277223 };
 const form = useForm({
     legal_name: "",
     nit: "",
@@ -16,19 +19,9 @@ const form = useForm({
 const handleSubmit = () => {
     form.post(route("proveedores.store"), {
         onFinish: () =>
-            form.reset(
-                "name",
-                "description",
-                "address",
-                "name_costumer",
-            ),
+            form.reset("name", "description", "address", "name_costumer"),
     });
 };
-
-import { GoogleMap, Marker } from 'vue3-google-map'
-
-const center = { lat: 40.689247, lng: -74.044502 }
-
 </script>
 
 <template>
@@ -60,15 +53,22 @@ const center = { lat: 40.689247, lng: -74.044502 }
                     v-model="form.id_customer"
                     type="text"
                 />
-                <GoogleMap
-                api-key="YOUR_API_KEY"
-                style="width: 100%; height: 500px"
-                :center="center"
-                :zoom="15"
-                >
-                    <Marker :options="{ position: center }" />
-                </GoogleMap>
+            </div>
 
+            <div class="p-4">
+                <h2 class="font-semibold mb-4 text-gray-700">
+                    Busque la ubicación del punto de venta
+                </h2>
+                <div class="mx-24">
+                    <GoogleMap
+                        :api-key="mapsApiKey"
+                        style="width: 100%; height: 400px"
+                        :center="center"
+                        :zoom="15"
+                    >
+                        <Marker :options="{ position: center }" />
+                    </GoogleMap>
+                </div>
             </div>
         </Form>
     </authenticated-layout>
