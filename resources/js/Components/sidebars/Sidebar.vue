@@ -39,7 +39,7 @@ const { isOpen } = useSidebar();
                     icon="hi-solid-user-group"
                     name="Usuarios"
                 />
-                <anchor-accordion name="Clientela XD" icon="hi-solid-users">
+                <anchor-accordion name="Gestión Comercial" icon="hi-solid-shopping-cart">
                     <Anchor
                         :href="route('customers.index')"
                         :active="route().current('customers.index')"
@@ -66,7 +66,7 @@ const { isOpen } = useSidebar();
                     />
                 </anchor-accordion>
                 <anchor-accordion
-                    name="Inventario de Productos"
+                    name="Inventario Productos"
                     icon="hi-inbox"
                 >
                     <Anchor
@@ -89,7 +89,7 @@ const { isOpen } = useSidebar();
                     />
                 </anchor-accordion>
                 <anchor-accordion
-                    name="Inventario de Materia Prima"
+                    name="Inventario Materia Prima"
                     icon="hi-solid-inbox"
                 >
                     <Anchor
