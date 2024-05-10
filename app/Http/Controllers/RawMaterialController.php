@@ -15,9 +15,9 @@ class RawMaterialController extends Controller
      */
     public function index(): Response
     {
-        $rawMaterials = RawMaterial::with('supplier')->get();
+        $raw_materials = RawMaterial::all();
 
-        return Inertia::render('RawMaterials/Index', ['raw_materials' => $rawMaterials]);
+        return Inertia::render('RawMaterials/Index', ['raw_materials' => $raw_materials]);
     }
 
     /**
@@ -37,7 +37,7 @@ class RawMaterialController extends Controller
             'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'stock' => 'required|numeric|min:0',
         ]);
 
         RawMaterial::create($validated);
@@ -70,7 +70,7 @@ class RawMaterialController extends Controller
             'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'stock' => 'required|numeric|min:0',
         ]);
 
         $rawMaterial->update($validated);

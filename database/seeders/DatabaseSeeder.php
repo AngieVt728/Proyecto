@@ -2,12 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\RawMaterial;
-use App\Models\Supplier;
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,15 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        $this->call([RoleSeeder::class, UserSeeder::class]);
-        // Supplier::factory(50)->create();
-        // RawMaterial::factory(10)->create();
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            SupplierSeeder::class,
+            RawMaterialSeeder::class,
+            ProductSeeder::class
+        ]);
     }
 }

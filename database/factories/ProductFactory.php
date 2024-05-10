@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\RawMaterial>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
  */
-class RawMaterialFactory extends Factory
+class ProductFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -16,7 +16,6 @@ class RawMaterialFactory extends Factory
      */
     public function definition(): array
     {
-
         return [
             'name' => fake()->word(),
             'description' => fake()->paragraphs(1, true),

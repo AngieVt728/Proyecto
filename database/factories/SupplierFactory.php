@@ -19,7 +19,7 @@ class SupplierFactory extends Factory
         return [
             'name' => fake()->name(),
             'nit' => fake()->unique()->randomNumber(8),
-            'description' => fake()->text(255),
+            'description' => fake()->paragraphs(1, true),
             'email' => fake()->unique()->safeEmail(),
             'phone_number' => fake()->phoneNumber(),
             'address' => fake()->address(),

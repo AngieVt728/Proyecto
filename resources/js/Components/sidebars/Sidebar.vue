@@ -35,26 +35,26 @@ const { isOpen } = useSidebar();
                 />
                 <Anchor
                     :href="route('users.index')"
-                    :active="route().current('users.index')"
+                    :active="route().current('users.*')"
                     icon="hi-solid-user-group"
                     name="Usuarios"
                 />
                 <anchor-accordion name="Gestión Comercial" icon="hi-solid-shopping-cart">
                     <Anchor
                         :href="route('customers.index')"
-                        :active="route().current('customers.index')"
+                        :active="route().current('customers.*')"
                         icon="hi-solid-users"
                         name="Clientes"
                     />
                     <Anchor
                         :href="route('retail-outlets.index')"
-                        :active="route().current('retail-outlets.index')"
+                        :active="route().current('retail-outlets.*')"
                         icon="hi-solid-map"
                         name="Puntos de Venta"
                     />
                     <Anchor
                         :href="route('orders.index')"
-                        :active="route().current('orders.index')"
+                        :active="route().current('orders.*')"
                         icon="hi-solid-hand"
                         name="Pedidos"
                     />
@@ -71,19 +71,19 @@ const { isOpen } = useSidebar();
                 >
                     <Anchor
                         :href="route('products.index')"
-                        :active="route().current('products.index')"
+                        :active="route().current('products.*')"
                         icon="hi-inbox"
                         name="Productos"
                     />
                     <Anchor
                         :href="route('revenues.index')"
-                        :active="route().current('revenues.index')"
+                        :active="route().current('revenues.*')"
                         icon="hi-solid-clipboard-copy"
                         name="Ingresos"
                     />
                     <Anchor
                         :href="route('sales.index')"
-                        :active="route().current('sales.index')"
+                        :active="route().current('sales.*')"
                         icon="hi-solid-clipboard-check"
                         name="Ventas"
                     />
@@ -94,25 +94,25 @@ const { isOpen } = useSidebar();
                 >
                     <Anchor
                         :href="route('suppliers.index')"
-                        :active="route().current('suppliers.index')"
+                        :active="route().current('suppliers.*')"
                         icon="hi-users"
                         name="Proveedores"
                     />
                     <Anchor
                         :href="route('raw-materials.index')"
-                        :active="route().current('raw-materials.index')"
+                        :active="route().current('raw-materials.*')"
                         icon="hi-solid-inbox"
                         name="Materia Prima"
                     />
                     <Anchor
                         :href="route('entries.index')"
-                        :active="route().current('entries.index')"
+                        :active="route().current('entries.*')"
                         icon="hi-solid-login"
                         name="Entradas"
                     />
                     <Anchor
                         :href="route('outflows.index')"
-                        :active="route().current('outflows.index')"
+                        :active="route().current('outflows.*')"
                         icon="hi-solid-logout"
                         name="Salidas"
                     />
