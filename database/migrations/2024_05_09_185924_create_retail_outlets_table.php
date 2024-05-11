@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('name', 150);
             $table->text('description')->nullable()->max(300);
             $table->string('address', 255);
-            $table->string('latitude', 100);
-            $table->string('longitude', 100);
+            $table->string('lat', 255);
+            $table->string('lng', 255);
+            $table->foreignId('customer_id')->constrained('customers');
             $table->timestamps();
         });
     }

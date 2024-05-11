@@ -56,7 +56,7 @@ class ProductController extends Controller
 
         // Asignar materias primas al producto si están definidas
         if (isset($validated['rawMaterials'])) {
-            $product->raw_materials()->attach($validated['rawMaterials']);
+            $product->rawMaterials()->attach($validated['rawMaterials']);
         }
 
         // Redirigir al índice de productos
@@ -80,7 +80,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $raw_materials = RawMaterial::all()->sortBy('name');
-        $raw_materials_product = $product->raw_materials()->get();
+        $raw_materials_product = $product->rawMaterials()->get();
 
         return Inertia::render('Products/Create', [
             'product' => $product,
