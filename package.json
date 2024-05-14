@@ -20,7 +20,9 @@
     "dependencies": {
         "@formkit/tempo": "^0.1.1",
         "@popperjs/core": "^2.11.8",
+        "chart.js": "^4.4.2",
         "oh-vue-icons": "^1.0.0-rc3",
+        "vue-chartjs": "^5.3.1",
         "vue3-google-map": "^0.20.0",
         "vue3-popper": "^1.5.0"
     }
