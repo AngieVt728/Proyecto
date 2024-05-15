@@ -19,9 +19,7 @@ const { isOpen } = useSidebar();
             "
             class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0"
         >
-            <router-link to="/">
-                <Logo />
-            </router-link>
+            <Logo :is-login="false" />
             <nav class="mt-10">
                 <Anchor
                     :href="route('dashboard')"

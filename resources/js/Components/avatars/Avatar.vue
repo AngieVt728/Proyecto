@@ -39,26 +39,37 @@ const dropdownOpen = ref(false);
                     }}</span>
                 </div>
                 <span
-                    class="px-4 py-2 text-sm text-gray-700 border-b hidden md:block"
+                    class="px-4 py-2 text-sm text-center font-semibold text-gray-700 border-b hidden md:block"
                     >Acciones</span
                 >
-                <router-link
-                    to="/update/profile"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
+                <Link
+                    :href="route('dashboard')"
+                    as="button"
+                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
                 >
-                    Mi información
-                </router-link>
-                <router-link
-                    to="/update/password"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white"
-                    >Actualizar contraseña</router-link
+                    <v-icon name="hi-solid-information-circle" /><span
+                        class="ml-1"
+                        >Mi información</span
+                    >
+                </Link>
+                <Link
+                    :href="route('dashboard')"
+                    as="button"
+                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
                 >
+                    <v-icon name="hi-solid-key" /><span class="ml-1"
+                        >Actualizar contraseña</span
+                    >
+                </Link>
                 <Link
                     :href="route('logout')"
                     method="post"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-600 hover:text-white cursor-pointer"
+                    as="button"
+                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
                 >
-                    Desconectarse
+                    <v-icon name="hi-solid-logout" /><span class="ml-1"
+                        >Desconectarse</span
+                    >
                 </Link>
             </div>
         </transition>
