@@ -20,11 +20,7 @@ const { isOpen } = useSidebar();
             class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0"
         >
             <router-link to="/">
-                <Logo
-                    :size="'w-12 h-12'"
-                    :text-style="'mx-2 text-xl text-white'"
-                    :margin-top="'mt-8'"
-                />
+                <Logo />
             </router-link>
             <nav class="mt-10">
                 <Anchor
@@ -39,7 +35,10 @@ const { isOpen } = useSidebar();
                     icon="hi-solid-user-group"
                     name="Usuarios"
                 />
-                <anchor-accordion name="Gestión Comercial" icon="hi-solid-shopping-cart">
+                <anchor-accordion
+                    name="Gestión Comercial"
+                    icon="hi-solid-shopping-cart"
+                >
                     <Anchor
                         :href="route('customers.index')"
                         :active="route().current('customers.*')"
@@ -65,10 +64,7 @@ const { isOpen } = useSidebar();
                         name="Pagos"
                     />
                 </anchor-accordion>
-                <anchor-accordion
-                    name="Inventario Productos"
-                    icon="hi-inbox"
-                >
+                <anchor-accordion name="Inventario Productos" icon="hi-inbox">
                     <Anchor
                         :href="route('products.index')"
                         :active="route().current('products.*')"

@@ -34,10 +34,7 @@ const submit = () => {
 
         <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
             <div class="w-full max-w-sm p-6 bg-white rounded-md shadow-md">
-                <Logo
-                    :size="'w-10 h-10'"
-                    :text-style="'text-2xl text-gray-700'"
-                />
+                <Logo :is-login="true" />
                 <form class="mt-4" @submit.prevent="submit">
                     <Input
                         id="email"
