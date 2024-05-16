@@ -13,13 +13,13 @@ const form = useForm({});
 const items = ref(props.users);
 const itemsDisplay = ref(props.users);
 const searchQuery = ref("");
-
 const columns = ref([
     { key: "id", label: "ID" },
     { key: "first_name", label: "Nombre/s" },
     { key: "last_name", label: "Apellidos" },
     { key: "email", label: "Correo electrónico" },
     { key: "ci", label: "CI" },
+    { key: "phone_number", label: "Numero teléfono" },
     { key: "address", label: "Dirección" },
     { key: "created_at", label: "Fecha creación", date: true },
     { key: "updated_at", label: "Fecha actualización", date: true },

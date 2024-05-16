@@ -3,28 +3,35 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 
+const props = defineProps(["customer"]);
 const form = useForm({
-    first_name: "",
-    last_name: "",
-    ci: "",
-    email: "",
-    phone_number: "",
-    address: "",
+    first_name: props.customer ? props.customer.first_name : "",
+    last_name: props.customer ? props.customer.last_name : "",
+    ci: props.customer ? props.customer.ci : "",
+    email: props.customer ? props.customer.email : "",
+    phone_number: props.customer ? props.customer.phone_number : "",
+    address: props.customer ? props.customer.address : "",
 });
 
 const handleSubmit = () => {
-    form.post(route("users.store"), {
-        onFinish: () =>
-            form.reset(
-                "first_name",
-                "last_name",
-                "ci",
-                "email",
-                "phone_number",
-                "address"
-            ),
-    });
+    if (props.customer?.id)
+        form.patch(route("customers.update", { customer: props.customer }), {
+            onSuccess: () => toast.success("Cliente actualizado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
+        });
+    else
+        form.post(route("customers.store"), {
+            onSuccess: () => toast.success("Cliente creado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
+        });
 };
 </script>
 

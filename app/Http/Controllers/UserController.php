@@ -50,8 +50,9 @@ class UserController extends Controller
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
         ]);
-
         $validated['password'] = Hash::make($validated['ci']);
+        $validated['phone_number'] = $validated['phone_number'] == null ? 'No registrado' : $validated['phone_number'];
+        $validated['address'] = $validated['address'] == null ? 'No registrado' : $validated['address'];
 
         User::create($validated);
 
@@ -71,28 +72,26 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): Response
+    public function edit(User $user): Response
     {
-        $user = User::findOrFail($id);
-
-        return Inertia::render('Users/Create', ['user' => $user]);
+        return Inertia::render('Users/Create', [
+            'user' => $user
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request->validate([
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
-            'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $id,
-            'email' => 'required|email|max:100|unique:users,email,' . $id,
+            'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $user['id'],
+            'email' => 'required|email|max:100|unique:users,email,' . $user['id'],
             'phone_number' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
         ]);
-
-        $user = User::findOrFail($id);
         $user->update($validated);
 
         return redirect()->route('users.index');
@@ -102,9 +101,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {
-        $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('users.index');
