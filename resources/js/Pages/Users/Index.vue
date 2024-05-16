@@ -20,13 +20,11 @@ const columns = ref([
     { key: "last_name", label: "Apellidos" },
     { key: "email", label: "Correo electrónico" },
     { key: "ci", label: "CI" },
-    { key: "role", label: "Rol" },
     { key: "address", label: "Dirección" },
     { key: "created_at", label: "Fecha creación", date: true },
     { key: "updated_at", label: "Fecha actualización", date: true },
 ]);
 const options = ref([
-    { id: "show", name: "Ver", icon: "hi-solid-eye" },
     { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
     { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
 ]);
@@ -52,17 +50,19 @@ const searchItems = () => {
 
 const action = (action) => {
     switch (action.action) {
-        case "show":
-            console.log(action);
-            form.get(route("users.show", { id: action.id }));
-            break;
         case "edit":
             form.get(route("users.edit", { id: action.id }));
             break;
         case "destroy":
             form.delete(route("users.destroy", { id: action.id }), {
-                onSuccess: () => toast.success("Usuario eliminado"),
-                onError: () => toast.error("Error al eliminar usuario"),
+                onSuccess: () => {
+                    toast.success("Usuario eliminado");
+                    form.get(route("users.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
             });
             break;
         default:

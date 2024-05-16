@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,10 +18,12 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $auth_user_id = auth()->id();
-        $users = User::where('id', '!=', $auth_user_id)->with('roles')->get();
-
-        return Inertia::render('Users/Index', ['users' => $users]);
+        return Inertia::render('Users/Index', [
+            'users' => User::where('id', '!=', auth()->id())
+                ->with('roles')
+                ->orderBy('updated_at', 'desc')
+                ->get()
+        ]);
     }
 
     /**
@@ -27,7 +31,10 @@ class UserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Users/Create');
+        return Inertia::render('Users/Create', [
+            'roles' => Role::all(),
+            'permissions' => Permission::all()
+        ]);
     }
 
     /**
@@ -56,9 +63,9 @@ class UserController extends Controller
      */
     public function show(User $user): Response
     {
-        // $user = User::with('roles')->findOrFail($id);
-
-        return Inertia::render('Users/Show', ['user' => $user]);
+        return Inertia::render('Users/Create', [
+            'user' => User::with('roles')->findOrFail($user['id'])
+        ]);
     }
 
     /**

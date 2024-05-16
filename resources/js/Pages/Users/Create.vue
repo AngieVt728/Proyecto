@@ -2,9 +2,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
+import Select from "@/Components/inputs/Select.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 
-const props = defineProps(["user"]);
+const props = defineProps(["roles", "permissions", "user"]);
 
 const form = useForm({
     first_name: props.user ? props.user.first_name : "",
@@ -18,27 +20,19 @@ const form = useForm({
 const handleSubmit = () => {
     if (props.user?.id)
         form.patch(route("users.update", { id: props.user.id }), {
-            onFinish: () =>
-                form.reset(
-                    "first_name",
-                    "last_name",
-                    "ci",
-                    "email",
-                    "phone_number",
-                    "address"
-                ),
+            onSuccess: () => toast.success("Usuario actualizado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
         });
     else
         form.post(route("users.store"), {
-            onFinish: () =>
-                form.reset(
-                    "first_name",
-                    "last_name",
-                    "ci",
-                    "email",
-                    "phone_number",
-                    "address"
-                ),
+            onSuccess: () => toast.success("Usuario creado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
         });
 };
 </script>
