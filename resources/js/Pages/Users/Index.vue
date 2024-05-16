@@ -4,10 +4,12 @@ import CardData from "@/Components/cards/CardData.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
+import { toast } from "vue3-toastify";
 
 const props = defineProps(["users"]);
+const form = useForm({});
 const items = ref(props.users);
 const itemsDisplay = ref(props.users);
 const searchQuery = ref("");
@@ -24,6 +26,7 @@ const columns = ref([
     { key: "updated_at", label: "Fecha actualización", date: true },
 ]);
 const options = ref([
+    { id: "show", name: "Ver", icon: "hi-solid-eye" },
     { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
     { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
 ]);
@@ -49,11 +52,18 @@ const searchItems = () => {
 
 const action = (action) => {
     switch (action.action) {
+        case "show":
+            console.log(action);
+            form.get(route("users.show", { id: action.id }));
+            break;
         case "edit":
-            router.get(`/users/${action.id}/edit`);
+            form.get(route("users.edit", { id: action.id }));
             break;
         case "destroy":
-            router.delete(`/users/${action.id}`);
+            form.delete(route("users.destroy", { id: action.id }), {
+                onSuccess: () => toast.success("Usuario eliminado"),
+                onError: () => toast.error("Error al eliminar usuario"),
+            });
             break;
         default:
             break;

@@ -54,11 +54,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): Response
+    public function show(User $user): Response
     {
-        $user = User::with('roles')->findOrFail($id);
+        // $user = User::with('roles')->findOrFail($id);
 
-        return Inertia::render('Users/Create', ['user' => $user]);
+        return Inertia::render('Users/Show', ['user' => $user]);
     }
 
     /**
