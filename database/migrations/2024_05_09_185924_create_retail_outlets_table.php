@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('retail_outlets', function (Blueprint $table) {
             $table->id();
             $table->string('name', 150);
+            $table->string('nit', 20);
             $table->text('description')->nullable()->max(300);
             $table->string('address', 255);
             $table->string('lat', 255);

@@ -13,6 +13,7 @@ class RetailOutlet extends Model
 
     protected $fillable = [
         'name',
+        'nit',
         'description',
         'address',
         'lat',

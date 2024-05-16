@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\RetailOutlet;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,9 +15,16 @@ class RetailOutletController extends Controller
      */
     public function index(): Response
     {
-        $retail_outlets = RetailOutlet::all();
-
-        return Inertia::render('RetailOutlets/Index', ['retail_outlets' => $retail_outlets]);
+        return Inertia::render('RetailOutlets/Index', [
+            'retailOutlets' => RetailOutlet::with('customer:id,first_name,last_name')
+                ->orderBy('updated_at', 'desc')
+                ->get()
+                ->map(function ($outlet) {
+                    $outlet->owner_name = $outlet->customer->first_name . ' ' . $outlet->customer->last_name;
+                    unset($outlet->customer);
+                    return $outlet;
+                })
+        ]);
     }
 
     /**
@@ -24,7 +32,11 @@ class RetailOutletController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('RetailOutlets/Create');
+        return Inertia::render('RetailOutlets/Create', [
+            'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+                ->orderBy('first_name', 'asc')
+                ->get()
+        ]);
     }
 
     /**
