@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             RetailOutletSeeder::class,
             SupplierSeeder::class,
             RawMaterialSeeder::class,
-            ProductSeeder::class
+            ProductSeeder::class,
+            OrderSeeder::class,
+            SaleSeeder::class
         ]);
     }
 }

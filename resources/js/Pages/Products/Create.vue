@@ -87,7 +87,7 @@ const getMaterialName = (id) => {
 const getPriceMP = (id) => {
     for (let key in props.raw_materials) {
         if (props.raw_materials[key].id == id)
-            return props.raw_materials[key].price;
+            return parseFloat(props.raw_materials[key].price);
     }
 };
 
