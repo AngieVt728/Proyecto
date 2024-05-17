@@ -3,6 +3,7 @@ import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
 import CardData from "@/Components/cards/CardData.vue";
 import CardStat from "@/Components/cards/CardStat.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { useGeolocation } from "@/Composables/useGeolocation";
 import { Head } from "@inertiajs/vue3";
 import {
     ArcElement,
@@ -19,7 +20,6 @@ import {
 import { Bar, Doughnut, Line, Pie } from "vue-chartjs";
 import { Loader } from "@googlemaps/js-api-loader";
 import { onMounted, computed, ref } from "vue";
-import { useGeolocation } from "@/Composables/useGeolocation";
 
 ChartJS.register(
     Title,
@@ -39,9 +39,8 @@ const props = defineProps([
     "totalProducts",
     "totalOrders",
     "totalSales",
+    "retailOutlets",
 ]);
-
-console.log(props.totalProducts, props.totalSales, props.totalOrders);
 
 const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 const { coords } = useGeolocation();
@@ -57,6 +56,11 @@ const mapDiv = ref(null);
 
 const options = {
     responsive: true,
+    plugins: {
+        legend: {
+            display: false,
+        },
+    },
 };
 const rawMaterialData = {
     labels: props.rawMaterials.map((rawMaterial) => rawMaterial.name),
@@ -82,7 +86,8 @@ const productsData = {
 
 onMounted(async () => {
     const { Map, InfoWindow } = await loader.importLibrary("maps");
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+    const { AdvancedMarkerElement, PinElement } =
+        await google.maps.importLibrary("marker");
 
     const map = new Map(mapDiv.value, {
         center: props.retailOutlet ? roPos.value : currPos.value,
@@ -90,19 +95,25 @@ onMounted(async () => {
         mapId: "DEMO_MAP_ID",
     });
     const infoWindow = new InfoWindow();
-    const draggableMarker = new AdvancedMarkerElement({
-        map,
-        position: props.retailOutlet ? roPos.value : currPos.value,
-        gmpDraggable: true,
-    });
 
-    draggableMarker.addListener("dragend", (event) => {
-        form.lat = event.latLng.lat();
-        form.lng = event.latLng.lng();
+    props.retailOutlets.forEach(({ position, name }, i) => {
+        const pinElement = new PinElement({
+            glyph: `${i + 1}`,
+        });
+        const marker = new AdvancedMarkerElement({
+            position,
+            map,
+            title: `${i + 1}. ${name}`,
+            content: pinElement.element,
+        });
 
-        infoWindow.close();
-        infoWindow.setContent(`Posición actual: ${form.lat}, ${form.lng}`);
-        infoWindow.open(draggableMarker.map, draggableMarker);
+        marker.addListener("click", ({ domEvent, latLng }) => {
+            const { target } = domEvent;
+
+            infoWindow.close();
+            infoWindow.setContent(marker.title);
+            infoWindow.open(marker.map, marker);
+        });
     });
 });
 </script>
@@ -142,37 +153,44 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <div class="flex justify-center flex-wrap mt-8 gap-6 px-28">
-                <div class="w-full rounded-lg shadow-lg p-4">
-                    <h2
-                        class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
-                    >
-                        Materia Prima Disponible
-                    </h2>
-                    <Bar
-                        id="my-chart-id"
-                        :options="options"
-                        :data="rawMaterialData"
-                    />
-                </div>
-                <div
-                    class="w-full rounded-lg shadow-lg mt-4 h-[500px] flex p-4"
-                >
-                    <h2
-                        class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
-                    >
-                        Productos Disponibles
-                    </h2>
-                    <Pie :data="productsData" :options="options" />
-                </div>
-            </div>
-            <div class="my-10 mx-20 p-8 rounded-lg shadow-lg">
+            <div class="mt-4">
                 <h2
                     class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
                 >
                     Puntos de venta registrados
                 </h2>
                 <div ref="mapDiv" style="width: 100%; height: 400px" />
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
+                <div class="rounded-lg shadow-lg border border-gray-100 p-2">
+                    <h2
+                        class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
+                    >
+                        Materia Prima Disponible
+                    </h2>
+                    <div
+                        class="flex justify-center content-center items-center"
+                    >
+                        <Bar
+                            id="my-chart-id"
+                            :options="options"
+                            :data="rawMaterialData"
+                        />
+                    </div>
+                </div>
+                <div class="rounded-lg shadow-lg border border-gray-100 p-2">
+                    <h2
+                        class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
+                    >
+                        Productos Disponibles
+                    </h2>
+                    <div
+                        class="flex justify-center content-center items-center h-[300px] lg:h-[230px]"
+                    >
+                        <Pie :data="productsData" :options="options" />
+                    </div>
+                </div>
             </div>
         </card-data>
     </authenticated-layout>

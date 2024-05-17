@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\RawMaterial;
+use App\Models\RetailOutlet;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Foundation\Application;
@@ -26,17 +27,25 @@ class DashboardController extends Controller
 
     public function dashboard(): Response
     {
-        $products = Product::select('id', 'name', 'stock')->get();
-        $products = $this->generateColors($products);
-        $rawMaterials = RawMaterial::select('id', 'name', 'stock')->get();
-        $rawMaterials = $this->generateColors($rawMaterials);
-
         return Inertia::render('Dashboard', [
-            'rawMaterials' => $rawMaterials,
-            'products' => $products,
+            'rawMaterials' => $this->generateColors(RawMaterial::select('id', 'name', 'stock')->get()),
+            'products' => $this->generateColors(Product::select('id', 'name', 'stock')->get()),
             'totalProducts' => Product::where('stock', '>=', 0)->count(),
             'totalOrders' => Order::whereDate('order_date', Carbon::now()->toDateString())->count(),
-            'totalSales' => Sale::whereDate('created_at', Carbon::now()->toDateString())->count()
+            'totalSales' => Sale::whereDate('created_at', Carbon::now()->toDateString())->count(),
+            'retailOutlets' => RetailOutlet::select('id', 'name', 'lat', 'lng')
+                ->orderBy('name', 'asc')
+                ->get()
+                ->map(function ($outlet) {
+                    return [
+                        'id' => $outlet->id,
+                        'name' => $outlet->name,
+                        'position' => [
+                            'lat' => (float) $outlet->lat,
+                            'lng' => (float) $outlet->lng
+                        ]
+                    ];
+                })
         ]);
     }
 
