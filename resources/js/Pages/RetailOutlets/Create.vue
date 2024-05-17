@@ -148,13 +148,11 @@ onMounted(async () => {
                     disabled
                 />
             </div>
-            <div class="p-4">
-                <h2 class="font-semibold mb-4 text-gray-700">
-                    Busque la ubicación del punto de venta
-                </h2>
-                <div class="mx-24">
-                    <div ref="mapDiv" style="width: 100%; height: 400px" />
-                </div>
+            <h2 class="font-semibold mb-4 text-gray-700">
+                Busque la ubicación del punto de venta
+            </h2>
+            <div class="shadow-lg mb-4">
+                <div ref="mapDiv" style="width: 100%; height: 400px" />
             </div>
         </Form>
     </authenticated-layout>

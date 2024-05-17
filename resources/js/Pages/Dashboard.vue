@@ -159,7 +159,9 @@ onMounted(async () => {
                 >
                     Puntos de venta registrados
                 </h2>
-                <div ref="mapDiv" style="width: 100%; height: 400px" />
+                <div class="shadow-lg mb-6">
+                    <div ref="mapDiv" style="width: 100%; height: 400px" />
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
