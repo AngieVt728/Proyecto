@@ -17,7 +17,19 @@ class CustomerController extends Controller
     public function index(): Response
     {
         return Inertia::render('Customers/Index', [
-            'customers' => Customer::orderBy('created_at', 'desc')->get()
+            'customers' => Customer::select(
+                'id',
+                'first_name',
+                'last_name',
+                'ci',
+                'email',
+                'phone_number',
+                'address',
+                'created_at',
+                'updated_at'
+            )
+                ->orderBy('created_at', 'desc')
+                ->get()
         ]);
     }
 
@@ -44,8 +56,8 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:255',
         ]);
         $validated['password'] = Hash::make($validated['ci']);
-        $validated['phone_number'] = $validated['phone_number'] == null ? 'No registrado' : $validated['phone_number'];
-        $validated['address'] = $validated['address'] == null ? 'No registrado' : $validated['address'];
+        $validated['phone_number'] = $validated['phone_number'] ?? 'No registrado';
+        $validated['address'] = $validated['address'] ?? 'No registrado';
 
         Customer::create($validated);
 
@@ -57,7 +69,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer): Response
     {
-        return Inertia::render('Customers/Create');
+        return Inertia::render('Customers/Create', [
+            'customer' => $customer->makeHidden('password')
+        ]);
     }
 
     /**
@@ -66,7 +80,7 @@ class CustomerController extends Controller
     public function edit(Customer $customer): Response
     {
         return Inertia::render('Customers/Create', [
-            'customer' => $customer
+            'customer' => $customer->makeHidden('password')
         ]);
     }
 
@@ -91,7 +105,7 @@ class CustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): RedirectResponse
     {
         $customer->delete();
 

@@ -8,12 +8,12 @@ import { toast } from "vue3-toastify";
 
 const props = defineProps(["roles", "permissions", "user"]);
 const form = useForm({
-    first_name: props.user ? props.user.first_name : "",
-    last_name: props.user ? props.user.last_name : "",
-    ci: props.user ? props.user.ci : "",
-    email: props.user ? props.user.email : "",
-    phone_number: props.user ? props.user.phone_number : "",
-    address: props.user ? props.user.address : "",
+    first_name: props.user?.first_name ?? "",
+    last_name: props.user?.last_name ?? "",
+    ci: props.user?.ci ?? "",
+    email: props.user?.email ?? "",
+    phone_number: props.user?.phone_number ?? "",
+    address: props.user?.address ?? "",
 });
 
 const handleSubmit = () => {

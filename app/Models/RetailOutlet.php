@@ -18,6 +18,7 @@ class RetailOutlet extends Model
         'address',
         'lat',
         'lng',
+        'customer_id'
     ];
 
     public function customer(): BelongsTo

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\RetailOutlet;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -42,17 +43,33 @@ class RetailOutletController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate(([
+            'name' => 'required|string|max:50',
+            'nit' => 'required|string|max:20',
+            'description' => 'nullable|string|max:300',
+            'address' => 'required|string|max:255',
+            'lat' => 'required|numeric|max:255',
+            'lng' => 'required|numeric|max:255',
+            'customer_id' => 'required|integer|exists:customers,id'
+        ]));
+
+        $validated['description'] = $validated['description'] ?? 'Sin descripción';
+
+        RetailOutlet::create($validated);
+
+        return redirect()->route('retail-outlets.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(RetailOutlet $retailOutlet)
+    public function show(RetailOutlet $retailOutlet): Response
     {
-        //
+        return Inertia::render('RetailOutlets/Create', [
+            'retailOutlet' => $retailOutlet
+        ]);
     }
 
     /**
@@ -60,22 +77,43 @@ class RetailOutletController extends Controller
      */
     public function edit(RetailOutlet $retailOutlet)
     {
-        //
+        return Inertia::render('RetailOutlets/Create', [
+            // 'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+            //     ->orderBy('first_name', 'asc')
+            //     ->get()
+            'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+                ->orderBy('first_name', 'asc')
+                ->get(),
+            'retailOutlet' => $retailOutlet
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, RetailOutlet $retailOutlet)
+    public function update(Request $request, RetailOutlet $retailOutlet): RedirectResponse
     {
-        //
+        $validated = $request->validate(([
+            'name' => 'required|string|max:50',
+            'nit' => 'required|string|max:20',
+            'description' => 'nullable|string|max:300',
+            'address' => 'required|string|max:255',
+            'lat' => 'required|numeric|max:255',
+            'lng' => 'required|numeric|max:255',
+            'customer_id' => 'required|integer|exists:customers,id'
+        ]));
+        $retailOutlet->update($validated);
+
+        return redirect()->route('retail-outlets.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(RetailOutlet $retailOutlet)
+    public function destroy(RetailOutlet $retailOutlet): RedirectResponse
     {
-        //
+        $retailOutlet->delete();
+
+        return redirect()->route('retail-outlets.index');
     }
 }

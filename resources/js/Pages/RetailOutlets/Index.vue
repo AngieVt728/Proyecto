@@ -18,7 +18,7 @@ const columns = ref([
     { key: "name", label: "Nombre" },
     { key: "nit", label: "NIT" },
     { key: "description", label: "Descripción" },
-    { key: "owner_name", label: "Nombre del Cliente Proppietario" },
+    { key: "owner_name", label: "Nombre del Cliente Propietario" },
     { key: "address", label: "Dirección" },
     { key: "lat", label: "Latitud" },
     { key: "lng", label: "Longitud" },
