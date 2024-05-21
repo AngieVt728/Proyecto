@@ -115,3 +115,26 @@ const { isOpen } = useSidebar();
         </div>
     </div>
 </template>
+
+<style scoped>
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #030712;
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #1f2937;
+}
+</style>

@@ -1,8 +1,7 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
-import Select from "@/Components/inputs/Select.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 

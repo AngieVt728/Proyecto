@@ -18,6 +18,7 @@ const columns = ref([
     { key: "price", label: "Precio" },
     { key: "stock", label: "Stock" },
     { key: "created_at", label: "Fecha creación", date: true },
+    { key: "updated_at", label: "Fecha de actualización", date: true },
 ]);
 const options = ref([
     { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },

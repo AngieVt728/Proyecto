@@ -16,9 +16,9 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        $products = Product::all();
-
-        return Inertia::render('Products/Index', ['products' => $products]);
+        return Inertia::render('Products/Index', [
+            'products' => Product::select('*')->orderBy('updated_at', 'desc')->get()
+        ]);
     }
 
     /**
@@ -26,9 +26,10 @@ class ProductController extends Controller
      */
     public function create(): Response
     {
-        $raw_materials = RawMaterial::all()->sortBy('name');
-
-        return Inertia::render('Products/Create', ['raw_materials' => $raw_materials]);
+        return Inertia::render('Products/Create', [
+            'rawMaterials' => RawMaterial::select('id', 'name', 'price', 'stock')
+                ->orderBy('name', 'asc')->get()
+        ]);
     }
 
     /**
@@ -36,32 +37,32 @@ class ProductController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validar los datos de entrada
         $validated = $request->validate([
             'name' => 'required|string|max:150',
             'description' => 'nullable|string|max:300',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
-            'rawMaterials' => 'required|array',
-            'rawMaterials.*' => 'exists:raw_materials,id'
+            'rawMaterials' => 'nullable|array',
+            'rawMaterials.*.id' => 'exists:raw_materials,id',
+            'rawMaterials.*.quantity' => 'required_with:rawMaterials|integer|min:1'
         ]);
 
-        // Crear un nuevo producto
         $product = Product::create([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? 'Sin descripción',
             'price' => $validated['price'],
-            'stock' => $validated['stock']
         ]);
 
-        // Asignar materias primas al producto si están definidas
-        if (isset($validated['rawMaterials'])) {
-            $product->rawMaterials()->attach($validated['rawMaterials']);
+        if (isset($validated['rawMaterials']) && is_array($validated['rawMaterials'])) {
+            $rawMaterials = [];
+            foreach ($validated['rawMaterials'] as $rawMaterial) {
+                $rawMaterials[$rawMaterial['id']] = ['quantity' => $rawMaterial['quantity']];
+            }
+            $product->rawMaterials()->attach($rawMaterials);
         }
 
-        // Redirigir al índice de productos
         return redirect()->route('products.index');
     }
+
 
 
     /**

@@ -1,197 +1,255 @@
 <script setup>
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
-import Select from "@/Components/inputs/Select.vue";
+import Textarea from "@/Components/inputs/Textarea.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { onMounted, ref } from "vue";
+import { computed, ref } from "vue";
+import { toast } from "vue3-toastify";
 
-const props = defineProps([
-    "product",
-    "raw_materials_product",
-    "raw_materials",
-]);
-const rawMaterialsIdName = props.raw_materials_product
-    ? ref(props.raw_materials_product)
-    : ref([]);
-const rawMaterialId = ref("");
-const mpExist = ref(false);
-
-const rawMaterialsId = () => {
-    const array = ref([]);
-    console.log(props.raw_materials_product);
-    if (props.raw_materials_product)
-        props.raw_materials_product.forEach((element) => {
-            array.value.push(element.id);
-        });
-    return array.value;
-};
-
-const rawMaterialsPrice = (materials) => {
-    let total = 0;
-    materials.forEach((material) => (total += material.price));
-    return total;
-};
-
-const totalPrice = ref(
-    props.raw_materials_product
-        ? rawMaterialsPrice(props.raw_materials_product)
-        : 0
-);
-
+const props = defineProps(["rawMaterials"]);
 const form = useForm({
-    name: props.product ? props.product.name : "",
-    description: props.product ? props.product.description : "",
-    price: props.product ? props.product.price : "",
-    stock: props.product ? props.product.stock : "",
-    rawMaterials: props.raw_materials_product ? rawMaterialsId() : [],
+    name: "",
+    description: "",
+    price: "",
+    rawMaterials: [],
 });
+const itemsPerColumn = ref(4);
+const rawMaterialGroups = computed(() => {
+    const groups = [];
+    for (let i = 0; i < props.rawMaterials.length; i += itemsPerColumn.value) {
+        groups.push(props.rawMaterials.slice(i, i + itemsPerColumn.value));
+    }
+    return groups;
+});
+props.rawMaterials.forEach((material) => {
+    material.quantity = 1;
+    material.selected = false;
+});
+
+const updateRawMaterials = (rawMaterial, event) => {
+    rawMaterial.selected = event.target.checked;
+    if (rawMaterial.selected) {
+        form.rawMaterials.push({
+            id: rawMaterial.id,
+            quantity: rawMaterial.quantity,
+        });
+    } else {
+        form.rawMaterials = form.rawMaterials.filter(
+            (item) => item.id !== rawMaterial.id
+        );
+    }
+    console.log(form.rawMaterials);
+};
+
+const increaseQuantity = (rawMaterial) => {
+    rawMaterial.quantity++;
+    updateMaterialQuantity(rawMaterial);
+};
+
+const decreaseQuantity = (rawMaterial) => {
+    if (rawMaterial.quantity > 1) {
+        rawMaterial.quantity--;
+        updateMaterialQuantity(rawMaterial);
+    }
+};
+
+const updateMaterialQuantity = (rawMaterial) => {
+    if (rawMaterial.selected) {
+        const material = form.rawMaterials.find(
+            (item) => item.id === rawMaterial.id
+        );
+        if (material) {
+            material.quantity = rawMaterial.quantity;
+        }
+    }
+};
 
 const handleSubmit = () => {
-    if (props.product?.id)
+    if (props.product?.id) {
         form.patch(route("products.update", { id: props.product.id }), {
-            onFinish: () =>
-                form.reset("name", "description", "precio", "stock"),
+            onSuccess: () => toast.success("Producto actualizado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
         });
-    else
-        form.post(route("products.store"), {
-            onFinish: () =>
-                form.reset("name", "description", "precio", "stock"),
-        });
-};
-
-const addRawMaterialId = () => {
-    if (
-        rawMaterialId.value &&
-        !form.rawMaterials.includes(rawMaterialId.value)
-    ) {
-        mpExist.value = false;
-        form.rawMaterials.push(rawMaterialId.value);
-        const id = rawMaterialId.value;
-        const name = getMaterialName(rawMaterialId.value);
-        const price = getPriceMP(rawMaterialId.value);
-        totalPrice.value += price;
-        rawMaterialsIdName.value.push({ id, name, price });
     } else {
-        mpExist.value = true;
+        form.post(route("products.store"), {
+            onSuccess: () => toast.success("Producto creado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
+        });
     }
 };
-
-const getMaterialName = (id) => {
-    for (let key in props.raw_materials) {
-        if (props.raw_materials[key].id == id)
-            return props.raw_materials[key].name;
-    }
-};
-
-const getPriceMP = (id) => {
-    for (let key in props.raw_materials) {
-        if (props.raw_materials[key].id == id)
-            return parseFloat(props.raw_materials[key].price);
-    }
-};
-
-onMounted(() => {
-    rawMaterialsId();
-});
 </script>
 
 <template>
-    <Head title="Crear nuevo usuario" />
+    <Head title="Crear nuevo producto" />
     <authenticated-layout>
         <Form title="Producto" @handle-submit="handleSubmit">
             <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                <Input
-                    id="name"
-                    label-text="Nombre"
-                    v-model="form.name"
-                    :error="form.errors.name"
-                    type="text"
-                />
-                <Input
-                    id="description"
-                    label-text="Descripción"
-                    v-model="form.description"
-                    :error="form.errors.description"
-                    type="text"
-                />
-                <Input
-                    id="price"
-                    label-text="Precio"
-                    v-model="form.price"
-                    :error="form.errors.price"
-                    type="text"
-                />
-                <Input
-                    id="stock"
-                    label-text="Stock"
-                    v-model="form.stock"
-                    :error="form.errors.stock"
-                    type="text"
-                />
+                <div class="grid grid-cols-1 mt-4">
+                    <Input
+                        id="name"
+                        label-text="Nombre"
+                        v-model="form.name"
+                        :error="form.errors.name"
+                        type="text"
+                    />
+                    <Input
+                        id="price"
+                        label-text="Precio"
+                        v-model="form.price"
+                        :error="form.errors.price"
+                        type="text"
+                    />
+                </div>
+                <div class="grid grid-cols-1 -mt-2 lg:mt-4">
+                    <Textarea
+                        id="description"
+                        label-text="Descripción"
+                        v-model="form.description"
+                        :error="form.errors.description"
+                    />
+                </div>
             </div>
-            <div class="grid grid-cols-1 mt-4">
-                <h2 class="font-semibold text-sm ml-4 uppercase text-gray-800">
-                    Agregar materia prima para el producto
-                    <span class="text-xs font-light lowercase"
-                        >(selecciona toda la materia prima requerida)</span
-                    >
+
+            <div class="mt-4">
+                <h2 class="w-full font-semibold text-gray-700">
+                    Lista de materia prima
                 </h2>
-                <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                    <div class="grid grid-cols-1">
-                        <h2 class="text-sm text-gray-700 text-center -mb-2">
-                            Materiales seleccionados
-                        </h2>
-                        <div
-                            class="bg-gray-100 rounded-lg w-full h-72 mt-4 shadow-md ml-2"
+                <div class="grid grid-cols-2 lg:grid-cols-4">
+                    <div
+                        v-for="(group, groupIndex) in rawMaterialGroups"
+                        :key="groupIndex"
+                    >
+                        <ul
+                            class="p-2"
+                            v-for="rawMaterial in group"
+                            :key="rawMaterial.id"
                         >
-                            <ul class="p-4 grid grid-cols-4 gap-3">
-                                <p
-                                    v-for="material in rawMaterialsIdName"
-                                    class="text-xs text-left text-gray-800 bg-gray-300 rounded-lg p-2 uppercase"
+                            <li class="rounded-lg shadow-md p-2">
+                                <div class="flex">
+                                    <div class="flex items-center h-5">
+                                        <input
+                                            class="text-indigo-600 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                                            :id="rawMaterial.id"
+                                            @change="
+                                                updateRawMaterials(
+                                                    rawMaterial,
+                                                    $event
+                                                )
+                                            "
+                                            type="checkbox"
+                                            :disabled="
+                                                rawMaterial.stock == 0
+                                                    ? true
+                                                    : false
+                                            "
+                                        />
+                                    </div>
+                                    <div class="ms-2 text-sm">
+                                        <label
+                                            :for="rawMaterial.id"
+                                            :class="
+                                                rawMaterial.stock == 0
+                                                    ? 'font-medium text-gray-700 line-through'
+                                                    : 'font-medium text-gray-700'
+                                            "
+                                        >
+                                            {{ rawMaterial.name }}
+                                        </label>
+                                        <p
+                                            id="helper-checkbox-text"
+                                            class="text-xs font-normal text-gray-600"
+                                        >
+                                            Precio:
+                                            <span class="font-semibold">
+                                                ${{ rawMaterial.price }}
+                                            </span>
+                                            - En stock:
+                                            <span class="font-semibold">
+                                                {{ rawMaterial.stock }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    v-if="rawMaterial.selected"
+                                    class="flex justify-center items-center mt-2"
                                 >
-                                    {{
-                                        `${material.id}. ${material.name} Bs. ${material.price}`
-                                    }}
-                                </p>
-                            </ul>
-                        </div>
-                        <div class="w-full flex justify-center mt-2">
-                            <p v-show="mpExist" class="text-red-500 text-md">
-                                Materia prima ya agregada
-                            </p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                        <Select
-                            id="rawMaterials"
-                            label-text="Materia prima disponible"
-                            v-model="rawMaterialId"
-                            :options="raw_materials"
-                            :error="form.errors.rawMaterials"
-                        />
-                        <div class="w-full align-middle -mt-4 lg:mt-9">
-                            <button
-                                class="flex justify-center items-center w-full px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-green-600 rounded-md hover:bg-green-500 focus:outline-none focus:bg-green-500 overflow-hidden truncate"
-                                @click="addRawMaterialId"
-                                type="button"
-                            >
-                                <v-icon
-                                    name="hi-solid-plus-circle"
-                                    class="mr-1"
-                                />
-                                Agregar
-                            </button>
-                        </div>
-                        <div class="font-semibold flex justify-center w-full">
-                            <p class="text-center uppercase">
-                                Precio total de MP:
-                                <span class="text-blue-500">{{
-                                    totalPrice
-                                }}</span>
-                                Bs.
-                            </p>
-                        </div>
+                                    <div>
+                                        <label
+                                            :for="rawMaterial.quantity"
+                                            class="block text-xs text-center font-medium text-gray-700"
+                                            >Cantidad:</label
+                                        >
+                                        <div class="relative flex items-center">
+                                            <button
+                                                class="flex-shrink-0 bg-red-500 hover:bg-red-600 inline-flex items-center justify-center border border-red-600 rounded-md h-5 w-5 focus:ring-red-600 focus:ring-2 focus:outline-none"
+                                                @click="
+                                                    decreaseQuantity(
+                                                        rawMaterial
+                                                    )
+                                                "
+                                                type="button"
+                                            >
+                                                <svg
+                                                    class="w-2.5 h-2.5 text-gray-50"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 18 2"
+                                                >
+                                                    <path
+                                                        stroke="currentColor"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M1 1h16"
+                                                    />
+                                                </svg>
+                                            </button>
+                                            <input
+                                                class="flex-shrink-0 text-gray-700 border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-16 text-center"
+                                                :id="rawMaterial.quantity"
+                                                v-model="rawMaterial.quantity"
+                                                type="text"
+                                            />
+                                            <button
+                                                class="flex-shrink-0 bg-green-500 hover:bg-green-600 inline-flex items-center justify-center border border-green-600 rounded-md h-5 w-5 focus:ring-green-600 focus:ring-2 focus:outline-none"
+                                                @click="
+                                                    increaseQuantity(
+                                                        rawMaterial
+                                                    )
+                                                "
+                                                type="button"
+                                            >
+                                                <svg
+                                                    class="w-2.5 h-2.5 text-gray-50"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 18 18"
+                                                >
+                                                    <path
+                                                        stroke="currentColor"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M9 1v16M1 9h16"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
