@@ -9,6 +9,7 @@ import { toast } from "vue3-toastify";
 import { ref, watch } from "vue";
 
 const props = defineProps(["products"]);
+console.log(props.products);
 const form = useForm({});
 const items = ref(props.products);
 const itemsDisplay = ref(props.products);

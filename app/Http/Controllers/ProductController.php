@@ -16,7 +16,10 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
-        $products = Product::select('*')->orderBy('updated_at', 'desc')->get();
+        $products = Product::select('*')
+            ->orderByRaw('GREATEST(updated_at, (SELECT MAX(updated_at) FROM product_raw_material WHERE product_raw_material.product_id = products.id)) DESC')
+            ->get();
+
 
         return Inertia::render('Products/Index', [
             'products' => $products
