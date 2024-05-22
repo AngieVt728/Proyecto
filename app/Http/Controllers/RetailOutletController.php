@@ -16,15 +16,17 @@ class RetailOutletController extends Controller
      */
     public function index(): Response
     {
+        $retailOutlets = RetailOutlet::with('customer:id,first_name,last_name')
+            ->orderBy('updated_at', 'desc')
+            ->get()
+            ->map(function ($outlet) {
+                $outlet->owner_name = $outlet->customer->first_name . ' ' . $outlet->customer->last_name;
+                unset($outlet->customer);
+                return $outlet;
+            });
+
         return Inertia::render('RetailOutlets/Index', [
-            'retailOutlets' => RetailOutlet::with('customer:id,first_name,last_name')
-                ->orderBy('updated_at', 'desc')
-                ->get()
-                ->map(function ($outlet) {
-                    $outlet->owner_name = $outlet->customer->first_name . ' ' . $outlet->customer->last_name;
-                    unset($outlet->customer);
-                    return $outlet;
-                })
+            'retailOutlets' => $retailOutlets
         ]);
     }
 
@@ -33,10 +35,12 @@ class RetailOutletController extends Controller
      */
     public function create(): Response
     {
+        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+            ->orderBy('first_name', 'asc')
+            ->get();
+
         return Inertia::render('RetailOutlets/Create', [
-            'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-                ->orderBy('first_name', 'asc')
-                ->get()
+            'customers' => $customers
         ]);
     }
 
@@ -77,13 +81,12 @@ class RetailOutletController extends Controller
      */
     public function edit(RetailOutlet $retailOutlet)
     {
+        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+            ->orderBy('first_name', 'asc')
+            ->get();
+
         return Inertia::render('RetailOutlets/Create', [
-            // 'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-            //     ->orderBy('first_name', 'asc')
-            //     ->get()
-            'customers' => Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-                ->orderBy('first_name', 'asc')
-                ->get(),
+            'customers' => $customers,
             'retailOutlet' => $retailOutlet
         ]);
     }

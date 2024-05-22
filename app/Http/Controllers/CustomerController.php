@@ -16,20 +16,22 @@ class CustomerController extends Controller
      */
     public function index(): Response
     {
+        $customers = Customer::select(
+            'id',
+            'first_name',
+            'last_name',
+            'ci',
+            'email',
+            'phone_number',
+            'address',
+            'created_at',
+            'updated_at'
+        )
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return Inertia::render('Customers/Index', [
-            'customers' => Customer::select(
-                'id',
-                'first_name',
-                'last_name',
-                'ci',
-                'email',
-                'phone_number',
-                'address',
-                'created_at',
-                'updated_at'
-            )
-                ->orderBy('created_at', 'desc')
-                ->get()
+            'customers' => $customers
         ]);
     }
 
