@@ -7,24 +7,34 @@ import { Head, useForm } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { toast } from "vue3-toastify";
 
-const props = defineProps(["rawMaterials"]);
+const props = defineProps(["rawMaterials", "product", "productRawMaterial"]);
 const form = useForm({
-    name: "",
-    description: "",
-    price: "",
-    rawMaterials: [],
+    name: props.product?.name ?? "",
+    description: props.product?.description ?? "",
+    price: props.product?.price ?? "",
+    rawMaterials:
+        props.productRawMaterial?.length > 0 ? props.productRawMaterial : [],
 });
-const itemsPerColumn = ref(4);
 const rawMaterialGroups = computed(() => {
     const groups = [];
-    for (let i = 0; i < props.rawMaterials.length; i += itemsPerColumn.value) {
-        groups.push(props.rawMaterials.slice(i, i + itemsPerColumn.value));
+    for (let i = 0; i < props.rawMaterials.length; i += 4) {
+        groups.push(props.rawMaterials.slice(i, i + 4));
     }
     return groups;
 });
 props.rawMaterials.forEach((material) => {
-    material.quantity = 1;
-    material.selected = false;
+    const materialFound = form.rawMaterials.find(
+        (item) => item.id === material.id
+    );
+    if (materialFound) {
+        material.quantity = materialFound.quantity;
+        material.cost = materialFound.cost;
+        material.selected = true;
+    } else {
+        material.quantity = 1;
+        material.cost = material.price;
+        material.selected = false;
+    }
 });
 
 const updateRawMaterials = (rawMaterial, event) => {
@@ -33,25 +43,33 @@ const updateRawMaterials = (rawMaterial, event) => {
         form.rawMaterials.push({
             id: rawMaterial.id,
             quantity: rawMaterial.quantity,
+            cost: rawMaterial.cost,
         });
     } else {
         form.rawMaterials = form.rawMaterials.filter(
             (item) => item.id !== rawMaterial.id
         );
     }
-    console.log(form.rawMaterials);
 };
 
 const increaseQuantity = (rawMaterial) => {
-    rawMaterial.quantity++;
+    if (rawMaterial.quantity < rawMaterial.stock) {
+        rawMaterial.quantity++;
+        rawMaterial.cost = parseFloat(
+            (rawMaterial.cost + rawMaterial.price).toFixed(2)
+        );
+    }
     updateMaterialQuantity(rawMaterial);
 };
 
 const decreaseQuantity = (rawMaterial) => {
     if (rawMaterial.quantity > 1) {
         rawMaterial.quantity--;
-        updateMaterialQuantity(rawMaterial);
+        rawMaterial.cost = parseFloat(
+            (rawMaterial.cost - rawMaterial.price).toFixed(2)
+        );
     }
+    updateMaterialQuantity(rawMaterial);
 };
 
 const updateMaterialQuantity = (rawMaterial) => {
@@ -61,9 +79,16 @@ const updateMaterialQuantity = (rawMaterial) => {
         );
         if (material) {
             material.quantity = rawMaterial.quantity;
+            material.cost = rawMaterial.cost;
         }
     }
 };
+
+const totalCost = computed(() => {
+    return form.rawMaterials
+        .reduce((acc, item) => acc + item.cost, 0)
+        .toFixed(2);
+});
 
 const handleSubmit = () => {
     if (props.product?.id) {
@@ -118,7 +143,7 @@ const handleSubmit = () => {
             </div>
 
             <div class="mt-4">
-                <h2 class="w-full font-semibold text-gray-700">
+                <h2 class="font-semibold ml-4 text-gray-700">
                     Lista de materia prima
                 </h2>
                 <div class="grid grid-cols-2 lg:grid-cols-4">
@@ -131,7 +156,7 @@ const handleSubmit = () => {
                             v-for="rawMaterial in group"
                             :key="rawMaterial.id"
                         >
-                            <li class="rounded-lg shadow-md p-2">
+                            <li class="rounded-lg border-2 shadow-md p-2">
                                 <div class="flex">
                                     <div class="flex items-center h-5">
                                         <input
@@ -145,10 +170,12 @@ const handleSubmit = () => {
                                             "
                                             type="checkbox"
                                             :disabled="
-                                                rawMaterial.stock == 0
+                                                rawMaterial.stock == 0 &&
+                                                !rawMaterial.selected
                                                     ? true
                                                     : false
                                             "
+                                            :checked="rawMaterial.selected"
                                         />
                                     </div>
                                     <div class="ms-2 text-sm">
@@ -250,6 +277,34 @@ const handleSubmit = () => {
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                </div>
+
+                <div class="flex justify-end items-center m-4">
+                    <div
+                        class="py-6 px-4 lg:px-24 border-2 rounded-lg shadow-lg"
+                    >
+                        <h2
+                            class="font-semibold text-center text-md uppercase text-gray-700 mb-2"
+                        >
+                            Total costo de producción
+                        </h2>
+                        <p
+                            class="text-xs lg:text-sm text-gray-800 font-medium flex justify-between items-center"
+                        >
+                            Cantidad materia prima seleccionada:
+                            <span class="font-bold text-lg text-indigo-600">{{
+                                form.rawMaterials.length
+                            }}</span>
+                        </p>
+                        <p
+                            class="text-xs lg:text-sm text-gray-800 font-medium flex justify-between items-center"
+                        >
+                            Costo total materia prima seleccionada: $<span
+                                class="font-bold text-lg text-indigo-600"
+                                >{{ totalCost }}</span
+                            >
+                        </p>
                     </div>
                 </div>
             </div>

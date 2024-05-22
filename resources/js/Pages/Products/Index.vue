@@ -4,10 +4,12 @@ import CardData from "@/Components/cards/CardData.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 import { ref, watch } from "vue";
 
 const props = defineProps(["products"]);
+const form = useForm({});
 const items = ref(props.products);
 const itemsDisplay = ref(props.products);
 const searchQuery = ref("");
@@ -39,10 +41,19 @@ const searchItems = () => {
 const action = (action) => {
     switch (action.action) {
         case "edit":
-            router.get(`/products/${action.id}/edit`);
+            form.get(route("products.edit", { id: action.id }));
             break;
         case "destroy":
-            router.delete(`/products/${action.id}`);
+            form.delete(route("products.destroy", { id: action.id }), {
+                onSuccess: () => {
+                    toast.success("Producto eliminado");
+                    form.get(route("products.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
+            });
             break;
         default:
             break;
