@@ -17,9 +17,8 @@ class ProductController extends Controller
     public function index(): Response
     {
         $products = Product::select('*')
-            ->orderByRaw('GREATEST(updated_at, (SELECT MAX(updated_at) FROM product_raw_material WHERE product_raw_material.product_id = products.id)) DESC')
+            ->orderByRaw('GREATEST(products.updated_at, (SELECT MAX(updated_at) FROM product_raw_material WHERE product_raw_material.product_id = products.id)) DESC')
             ->get();
-
 
         return Inertia::render('Products/Index', [
             'products' => $products

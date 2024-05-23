@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RawMaterial;
 use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,13 @@ class SupplierController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Suppliers/Index', ['suppliers' => Supplier::all()]);
+        $suppliers = Supplier::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
+        return Inertia::render('Suppliers/Index', [
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**
@@ -23,7 +30,19 @@ class SupplierController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Suppliers/Create');
+        $rawMaterials = RawMaterial::select('id', 'name', 'price', 'stock')
+            ->orderBy('name', 'asc')->get()->map(function ($material) {
+                return [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'price' => (float) $material->price,
+                    'stock' => $material->stock
+                ];
+            });
+
+        return Inertia::render('Suppliers/Create', [
+            'rawMaterials' => $rawMaterials
+        ]);
     }
 
     /**
@@ -33,14 +52,21 @@ class SupplierController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'nit' => 'required|string|max:20|unique:suppliers,nit',
-            'description' => 'nullable|string|max:255',
-            'email' => 'required|email|max:60|unique:suppliers,email',
-            'phone_number' => 'string|max:20',
+            'nit' => 'required|integer|min_digits:5|max_digits:20|unique:suppliers,nit',
+            'description' => 'nullable|string|max:300',
+            'email' => 'required|email:rfc,dns|max:60|unique:suppliers,email',
+            'phone_number' => 'required|integer|min_digits:5|max_digits:20',
             'address' => 'string|max:150',
         ]);
 
-        Supplier::create($validated);
+        Supplier::create([
+            'name' => $validated['name'],
+            'nit' => $validated['nit'],
+            'description' => $validated['description'] ?? 'Sin descripción',
+            'email' => $validated['email'],
+            'phone_number' => $validated['phone_number'],
+            'address' => $validated['address']
+        ]);
 
         return redirect()->route('suppliers.index');
     }
@@ -48,34 +74,59 @@ class SupplierController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id): Response
+    public function show(Supplier $supplier): Response
     {
-        return Inertia::render('Suppliers/Create', ['supplier' => Supplier::findOrFail($id)]);
+        $rawMaterials = RawMaterial::select('id', 'name', 'price', 'stock')
+            ->orderBy('name', 'asc')->get()->map(function ($material) {
+                return [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'price' => (float) $material->price,
+                    'stock' => $material->stock
+                ];
+            });
+
+        return Inertia::render('Suppliers/Create', [
+            'supplier' => $supplier,
+            'rawMaterials' => $rawMaterials
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id): Response
+    public function edit(Supplier $supplier): Response
     {
-        return Inertia::render('Suppliers/Create', ['supplier' => Supplier::findOrFail($id)]);
+        $rawMaterials = RawMaterial::select('id', 'name', 'price', 'stock')
+            ->orderBy('name', 'asc')->get()->map(function ($material) {
+                return [
+                    'id' => $material->id,
+                    'name' => $material->name,
+                    'price' => (float) $material->price,
+                    'stock' => $material->stock
+                ];
+            });
+
+        return Inertia::render('Suppliers/Create', [
+            'supplier' => $supplier,
+            'rawMaterials' => $rawMaterials
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(Request $request, Supplier $supplier): RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'nit' => 'required|string|max:20|unique:suppliers,nit,' . $id,
+            'nit' => 'required|string|max:20|unique:suppliers,nit,' . $supplier['id'],
             'description' => 'nullable|string|max:255',
-            'email' => 'required|email|max:60|unique:suppliers,email,' . $id,
+            'email' => 'required|email|max:60|unique:suppliers,email,' . $supplier['id'],
             'phone_number' => 'string|max:20',
             'address' => 'string|max:150',
         ]);
 
-        $supplier = Supplier::findOrFail($id);
         $supplier->update($validated);
 
         return redirect()->route('suppliers.index');
@@ -84,9 +135,9 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(Supplier $supplier): RedirectResponse
     {
-        $supplier = Supplier::findOrFail($id);
+        $supplier->rawMaterials()->detach();
         $supplier->delete();
 
         return redirect()->route('suppliers.index');

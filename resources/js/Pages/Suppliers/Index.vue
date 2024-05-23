@@ -4,14 +4,15 @@ import CardData from "@/Components/cards/CardData.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, router } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { ref, watch } from "vue";
+import { toast } from "vue3-toastify";
 
 const props = defineProps(["suppliers"]);
+const form = useForm({});
 const items = ref(props.suppliers);
 const itemsDisplay = ref(props.suppliers);
 const searchQuery = ref("");
-
 const columns = ref([
     { key: "id", label: "ID" },
     { key: "name", label: "Razón Social" },
@@ -23,16 +24,10 @@ const columns = ref([
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
 const options = ref([
     { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
     { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
 ]);
-
-const loadData = () => {
-    items.value = props.suppliers;
-    itemsDisplay.value = props.suppliers;
-};
 
 watch(searchQuery, () => {
     searchItems();
@@ -58,10 +53,19 @@ function searchItems() {
 const action = (action) => {
     switch (action.action) {
         case "edit":
-            router.get(`/suppliers/${action.id}/edit`);
+            form.get(route("suppliers.edit", { id: action.id }));
             break;
         case "destroy":
-            router.delete(`/suppliers/${action.id}`);
+            form.delete(route("suppliers.destroy", { id: action.id }), {
+                onSuccess: () => {
+                    toast.success("Proveedor eliminado");
+                    form.get(route("suppliers.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
+            });
             break;
         default:
             break;

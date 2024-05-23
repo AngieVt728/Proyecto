@@ -1,44 +1,37 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/cards/CardForm.vue";
 import Input from "@/Components/inputs/Input.vue";
+import Textarea from "@/Components/inputs/Textarea.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 
 const props = defineProps(["supplier"]);
-
 const form = useForm({
-    name: props.supplier ? props.supplier.name : "",
-    nit: props.supplier ? props.supplier.nit : "",
-    description: props.supplier ? props.supplier.description : "",
-    email: props.supplier ? props.supplier.email : "",
-    phone_number: props.supplier ? props.supplier.phone_number : "",
-    address: props.supplier ? props.supplier.address : "",
+    name: props.supplier?.name ?? "",
+    nit: props.supplier?.nit ?? "",
+    description: props.supplier?.description ?? "",
+    email: props.supplier?.email ?? "",
+    phone_number: props.supplier?.phone_number ?? "",
+    address: props.supplier?.address ?? "",
 });
 
 const handleSubmit = () => {
     if (props.supplier?.id)
         form.patch(route("suppliers.update", { id: props.supplier.id }), {
-            onFinish: () =>
-                form.reset(
-                    "name",
-                    "nit",
-                    "description",
-                    "email",
-                    "phone_number",
-                    "address"
-                ),
+            onSuccess: () => toast.success("Proveedor actualizado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
         });
     else
         form.post(route("suppliers.store"), {
-            onFinish: () =>
-                form.reset(
-                    "name",
-                    "nit",
-                    "description",
-                    "email",
-                    "phone_number",
-                    "address"
-                ),
+            onSuccess: () => toast.success("Proveedor creado"),
+            onError: (errors) =>
+                Object.values(errors).forEach((message) => {
+                    toast.error(message);
+                }),
         });
 };
 </script>
@@ -63,13 +56,6 @@ const handleSubmit = () => {
                     type="text"
                 />
                 <Input
-                    id="description"
-                    label-text="Descripción"
-                    v-model="form.description"
-                    :error="form.errors.description"
-                    type="text"
-                />
-                <Input
                     id="email"
                     label-text="Correo electrónico"
                     v-model="form.email"
@@ -78,7 +64,7 @@ const handleSubmit = () => {
                 />
                 <Input
                     id="phone_number"
-                    label-text="Número de Teléfono"
+                    label-text="Número de teléfono"
                     v-model="form.phone_number"
                     :error="form.errors.phone_number"
                     type="text"
@@ -89,6 +75,12 @@ const handleSubmit = () => {
                     v-model="form.address"
                     :error="form.errors.address"
                     type="text"
+                />
+                <Textarea
+                    id="description"
+                    label-text="Descripción"
+                    v-model="form.description"
+                    :error="form.errors.description"
                 />
             </div>
         </Form>

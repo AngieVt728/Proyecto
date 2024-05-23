@@ -18,22 +18,24 @@ class UserController extends Controller
      */
     public function index(): Response
     {
+        $users = User::where('id', '!=', auth()->id())
+            ->with('roles')
+            ->select(
+                'id',
+                'first_name',
+                'last_name',
+                'ci',
+                'email',
+                'phone_number',
+                'address',
+                'created_at',
+                'updated_at'
+            )
+            ->orderBy('updated_at', 'desc')
+            ->get();
+
         return Inertia::render('Users/Index', [
-            'users' => User::where('id', '!=', auth()->id())
-                ->with('roles')
-                ->select(
-                    'id',
-                    'first_name',
-                    'last_name',
-                    'ci',
-                    'email',
-                    'phone_number',
-                    'address',
-                    'created_at',
-                    'updated_at'
-                )
-                ->orderBy('updated_at', 'desc')
-                ->get()
+            'users' => $users
         ]);
     }
 

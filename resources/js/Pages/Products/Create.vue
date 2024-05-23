@@ -4,7 +4,7 @@ import Input from "@/Components/inputs/Input.vue";
 import Textarea from "@/Components/inputs/Textarea.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { toast } from "vue3-toastify";
 
 const props = defineProps(["rawMaterials", "product", "productRawMaterial"]);

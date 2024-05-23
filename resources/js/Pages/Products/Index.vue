@@ -5,11 +5,10 @@ import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { toast } from "vue3-toastify";
 import { ref, watch } from "vue";
+import { toast } from "vue3-toastify";
 
 const props = defineProps(["products"]);
-console.log(props.products);
 const form = useForm({});
 const items = ref(props.products);
 const itemsDisplay = ref(props.products);
