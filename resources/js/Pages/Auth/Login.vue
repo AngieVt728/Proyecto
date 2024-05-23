@@ -1,7 +1,7 @@
 <script setup>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import Input from "@/Components/inputs/Input.vue";
-import CheckboxRemember from "@/Components/inputs/CheckboxRemember.vue";
+import Checkbox from "@/Components/inputs/Checkbox.vue";
 import Logo from "@/Components/branding/Logo.vue";
 import ButtonSubmit from "@/Components/buttons/ButtonSubmit.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
@@ -53,7 +53,7 @@ const submit = () => {
 
                     <div class="flex items-center justify-between mt-4">
                         <div>
-                            <CheckboxRemember
+                            <Checkbox
                                 id="remember"
                                 label-text="Recuérdame"
                                 v-model:checked="form.remember"
