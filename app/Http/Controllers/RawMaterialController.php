@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RawMaterial;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
@@ -15,9 +16,13 @@ class RawMaterialController extends Controller
      */
     public function index(): Response
     {
-        $raw_materials = RawMaterial::all();
+        $rawMaterials = RawMaterial::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->get();
 
-        return Inertia::render('RawMaterials/Index', ['raw_materials' => $raw_materials]);
+        return Inertia::render('RawMaterials/Index', [
+            'rawMaterials' => $rawMaterials
+        ]);
     }
 
     /**
@@ -25,7 +30,13 @@ class RawMaterialController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('RawMaterials/Create');
+        $suppliers = Supplier::select('name')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return Inertia::render('RawMaterials/Create', [
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**
@@ -35,12 +46,16 @@ class RawMaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:300',
         ]);
 
-        RawMaterial::create($validated);
+        RawMaterial::create([
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'stock' => 0,
+            'description' => $validated['description'] ?? 'Sin descripción'
+        ]);
 
         return redirect()->route('raw-materials.index');
     }
@@ -50,7 +65,14 @@ class RawMaterialController extends Controller
      */
     public function show(RawMaterial $rawMaterial): Response
     {
-        return Inertia::render('RawMaterials/Show', ['raw_material' => $rawMaterial]);
+        $suppliers = Supplier::select('name')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return Inertia::render('RawMaterials/Create', [
+            'rawMaterial' => $rawMaterial,
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**
@@ -58,7 +80,14 @@ class RawMaterialController extends Controller
      */
     public function edit(RawMaterial $rawMaterial): Response
     {
-        return Inertia::render('RawMaterials/Edit', ['raw_material' => $rawMaterial]);
+        $suppliers = Supplier::select('name')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return Inertia::render('RawMaterials/Create', [
+            'rawMaterial' => $rawMaterial,
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**
@@ -68,9 +97,8 @@ class RawMaterialController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:255',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:300',
         ]);
 
         $rawMaterial->update($validated);

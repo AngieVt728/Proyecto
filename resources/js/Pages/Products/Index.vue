@@ -16,9 +16,9 @@ const searchQuery = ref("");
 const columns = ref([
     { key: "id", label: "ID" },
     { key: "name", label: "Nombre Producto" },
-    { key: "description", label: "Descripción" },
     { key: "price", label: "Precio" },
     { key: "stock", label: "Stock" },
+    { key: "description", label: "Descripción" },
     { key: "created_at", label: "Fecha creación", date: true },
     { key: "updated_at", label: "Fecha de actualización", date: true },
 ]);

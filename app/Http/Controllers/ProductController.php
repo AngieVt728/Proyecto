@@ -52,8 +52,8 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:300',
             'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:300',
             'rawMaterials' => 'nullable|array',
             'rawMaterials.*.id' => 'exists:raw_materials,id',
             'rawMaterials.*.quantity' => 'required_with:rawMaterials|integer|min:1',
@@ -62,9 +62,9 @@ class ProductController extends Controller
 
         $product = Product::create([
             'name' => $validated['name'],
-            'description' => $validated['description'] ?? 'Sin descripción',
             'price' => $validated['price'],
-            'stock' => 0
+            'stock' => 0,
+            'description' => $validated['description'] ?? 'Sin descripción'
         ]);
 
         if (isset($validated['rawMaterials']) && is_array($validated['rawMaterials'])) {
@@ -149,8 +149,8 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:150',
-            'description' => 'nullable|string|max:300',
             'price' => 'required|numeric|min:0',
+            'description' => 'nullable|string|max:300',
             'rawMaterials' => 'nullable|array',
             'rawMaterials.*.id' => 'exists:raw_materials,id',
             'rawMaterials.*.quantity' => 'required_with:rawMaterials|integer|min:1',
