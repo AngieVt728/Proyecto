@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\RawMaterial;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,11 +16,23 @@ class ProductController extends Controller
      */
     public function index(): Response
     {
+        $filters = Request::all('search');
         $products = Product::select('*')
-            ->orderByRaw('GREATEST(products.updated_at, (SELECT MAX(updated_at) FROM product_raw_material WHERE product_raw_material.product_id = products.id)) DESC')
-            ->get();
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)->withQueryString()
+            ->through(fn ($product) => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'stock' => $product->stock,
+                'description' => $product->description,
+                'created_at' => $product->created_at,
+                'updated_at' => $product->updated_at
+            ]);
 
         return Inertia::render('Products/Index', [
+            'filters' => $filters,
             'products' => $products
         ]);
     }
@@ -97,13 +109,23 @@ class ProductController extends Controller
                 ];
             });
         $productRawMaterial = $product->rawMaterials()
-            ->withPivot('raw_material_id', 'quantity', 'cost')
+            ->withPivot('quantity', 'cost')
             ->get();
+
+        $formattedRawMaterials = [];
+        foreach ($productRawMaterial as $rawMaterial) {
+            $formattedRawMaterials[] = [
+                'id' => $rawMaterial->pivot->raw_material_id,
+                'quantity' => $rawMaterial->pivot->quantity,
+                'cost' => (float) number_format($rawMaterial->pivot->cost, 2),
+                'selected' => true,
+            ];
+        }
 
         return Inertia::render('Products/Create', [
             'rawMaterials' => $rawMaterials,
             'product' => $product,
-            'productRawMaterial' => $productRawMaterial
+            'productRawMaterial' => $formattedRawMaterials
         ]);
     }
 

@@ -1,7 +1,7 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
-import CardStat from "@/Components/cards/CardStat.vue";
+import ButtonAdd from "@/Components/Buttons/AddButton.vue";
+import CardData from "@/Components/Cards/BaseCard.vue";
+import CardStat from "@/Components/Cards/CardStat.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { useGeolocation } from "@/Composables/useGeolocation";
 import { Head } from "@inertiajs/vue3";
@@ -165,7 +165,9 @@ onMounted(async () => {
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 mt-4 gap-4">
-                <div class="rounded-lg shadow-lg border border-gray-100 p-2">
+                <div
+                    class="rounded-lg shadow-lg bg-white border border-gray-100 p-2"
+                >
                     <h2
                         class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
                     >
@@ -181,7 +183,9 @@ onMounted(async () => {
                         />
                     </div>
                 </div>
-                <div class="rounded-lg shadow-lg border border-gray-100 p-2">
+                <div
+                    class="rounded-lg shadow-lg bg-white border border-gray-100 p-2"
+                >
                     <h2
                         class="font-semibold uppercase text-sm text-gray-600 py-4 ml-4"
                     >

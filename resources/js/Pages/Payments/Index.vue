@@ -1,6 +1,6 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
+import ButtonAdd from "@/Components/Buttons/AddButton.vue";
+import CardData from "@/Components/cards/BaseCard.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";

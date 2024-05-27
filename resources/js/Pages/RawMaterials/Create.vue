@@ -1,9 +1,9 @@
 <script setup>
+import Form from "@/Components/Cards/FormCard.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import Textarea from "@/Components/Inputs/Textarea.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Form from "@/Components/cards/CardForm.vue";
-import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import Textarea from "@/Components/inputs/Textarea.vue";
 import { toast } from "vue3-toastify";
 
 const props = defineProps(["rawMaterial"]);

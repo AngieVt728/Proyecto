@@ -1,9 +1,9 @@
 <script setup>
 import GuestLayout from "@/Layouts/GuestLayout.vue";
-import Input from "@/Components/inputs/Input.vue";
-import Checkbox from "@/Components/inputs/Checkbox.vue";
-import Logo from "@/Components/branding/Logo.vue";
-import ButtonSubmit from "@/Components/buttons/ButtonSubmit.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import Checkbox from "@/Components/Inputs/Checkbox.vue";
+import Logo from "@/Components/Branding/Logo.vue";
+import ButtonSubmit from "@/Components/Buttons/ButtonSubmit.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
 defineProps({

@@ -1,7 +1,7 @@
 <script setup>
-import Form from "@/Components/cards/CardForm.vue";
-import Input from "@/Components/inputs/Input.vue";
-import Select from "@/Components/inputs/Select.vue";
+import Form from "@/Components/Cards/FormCard.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import Select from "@/Components/Inputs/Select.vue";
 import { useGeolocation } from "@/Composables/useGeolocation";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Loader } from "@googlemaps/js-api-loader";
@@ -151,7 +151,7 @@ onMounted(async () => {
             <h2 class="font-semibold mb-4 text-gray-700">
                 Busque la ubicación del punto de venta
             </h2>
-            <div class="shadow-lg mb-4">
+            <div class="mb-4">
                 <div ref="mapDiv" style="width: 100%; height: 400px" />
             </div>
         </Form>

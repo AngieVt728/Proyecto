@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,5 +37,14 @@ class Product extends Model
     public function revenue(): HasMany
     {
         return $this->hasMany(Revenue::class);
+    }
+
+    public function scopeFilter(Builder $query, array $filters)
+    {
+        if (isset($filters['search'])) {
+            $query->where(function ($query) use ($filters) {
+                $query->where('name', 'like', '%' . $filters['search'] . '%');
+            });
+        }
     }
 }

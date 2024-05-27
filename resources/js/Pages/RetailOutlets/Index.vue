@@ -1,50 +1,52 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, ref } from "vue";
 import { toast } from "vue3-toastify";
 
-const props = defineProps(["retailOutlets"]);
+const props = defineProps(["filters", "retailOutlets"]);
 const form = useForm({});
-const items = ref(props.retailOutlets);
-const itemsDisplay = ref(props.retailOutlets);
-const searchQuery = ref("");
 const columns = ref([
-    { key: "id", label: "ID" },
-    { key: "name", label: "Nombre" },
+    { key: "name", label: "Nombre", truncate: true },
     { key: "nit", label: "NIT" },
-    { key: "description", label: "Descripción" },
     { key: "owner_name", label: "Nombre del Cliente Propietario" },
-    { key: "address", label: "Dirección" },
-    { key: "lat", label: "Latitud" },
-    { key: "lng", label: "Longitud" },
+    { key: "address", label: "Dirección", truncate: true },
+    { key: "description", label: "Descripción", truncate: true },
     { key: "created_at", label: "Fecha creación", date: true },
     { key: "updated_at", label: "Fecha actualización", date: true },
 ]);
 const options = ref([
-    { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
-
-watch(searchQuery, () => {
-    searchItems();
+const addButton = reactive({
+    create: "Puesto de venta",
+    route: route("retail-outlets.create"),
 });
-
-const searchItems = () => {
-    const filteredItems = items.value.filter(
-        (item) =>
-            item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            item.address.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-    itemsDisplay.value = filteredItems;
-};
 
 const action = (action) => {
     switch (action.action) {
+        case "show":
+            form.get(route("retail-outlets.show", { id: action.id }));
+            break;
         case "edit":
             form.get(route("retail-outlets.edit", { id: action.id }));
             break;
@@ -67,24 +69,17 @@ const action = (action) => {
 </script>
 
 <template>
-    <Head title="Puntos de Venta" />
+    <Head title="Puestos de venta" />
     <authenticated-layout>
-        <card-data title="Puntos de Venta">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('retail-outlets.create')"
-                        >Agregar Punto de Venta</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Puestos de venta">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="retailOutlets"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

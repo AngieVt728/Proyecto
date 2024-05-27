@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RawMaterial;
 use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,11 +16,25 @@ class SupplierController extends Controller
      */
     public function index(): Response
     {
+        $filters = Request::all('search');
         $suppliers = Supplier::select('*')
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->filter(Request::only('search'))
+            ->paginate(10)->withQueryString()
+            ->through(fn ($supplier) => [
+                'id' => $supplier->id,
+                'name' => $supplier->name,
+                'nit' => $supplier->nit,
+                'email' => $supplier->email,
+                'phone_number' => $supplier->phone_number,
+                'address' => $supplier->address,
+                'description' => $supplier->description,
+                'created_at' => $supplier->created_at,
+                'updated_at' => $supplier->updated_at
+            ]);
 
         return Inertia::render('Suppliers/Index', [
+            'filters' => $filters,
             'suppliers' => $suppliers
         ]);
     }

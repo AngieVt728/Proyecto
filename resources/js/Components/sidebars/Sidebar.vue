@@ -1,8 +1,9 @@
 <script setup>
-import Anchor from "@/Components/anchors/Anchor.vue";
-import AnchorAccordion from "@/Components/anchors/AnchorAccordion.vue";
-import Logo from "@/Components/branding/Logo.vue";
+import Anchor from "@/Components/Anchors/Anchor.vue";
+import AnchorAccordion from "@/Components/Anchors/AnchorAccordion.vue";
+import Logo from "@/Components/Branding/Logo.vue";
 import { useSidebar } from "@/Composables/useSidebar";
+
 const { isOpen } = useSidebar();
 </script>
 
@@ -115,26 +116,3 @@ const { isOpen } = useSidebar();
         </div>
     </div>
 </template>
-
-<style scoped>
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: #111827;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #030712;
-    border-radius: 5px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #1f2937;
-}
-</style>

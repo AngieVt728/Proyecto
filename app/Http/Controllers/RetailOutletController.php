@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\RetailOutlet;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,16 +16,25 @@ class RetailOutletController extends Controller
      */
     public function index(): Response
     {
+        $filters = Request::all('search');
         $retailOutlets = RetailOutlet::with('customer:id,first_name,last_name')
             ->orderBy('updated_at', 'desc')
-            ->get()
-            ->map(function ($outlet) {
-                $outlet->owner_name = $outlet->customer->first_name . ' ' . $outlet->customer->last_name;
-                unset($outlet->customer);
-                return $outlet;
-            });
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($outlet) => [
+                'id' => $outlet->id,
+                'name' => $outlet->name,
+                'nit' => $outlet->nit,
+                'owner_name' => $outlet->customer->first_name . ' ' . $outlet->customer->last_name,
+                'address' => $outlet->address,
+                'description' => $outlet->description,
+                'created_at' => $outlet->created_at,
+                'updated_at' => $outlet->updated_at
+            ]);
 
         return Inertia::render('RetailOutlets/Index', [
+            'filters' => $filters,
             'retailOutlets' => $retailOutlets
         ]);
     }
@@ -71,7 +80,12 @@ class RetailOutletController extends Controller
      */
     public function show(RetailOutlet $retailOutlet): Response
     {
+        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+            ->orderBy('first_name', 'asc')
+            ->get();
+
         return Inertia::render('RetailOutlets/Create', [
+            'customers' => $customers,
             'retailOutlet' => $retailOutlet
         ]);
     }

@@ -1,55 +1,56 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, ref } from "vue";
 import { toast } from "vue3-toastify";
 
-const props = defineProps(["users"]);
+const props = defineProps(["filters", "users"]);
 const form = useForm({});
-const items = ref(props.users);
-const itemsDisplay = ref(props.users);
-const searchQuery = ref("");
 const columns = ref([
-    { key: "id", label: "ID" },
-    { key: "first_name", label: "Nombre/s" },
-    { key: "last_name", label: "Apellidos" },
-    { key: "email", label: "Correo electrónico" },
-    { key: "ci", label: "CI" },
-    { key: "phone_number", label: "Numero teléfono" },
-    { key: "address", label: "Dirección" },
-    { key: "created_at", label: "Fecha creación", date: true },
-    { key: "updated_at", label: "Fecha actualización", date: true },
+    { key: "first_name", label: "Nombres", trucate: true },
+    { key: "last_name", label: "Apellidos", trucate: true },
+    { key: "ci", label: "Carnet de identidad" },
+    {
+        key: "email",
+        label: "Correo electrónico",
+        verify: "email_verified_at",
+        truncate: true,
+    },
+    { key: "phone_number", label: "Teléfono o celular", truncate: true },
+    { key: "role", label: "Rol" },
+    { key: "address", label: "Dirección", truncate: true },
+    { key: "created_at", label: "Fecha de creación", date: true },
+    { key: "updated_at", label: "Ultima actualización", date: true },
 ]);
 const options = ref([
-    { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
-
-watch(searchQuery, () => {
-    searchItems();
-});
-
-const searchItems = () => {
-    const filteredItems = items.value.filter(
-        (item) =>
-            item.first_name
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase()) ||
-            item.last_name
-                .toLowerCase()
-                .includes(searchQuery.value.toLowerCase()) ||
-            item.ci.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-    itemsDisplay.value = filteredItems;
-};
+const addButton = reactive({ create: "Usuario", route: route("users.create") });
 
 const action = (action) => {
     switch (action.action) {
+        case "show":
+            form.get(route("users.show", { id: action.id }));
+            break;
         case "edit":
             form.get(route("users.edit", { id: action.id }));
             break;
@@ -74,22 +75,15 @@ const action = (action) => {
 <template>
     <Head title="Usuarios" />
     <authenticated-layout>
-        <card-data title="Usuarios">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('users.create')"
-                        >Agregar Usuario</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Usuarios">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="users"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

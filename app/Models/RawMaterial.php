@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,9 +14,9 @@ class RawMaterial extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'price',
-        'stock'
+        'stock',
+        'description'
     ];
 
     public function suppliers(): BelongsToMany
@@ -46,5 +47,14 @@ class RawMaterial extends Model
     public function outflows(): HasMany
     {
         return $this->hasMany(Outflow::class);
+    }
+
+    public function scopeFilter(Builder $query, array $filters)
+    {
+        if (isset($filters['search'])) {
+            $query->where(function ($query) use ($filters) {
+                $query->where('name', 'like', '%' . $filters['search'] . '%');
+            });
+        }
     }
 }

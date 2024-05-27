@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Form from "@/Components/cards/CardForm.vue";
+import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 

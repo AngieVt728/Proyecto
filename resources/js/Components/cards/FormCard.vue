@@ -1,6 +1,6 @@
 <script setup>
-import ButtonReturn from "@/Components/buttons/ButtonReturn.vue";
-import ButtonSave from "@/Components/buttons/ButtonSave.vue";
+import ButtonReturn from "@/Components/Buttons/ButtonReturn.vue";
+import ButtonSave from "@/Components/Buttons/ButtonSave.vue";
 
 const emit = defineEmits(["handleSubmit"]);
 const props = defineProps({
@@ -21,7 +21,7 @@ function handleSubmit(e) {
 </script>
 
 <template>
-    <div class="p-6 bg-white rounded-md shadow-md">
+    <div class="m-4 p-6 bg-white rounded-md shadow-md">
         <h2 class="text-lg font-semibold text-gray-700 capitalize">
             {{ title }}
         </h2>

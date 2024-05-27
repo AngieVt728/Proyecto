@@ -1,6 +1,6 @@
 <script setup>
+import Avatar from "@/Components/Avatars/Avatar.vue";
 import { useSidebar } from "@/Composables/useSidebar";
-import Avatar from "@/Components/avatars/Avatar.vue";
 
 const { isOpen } = useSidebar();
 </script>

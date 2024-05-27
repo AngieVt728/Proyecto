@@ -1,45 +1,51 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { reactive, ref } from "vue";
 import { toast } from "vue3-toastify";
 
-const props = defineProps(["products"]);
+const props = defineProps(["filters", "products"]);
 const form = useForm({});
-const items = ref(props.products);
-const itemsDisplay = ref(props.products);
-const searchQuery = ref("");
 const columns = ref([
-    { key: "id", label: "ID" },
-    { key: "name", label: "Nombre Producto" },
+    { key: "name", label: "Nombre Producto", truncate: true },
     { key: "price", label: "Precio" },
     { key: "stock", label: "Stock" },
-    { key: "description", label: "Descripción" },
-    { key: "created_at", label: "Fecha creación", date: true },
-    { key: "updated_at", label: "Fecha de actualización", date: true },
+    { key: "description", label: "Descripción", truncate: true },
+    { key: "created_at", label: "Fecha de creación", date: true },
+    { key: "updated_at", label: "Ultima actualización", date: true },
 ]);
 const options = ref([
-    { id: "edit", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "destroy", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
-
-watch(searchQuery, () => {
-    searchItems();
+const addButton = reactive({
+    create: "Producto",
+    route: route("products.create"),
 });
-
-const searchItems = () => {
-    const filteredItems = items.value.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-    itemsDisplay.value = filteredItems;
-};
 
 const action = (action) => {
     switch (action.action) {
+        case "show":
+            form.get(route("products.show", { id: action.id }));
+            break;
         case "edit":
             form.get(route("products.edit", { id: action.id }));
             break;
@@ -64,22 +70,15 @@ const action = (action) => {
 <template>
     <Head title="Productos" />
     <authenticated-layout>
-        <card-data title="Productos">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('products.create')"
-                        >Agregar Producto</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Productos">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="products"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

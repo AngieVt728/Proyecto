@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Form from "@/Components/cards/CardForm.vue";
+import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 
@@ -20,7 +20,7 @@ const handleSubmit = () => {
                 "quantity",
                 "product_id",
                 "price",
-                "retail_outlet_id",
+                "retail_outlet_id"
             ),
     });
 };

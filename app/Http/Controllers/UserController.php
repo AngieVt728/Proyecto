@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -18,23 +19,29 @@ class UserController extends Controller
      */
     public function index(): Response
     {
+        $filters = Request::all('search', 'role');
         $users = User::where('id', '!=', auth()->id())
             ->with('roles')
-            ->select(
-                'id',
-                'first_name',
-                'last_name',
-                'ci',
-                'email',
-                'phone_number',
-                'address',
-                'created_at',
-                'updated_at'
-            )
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->filter(Request::only('search', 'role'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($user) => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'ci' => $user->ci,
+                'email' => $user->email,
+                'email_verified_at' => $user->email_verified_at,
+                'phone_number' => $user->phone_number,
+                'role' =>  $user->roles->first()->name,
+                'address' => $user->address,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at
+            ]);
 
         return Inertia::render('Users/Index', [
+            'filters' => $filters,
             'users' => $users
         ]);
     }

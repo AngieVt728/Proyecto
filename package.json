@@ -9,6 +9,8 @@
         "@formkit/tempo": "^0.1.1",
         "@googlemaps/js-api-loader": "^1.16.6",
         "@popperjs/core": "^2.11.8",
+        "@tailwindcss/aspect-ratio": "^0.4.2",
+        "@tailwindcss/typography": "^0.5.13",
         "chart.js": "^4.4.3",
         "oh-vue-icons": "^1.0.0-rc3",
         "vue-chartjs": "^5.3.1",

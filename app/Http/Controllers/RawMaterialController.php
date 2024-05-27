@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\RawMaterial;
 use App\Models\Supplier;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 use Inertia\Response;
 
 class RawMaterialController extends Controller
@@ -16,11 +16,24 @@ class RawMaterialController extends Controller
      */
     public function index(): Response
     {
+        $filters = Request::all('search');
         $rawMaterials = RawMaterial::select('*')
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($material) => [
+                'id' => $material->id,
+                'name' => $material->name,
+                'price' => $material->price,
+                'stock' => $material->stock,
+                'description' => $material->description,
+                'created_at' => $material->created_at,
+                'updated_at' => $material->updated_at
+            ]);
 
         return Inertia::render('RawMaterials/Index', [
+            'filters' => $filters,
             'rawMaterials' => $rawMaterials
         ]);
     }

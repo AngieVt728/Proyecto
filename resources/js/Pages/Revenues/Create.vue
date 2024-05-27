@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Form from "@/Components/cards/CardForm.vue";
+import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/inputs/Input.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 
@@ -14,12 +14,7 @@ const form = useForm({
 const handleSubmit = () => {
     form.post(route("ingresos.store"), {
         onFinish: () =>
-            form.reset(
-                "description",
-                "revenue_date",
-                "quantity",
-                "product_id"
-            ),
+            form.reset("description", "revenue_date", "quantity", "product_id"),
     });
 };
 </script>

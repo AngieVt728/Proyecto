@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,10 +14,10 @@ class Supplier extends Model
     protected  $fillable = [
         'name',
         'nit',
-        'description',
         'email',
         'phone_number',
-        'address'
+        'address',
+        'description'
     ];
 
     public function rawMaterials(): BelongsToMany
@@ -27,5 +28,17 @@ class Supplier extends Model
             'raw_material_id',
             'supplier_id'
         )->withTimestamps();
+    }
+
+    public function scopeFilter(Builder $query, array $filters)
+    {
+        if (isset($filters['search'])) {
+            $query->where(function ($query) use ($filters) {
+                $query->where('name', 'like', '%' . $filters['search'] . '%')
+                    ->where('nit', 'like', '%' . $filters['search'] . '%')
+                    ->where('email', 'like', '%' . $filters['search'] . '%')
+                    ->where('phone_number', 'like', '%' . $filters['search'] . '%');
+            });
+        }
     }
 }

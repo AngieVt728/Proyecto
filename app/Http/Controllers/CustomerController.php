@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,21 +16,27 @@ class CustomerController extends Controller
      */
     public function index(): Response
     {
-        $customers = Customer::select(
-            'id',
-            'first_name',
-            'last_name',
-            'ci',
-            'email',
-            'phone_number',
-            'address',
-            'created_at',
-            'updated_at'
-        )
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $filters = Request::all('search');
+        $customers = Customer::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($customer) => [
+                'id' => $customer->id,
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'ci' => $customer->ci,
+                'email' => $customer->email,
+                'email_verified_at' => $customer->email_verified_at,
+                'phone_number' => $customer->phone_number,
+                'address' => $customer->address,
+                'created_at' => $customer->created_at,
+                'updated_at' => $customer->updated_at
+            ]);
 
         return Inertia::render('Customers/Index', [
+            'filters' => $filters,
             'customers' => $customers
         ]);
     }

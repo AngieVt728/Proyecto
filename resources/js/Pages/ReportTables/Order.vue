@@ -1,6 +1,6 @@
 <script setup>
-import ButtonAdd from "@/Components/buttons/ButtonAdd.vue";
-import CardData from "@/Components/cards/CardData.vue";
+import ButtonAdd from "@/Components/Buttons/AddButton.vue";
+import CardData from "@/Components/cards/BaseCard.vue";
 import Search from "@/Components/inputs/Search.vue";
 import DataTable from "@/Components/tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
@@ -79,7 +79,6 @@ const action = (action) => {
                     class="flex flex-col justify-between md:flex-row gap-2 w-full"
                 >
                     <Search v-model="searchQuery" />
-
                 </div> </template
             ><DataTable
                 :columns="columns"
