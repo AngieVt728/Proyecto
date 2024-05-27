@@ -32,7 +32,9 @@ const submit = () => {
     <guest-layout>
         <Head title="Inicio de sesión" />
 
-        <div class="flex items-center justify-center h-screen px-6 bg-gray-200">
+        <div
+            class="flex items-center justify-center bg-gradient-to-br from-purple-300 via-indigo-400 to-purple-300 h-screen px-6"
+        >
             <div class="w-full max-w-sm p-6 bg-white rounded-md shadow-md">
                 <Logo :is-login="true" />
                 <form class="mt-4" @submit.prevent="submit">
