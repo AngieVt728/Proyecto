@@ -3,6 +3,7 @@ import AddButton from "@/Components/Buttons/AddButton.vue";
 import Action from "@/Components/Tables/Action.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
 import { format } from "@formkit/tempo";
+import Popper from "vue3-popper";
 
 const emit = defineEmits(["action"]);
 const props = defineProps({
@@ -43,7 +44,7 @@ const action = (data) => {
     <div>
         <div class="flex items-center justify-between mb-4">
             <add-button v-if="add" :href="add?.route">
-                Agregar {{ props.add?.create }}
+                Agregar {{ props.add?.create.toLowerCase() }}
             </add-button>
         </div>
 
@@ -58,20 +59,18 @@ const action = (data) => {
                                 class="px-6 py-3 text-nowrap truncate max-w-28"
                                 v-for="(column, index) in columns"
                                 :key="column.key"
-                                :class="
-                                    index === 0
-                                        ? 'rounded-tl-lg'
-                                        : index === columns.length - 1 &&
-                                          options.length === 0
-                                        ? 'rounded-tr-lg'
-                                        : ''
-                                "
+                                :class="{
+                                    'rounded-tl': index === 0,
+                                    'rounded-tr':
+                                        index === columns.length - 1 &&
+                                        options.length === 0,
+                                }"
                                 scope="col"
                             >
                                 {{ column.label }}
                             </th>
                             <th
-                                class="px-6 py-3 text-nowrap truncate max-w-28 rounded-tr-lg"
+                                class="px-6 py-3 text-nowrap truncate max-w-28 rounded-tr"
                                 v-if="options.length > 0"
                             >
                                 Acciones
