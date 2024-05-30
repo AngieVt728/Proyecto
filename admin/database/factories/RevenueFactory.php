@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Product;
-use App\Models\RetailOutlet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sale>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Revenue>
  */
-class SaleFactory extends Factory
+class RevenueFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -19,11 +18,10 @@ class SaleFactory extends Factory
     public function definition(): array
     {
         return [
+            'revenue_date' => fake()->date(),
             'quantity' => fake()->randomNumber(2),
-            'total_price' => fake()->randomFloat(2, 1, 100),
             'description' => fake()->paragraphs(1, true),
-            'product_id' => Product::factory(),
-            'retail_outlet_id' => RetailOutlet::factory()
+            'product_id' => Product::factory()
         ];
     }
 }

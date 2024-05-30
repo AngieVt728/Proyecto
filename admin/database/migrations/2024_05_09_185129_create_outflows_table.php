@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('outflows', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->date('outflow_date');
             $table->integer('quantity');
             $table->foreignId('raw_material_id')->constrained('raw_materials');
             $table->timestamps();

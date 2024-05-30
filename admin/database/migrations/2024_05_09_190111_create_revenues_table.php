@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('revenues', function (Blueprint $table) {
             $table->id();
-            $table->text('description')->nullable()->max(300);
-            $table->date('date');
+            $table->date('revenue_date');
             $table->integer('quantity');
+            $table->text('description')->nullable()->max(300);
             $table->foreignId('product_id')->constrained('products');
             $table->timestamps();
         });

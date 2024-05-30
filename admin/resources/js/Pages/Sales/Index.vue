@@ -1,53 +1,83 @@
 <script setup>
-import ButtonAdd from "@/Components/Buttons/AddButton.vue";
-import CardData from "@/Components/cards/BaseCard.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { reactive, ref } from "vue";
+import { toast } from "vue3-toastify";
 
-const props = defineProps(["sales"]);
-const items = ref(props.sales);
-const itemsDisplay = ref(props.sales);
-const searchQuery = ref("");
-
+const props = defineProps({ filters: Object, sales: Object });
+const form = useForm({});
 const columns = ref([
-    { key: "id", label: "ID" },
-    { key: "description", label: "Descripción" },
     { key: "quantity", label: "Cantidad" },
-    { key: "product_id", label: "Nombre del Producto" },
-    { key: "price", label: "Precio Total" },
-    { key: "retail_outlet_id", label: "Punto de Venta" },
+    { key: "total_price", label: "Precio total" },
+    { key: "description", label: "Descripción", truncate: true },
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
 const options = ref([
-    { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "delete", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
+const addButton = reactive({
+    create: "Venta",
+    route: route("sales.create"),
+});
+
+const action = (action) => {
+    switch (action.action) {
+        case "show":
+            form.get(route("sales.show", { id: action.id }));
+            break;
+        case "edit":
+            form.get(route("sales.edit", { id: action.id }));
+            break;
+        case "destroy":
+            form.delete(route("sales.destroy", { id: action.id }), {
+                onSuccess: () => {
+                    toast.success("Venta eliminado");
+                    form.get(route("sales.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
+            });
+            break;
+        default:
+            break;
+    }
+};
 </script>
 
 <template>
-    <Head title="Ventas" />
+    <Head title="Ingresos" />
     <authenticated-layout>
-        <card-data title="Ventas">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('sales.create')"
-                        >Agregar Nueva Venta</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Ingresos">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="sales"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,9 +14,25 @@ class PaymentController extends Controller
      */
     public function index(): Response
     {
-        $payments = Payment::all();
+        $filters = Request::all('search');
+        $payments = Payment::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($payment) => [
+                'id' => $payment->id,
+                'detail' => $payment->detail,
+                'payment_date' => $payment->payment_date,
+                'payment_balance' => $payment->payment_balance,
+                'created_at' => $payment->created_at,
+                'updated_at' => $payment->updated_at
+            ]);
 
-        return Inertia::render('Payments/Index', ['payments' => $payments]);
+        return Inertia::render('Payments/Index', [
+            'filters' => $filters,
+            'payments' => $payments
+        ]);
     }
 
     /**

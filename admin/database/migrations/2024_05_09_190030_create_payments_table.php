@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
             $table->text('detail')->nullable()->max(300);
-            $table->decimal('balance', 10, 2);
+            $table->date('payment_date');
+            $table->decimal('payment_balance', 10, 2);
             $table->foreignId('order_id')->constrained('orders');
             $table->timestamps();
         });

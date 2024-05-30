@@ -1,51 +1,82 @@
 <script setup>
-import ButtonAdd from "@/Components/Buttons/AddButton.vue";
-import CardData from "@/Components/cards/BaseCard.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { reactive, ref } from "vue";
+import { toast } from "vue3-toastify";
 
-const props = defineProps(["entries"]);
-const items = ref(props.entries);
-const itemsDisplay = ref(props.entries);
-const searchQuery = ref("");
-
-const columnsEntries = ref([
-    { key: "id", label: "ID" },
+const props = defineProps({ filters: Object, entries: Object });
+const form = useForm({});
+const columns = ref([
     { key: "entry_date", label: "Fecha de Entrada" },
     { key: "quantity", label: "Cantidad" },
-    { key: "raw_material_id", label: "ID de la Materia Prima" },
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
 const options = ref([
-    { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "delete", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
+const addButton = reactive({
+    create: "Entrada",
+    route: route("entries.create"),
+});
+
+const action = (action) => {
+    switch (action.action) {
+        case "show":
+            form.get(route("entries.show", { id: action.id }));
+            break;
+        case "edit":
+            form.get(route("entries.edit", { id: action.id }));
+            break;
+        case "destroy":
+            form.delete(route("entries.destroy", { id: action.id }), {
+                onSuccess: () => {
+                    toast.success("Entrada eliminada");
+                    form.get(route("entries.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
+            });
+            break;
+        default:
+            break;
+    }
+};
 </script>
 
 <template>
-    <Head title="Entrada a Materia Prima" />
+    <Head title="Entradas" />
     <authenticated-layout>
-        <card-data title="Entrada a Materia Prima">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('entries.create')"
-                        >Agregar Ingreso a Materia Prima</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Entradas">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="entries"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

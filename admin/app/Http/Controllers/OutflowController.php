@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Outflow;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,9 +14,24 @@ class OutflowController extends Controller
      */
     public function index(): Response
     {
-        $outflows = Outflow::all();
+        $filters = Request::all('search');
+        $outflows = Outflow::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($entry) => [
+                'id' => $entry->id,
+                'outflow_date' => $entry->outflow_date,
+                'quantity' => $entry->quantity,
+                'created_at' => $entry->created_at,
+                'updated_at' => $entry->updated_at
+            ]);
 
-        return Inertia::render('Outflows/Index', ['outflows' => $outflows]);
+        return Inertia::render('Outflows/Index', [
+            'filters' => $filters,
+            'outflows' => $outflows
+        ]);
     }
 
     /**

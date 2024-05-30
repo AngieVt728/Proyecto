@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sale;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,8 +14,25 @@ class SaleController extends Controller
      */
     public function index(): Response
     {
-        $sales = Sale::all();
-        return Inertia::render('Sales/Index', ['sales' => $sales]);
+        $filters = Request::all('search');
+        $sales = Sale::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($sale) => [
+                'id' => $sale->id,
+                'quantity' => $sale->quantity,
+                'total_price' => $sale->total_price,
+                'description' => $sale->description,
+                'created_at' => $sale->created_at,
+                'updated_at' => $sale->updated_at
+            ]);
+
+        return Inertia::render('Sales/Index', [
+            'filters' => $filters,
+            'sales' => $sales
+        ]);
     }
 
     /**

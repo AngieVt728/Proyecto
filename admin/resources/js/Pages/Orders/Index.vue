@@ -1,52 +1,83 @@
 <script setup>
-import ButtonAdd from "@/Components/Buttons/AddButton.vue";
-import CardData from "@/Components/cards/BaseCard.vue";
-import Search from "@/Components/inputs/Search.vue";
-import DataTable from "@/Components/tables/DataTable.vue";
+import BaseCard from "@/Components/Cards/BaseCard.vue";
+import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { reactive, ref } from "vue";
+import { toast } from "vue3-toastify";
 
-const props = defineProps(["orders"]);
-const items = ref(props.orders);
-const itemsDisplay = ref(props.orders);
-const searchQuery = ref("");
-
+const props = defineProps({ filters: Object, orders: Object });
+const form = useForm({});
 const columns = ref([
-    { key: "id", label: "ID" },
-    { key: "detail", label: "Detalle" },
+    { key: "detail", label: "Detalle", truncate: true },
     { key: "order_date", label: "Fecha del Pedido" },
-    { key: "delivery_deadline", label: "Fecha de Entrega" },
-    { key: "customer_id", label: "ID del Cliente" },
+    { key: "deliver_date", label: "Fecha de Entrega" },
     { key: "created_at", label: "Fecha de Creación", date: true },
     { key: "updated_at", label: "Fecha de Actualización", date: true },
 ]);
-
 const options = ref([
-    { id: "update", name: "Actualizar", icon: "hi-solid-pencil" },
-    { id: "delete", name: "Eliminar", icon: "hi-solid-exclamation" },
+    {
+        id: "show",
+        name: "Ver",
+        icon: "hi-solid-eye",
+        color: "text-green-500",
+    },
+    {
+        id: "edit",
+        name: "Actualizar",
+        icon: "hi-solid-pencil",
+        color: "text-blue-500",
+    },
+    {
+        id: "destroy",
+        name: "Eliminar",
+        icon: "hi-solid-exclamation",
+        color: "text-red-500",
+    },
 ]);
+const addButton = reactive({
+    create: "Pedido",
+    route: route("orders.create"),
+});
+
+const action = (action) => {
+    switch (action.action) {
+        case "show":
+            form.get(route("orders.show", { id: action.id }));
+            break;
+        case "edit":
+            form.get(route("orders.edit", { id: action.id }));
+            break;
+        case "destroy":
+            form.delete(route("orders.destroy", { id: action.id }), {
+                onSuccess: () => {
+                    toast.success("Pedido eliminado");
+                    form.get(route("orders.index"));
+                },
+                onError: (errors) =>
+                    Object.values(errors).forEach((message) => {
+                        toast.error(message);
+                    }),
+            });
+            break;
+        default:
+            break;
+    }
+};
 </script>
 
 <template>
     <Head title="Pedidos" />
     <authenticated-layout>
-        <card-data title="Pedidos">
-            <template v-slot:filters>
-                <div
-                    class="flex flex-col justify-between md:flex-row gap-2 w-full"
-                >
-                    <Search v-model="searchQuery" />
-                    <button-add :href="route('orders.create')"
-                        >Agregar Nuevo Pedido</button-add
-                    >
-                </div> </template
-            ><DataTable
+        <base-card title="Pedidos">
+            <data-table
                 :columns="columns"
-                :items="itemsDisplay"
+                :content="orders"
+                :filters="filters"
+                :add="addButton"
                 :options="options"
                 @action="action"
-            ></DataTable
-        ></card-data>
+            />
+        </base-card>
     </authenticated-layout>
 </template>

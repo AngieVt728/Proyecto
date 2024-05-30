@@ -1,8 +1,9 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/Cards/FormCard.vue";
-import Input from "@/Components/inputs/Input.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 
 const form = useForm({
     entry_date: "",
@@ -11,8 +12,12 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    form.post(route("entradas.store"), {
-        onFinish: () => form.reset("entry_date", "quantity", "raw_material_id"),
+    form.post(route("entries.store"), {
+        onSuccess: () => toast.success("Entrada creada"),
+        onError: (errors) =>
+            Object.values(errors).forEach((message) => {
+                toast.error(message);
+            }),
     });
 };
 </script>
@@ -26,18 +31,21 @@ const handleSubmit = () => {
                     id="entry_date"
                     label-text="Fecha de Entrada"
                     v-model="form.entry_date"
+                    :error="form.errors.entry_date"
                     type="date"
                 />
                 <Input
                     id="quantity"
                     label-text="Cantidad"
                     v-model="form.quantity"
+                    :error="form.errors.quantity"
                     type="number"
                 />
                 <Input
                     id="raw_material_id"
                     label-text="ID de la Materia Prima"
                     v-model="form.raw_material_id"
+                    :error="form.errors.raw_material_id"
                     type="number"
                 />
             </div>

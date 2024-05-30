@@ -7,7 +7,6 @@ import { reactive, ref } from "vue";
 import { toast } from "vue3-toastify";
 
 const props = defineProps(["filters", "customers"]);
-console.log(props.customers);
 const form = useForm({});
 const columns = ref([
     { key: "first_name", label: "Nombres", trucate: true },

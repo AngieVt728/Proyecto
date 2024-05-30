@@ -23,7 +23,11 @@ class DatabaseSeeder extends Seeder
             RawMaterialSeeder::class,
             ProductSeeder::class,
             OrderSeeder::class,
-            SaleSeeder::class
+            SaleSeeder::class,
+            PaymentSeeder::class,
+            RevenueSeeder::class,
+            EntrySeeder::class,
+            OutflowSeeder::class
         ]);
     }
 }

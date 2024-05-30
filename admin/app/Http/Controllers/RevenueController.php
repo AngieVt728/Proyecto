@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Revenue;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,9 +14,25 @@ class RevenueController extends Controller
      */
     public function index(): Response
     {
-        $revenues = Revenue::all();
+        $filters = Request::all('search');
+        $revenues = Revenue::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($revenue) => [
+                'id' => $revenue->id,
+                'revenue_date' => $revenue->revenue_date,
+                'quantity' => $revenue->quantity,
+                'description' => $revenue->description,
+                'created_at' => $revenue->created_at,
+                'updated_at' => $revenue->updated_at
+            ]);
 
-        return Inertia::render('Revenues/Index', ['revenues' => $revenues]);
+        return Inertia::render('Revenues/Index', [
+            'filters' => $filters,
+            'revenues' => $revenues
+        ]);
     }
 
     /**

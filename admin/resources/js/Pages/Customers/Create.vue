@@ -1,7 +1,7 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 
@@ -44,36 +44,42 @@ const handleSubmit = () => {
                     id="first_name"
                     label-text="Nombre/s"
                     v-model="form.first_name"
+                    :error="form.errors.first_name"
                     type="text"
                 />
                 <Input
                     id="last_name"
                     label-text="Apellidos"
                     v-model="form.last_name"
+                    :error="form.errors.last_name"
                     type="text"
                 />
                 <Input
                     id="ci"
                     label-text="Carnet de identidad"
                     v-model="form.ci"
+                    :error="form.errors.ci"
                     type="text"
                 />
                 <Input
                     id="email"
                     label-text="Correo electrónico"
                     v-model="form.email"
+                    :error="form.errors.email"
                     type="email"
                 />
                 <Input
                     id="phone_number"
                     label-text="Numero teléfono celular"
                     v-model="form.phone_number"
+                    :error="form.errors.phone_number"
                     type="text"
                 />
                 <Input
                     id="address"
                     label-text="Dirección domicilio"
                     v-model="form.address"
+                    :error="form.errors.address"
                     type="text"
                 />
             </div>

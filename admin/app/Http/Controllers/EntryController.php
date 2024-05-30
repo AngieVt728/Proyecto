@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entry;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,9 +14,24 @@ class EntryController extends Controller
      */
     public function index(): Response
     {
-        $entries = Entry::all();
+        $filters = Request::all('search');
+        $entries = Entry::select('*')
+            ->orderBy('updated_at', 'desc')
+            ->filter(Request::only('search'))
+            ->paginate(10)
+            ->withQueryString()
+            ->through(fn ($entry) => [
+                'id' => $entry->id,
+                'entry_date' => $entry->entry_date,
+                'quantity' => $entry->quantity,
+                'created_at' => $entry->created_at,
+                'updated_at' => $entry->updated_at
+            ]);
 
-        return Inertia::render('Entries/Index', ['entries' => $entries]);
+        return Inertia::render('Entries/Index', [
+            'filters' => $filters,
+            'entries' => $entries
+        ]);
     }
 
     /**
