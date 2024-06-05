@@ -57,7 +57,7 @@ class RawMaterialController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:300',
@@ -108,7 +108,7 @@ class RawMaterialController extends Controller
      */
     public function update(Request $request, RawMaterial $rawMaterial): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:300',

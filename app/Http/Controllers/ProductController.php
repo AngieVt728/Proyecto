@@ -62,7 +62,7 @@ class ProductController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:300',
@@ -169,7 +169,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string|max:300',

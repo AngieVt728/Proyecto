@@ -64,7 +64,7 @@ class SupplierController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'nit' => 'required|integer|min_digits:5|max_digits:20|unique:suppliers,nit',
             'description' => 'nullable|string|max:300',
@@ -132,7 +132,7 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'name' => 'required|string|max:150',
             'nit' => 'required|string|max:20|unique:suppliers,nit,' . $supplier['id'],
             'description' => 'nullable|string|max:255',

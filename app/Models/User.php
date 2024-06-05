@@ -62,11 +62,5 @@ class User extends Authenticatable
                     ->orWhere('ci', 'like', '%' . $filters['search'] . '%');
             });
         }
-
-        if (isset($filters['role'])) {
-            $query->whereHas('roles', function ($query) use ($filters) {
-                $query->where('name', 'like', '%' . $filters['role'] . '%');
-            });
-        }
     }
 }

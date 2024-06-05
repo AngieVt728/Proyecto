@@ -35,10 +35,7 @@ const options = ref([
         color: "text-red-500",
     },
 ]);
-const addButton = reactive({
-    create: "Pago",
-    route: route("payments.create"),
-});
+const addButton = reactive({ name: "Pago", route: "payments" });
 
 const action = (action) => {
     switch (action.action) {

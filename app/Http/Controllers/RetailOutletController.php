@@ -58,7 +58,7 @@ class RetailOutletController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate(([
+        $validated = $request::validate(([
             'name' => 'required|string|max:50',
             'nit' => 'required|string|max:20',
             'description' => 'nullable|string|max:300',
@@ -110,7 +110,7 @@ class RetailOutletController extends Controller
      */
     public function update(Request $request, RetailOutlet $retailOutlet): RedirectResponse
     {
-        $validated = $request->validate(([
+        $validated = $request::validate(([
             'name' => 'required|string|max:50',
             'nit' => 'required|string|max:20',
             'description' => 'nullable|string|max:300',

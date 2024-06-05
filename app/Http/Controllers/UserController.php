@@ -19,11 +19,11 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $filters = Request::all('search', 'role');
+        $filters = Request::all('search');
         $users = User::where('id', '!=', auth()->id())
             ->with('roles')
             ->orderBy('updated_at', 'desc')
-            ->filter(Request::only('search', 'role'))
+            ->filter(Request::only('search'))
             ->paginate(10)
             ->withQueryString()
             ->through(fn ($user) => [
@@ -62,7 +62,7 @@ class UserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'ci' => 'required|string|unique:users,ci|max:10|min:8',
@@ -104,7 +104,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): RedirectResponse
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $user['id'],
@@ -116,7 +116,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
-
 
     /**
      * Remove the specified resource from storage.

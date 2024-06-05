@@ -55,7 +55,7 @@ class CustomerController extends Controller
     public function store(Request $request): RedirectResponse
     {
 
-        $validated = $request->validate([
+        $validated = $request::validate([
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'ci' => 'required|string|unique:users,ci|max:10|min:8',
@@ -97,7 +97,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        $validated = $request->validate([
+        $validated = $request::validate([
             'first_name' => 'required|string|max:50',
             'last_name' => 'required|string|max:50',
             'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $customer['id'],

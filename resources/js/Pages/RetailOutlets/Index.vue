@@ -38,8 +38,8 @@ const options = ref([
     },
 ]);
 const addButton = reactive({
-    create: "Puesto de venta",
-    route: route("retail-outlets.create"),
+    name: "Puesto de venta",
+    route: "retail-outlets",
 });
 
 const action = (action) => {

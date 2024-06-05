@@ -34,10 +34,7 @@ const options = ref([
         color: "text-red-500",
     },
 ]);
-const addButton = reactive({
-    create: "Salida",
-    route: route("outflows.create"),
-});
+const addButton = reactive({ name: "Salida", route: "outflows" });
 
 const action = (action) => {
     switch (action.action) {

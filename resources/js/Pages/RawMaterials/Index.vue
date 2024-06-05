@@ -36,10 +36,7 @@ const options = ref([
         color: "text-red-500",
     },
 ]);
-const addButton = reactive({
-    create: "Materia prima",
-    route: route("raw-materials.create"),
-});
+const addButton = reactive({ name: "Materia prima", route: "raw-materials" });
 
 const action = (action) => {
     switch (action.action) {

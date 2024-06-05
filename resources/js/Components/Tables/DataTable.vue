@@ -1,9 +1,11 @@
 <script setup>
 import AddButton from "@/Components/Buttons/AddButton.vue";
+import Search from "@/Components/Inputs/Search.vue";
 import Action from "@/Components/Tables/Action.vue";
 import Pagination from "@/Components/Tables/Pagination.vue";
 import { format } from "@formkit/tempo";
-import Popper from "vue3-popper";
+import { router } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 
 const emit = defineEmits(["action"]);
 const props = defineProps({
@@ -28,23 +30,45 @@ const props = defineProps({
         required: false,
         validator(value) {
             return (
-                typeof value.create === "string" &&
+                typeof value.name === "string" &&
                 typeof value.route === "string"
             );
         },
     },
 });
 
+const search = ref(props.filters.search ?? "");
+
+watch(search, (value) => {
+    if (value != "") {
+        router.get(
+            `/${props.add?.route}`,
+            { search: value },
+            { preserveState: true, replace: true }
+        );
+    } else {
+        router.get(`/${props.add?.route}`);
+    }
+});
+
 const action = (data) => {
     emit("action", data);
+};
+
+const reset = () => {
+    search.value = "";
+    router.get(`/${props.add?.route}`);
 };
 </script>
 
 <template>
     <div>
-        <div class="flex items-center justify-between mb-4">
-            <add-button v-if="add" :href="add?.route">
-                Agregar {{ props.add?.create.toLowerCase() }}
+        <div
+            class="w-full flex items-center justify-between flex-wrap gap-2 mb-4"
+        >
+            <Search v-model="search" @reset="reset" />
+            <add-button v-if="add" :href="route(`${add?.route}.create`)">
+                Agregar {{ props.add?.name.toLowerCase() }}
             </add-button>
         </div>
 
