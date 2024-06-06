@@ -32,7 +32,9 @@ class Sale extends Model
     {
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
-                $query->where('description', 'like', '%' . $filters['search'] . '%');
+                $query->where('quantity', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('total_price', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

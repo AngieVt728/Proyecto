@@ -2,12 +2,11 @@
 import BaseCard from "@/Components/Cards/BaseCard.vue";
 import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
+import { goodDialogs } from "gooddialogs";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
 
 const props = defineProps(["filters", "retailOutlets"]);
-const form = useForm({});
 const columns = ref([
     { key: "name", label: "Nombre", truncate: true },
     { key: "nit", label: "NIT" },
@@ -42,23 +41,62 @@ const addButton = reactive({
     route: "retail-outlets",
 });
 
-const action = (action) => {
+// const action = (action) => {
+//     switch (action.action) {
+//         case "show":
+//             form.get(route("retail-outlets.show", { id: action.id }));
+//             break;
+//         case "edit":
+//             form.get(route("retail-outlets.edit", { id: action.id }));
+//             break;
+//         case "destroy":
+//             form.delete(route("retail-outlets.destroy", { id: action.id }), {
+//                 onSuccess: () => {
+//                     toast.success("Puesto de venta eliminado");
+//                     form.get(route("retail-outlets.index"));
+//                 },
+//                 onError: (errors) =>
+//                     Object.values(errors).forEach((message) => {
+//                         toast.error(message);
+//                     }),
+//             });
+//             break;
+//         default:
+//             break;
+//     }
+// };
+
+const action = async (action) => {
     switch (action.action) {
         case "show":
-            form.get(route("retail-outlets.show", { id: action.id }));
+            router.get(route("retail-outlets.show", { id: action.id }));
             break;
         case "edit":
-            form.get(route("retail-outlets.edit", { id: action.id }));
+            router.get(route("retail-outlets.edit", { id: action.id }));
             break;
         case "destroy":
-            form.delete(route("retail-outlets.destroy", { id: action.id }), {
-                onSuccess: () => {
-                    toast.success("Puesto de venta eliminado");
-                    form.get(route("retail-outlets.index"));
-                },
+            const resDialog = await goodDialogs.confirm(
+                "¿Eliminar puesto de venta?",
+                {
+                    confirmButtonText: "Confirmar",
+                    cancelButtonText: "Cancelar",
+                }
+            );
+            if (!resDialog)
+                return goodDialogs.cancelled("Se cancelo la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            router.delete(route("retail-outlets.destroy", { id: action.id }), {
+                onSuccess: () =>
+                    goodDialogs.createNotification(
+                        "Puesto de venta eliminado con éxito",
+                        { type: "success" }
+                    ),
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;

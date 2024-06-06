@@ -12,8 +12,8 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date',
-        'payment_detail',
+        'detail',
+        'payment_date',
         'payment_balance',
     ];
 
@@ -26,7 +26,9 @@ class Payment extends Model
     {
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
-                $query->where('date', 'like', '%' . $filters['search'] . '%');
+                $query->where('detail', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('payment_date', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('payment_balance', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

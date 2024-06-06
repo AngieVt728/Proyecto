@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address', 255);
             $table->decimal('lat', 20, 15);
             $table->decimal('lng', 20, 15);
-            $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->timestamps();
         });
     }

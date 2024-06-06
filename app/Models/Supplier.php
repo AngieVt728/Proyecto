@@ -35,9 +35,11 @@ class Supplier extends Model
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
                 $query->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->where('nit', 'like', '%' . $filters['search'] . '%')
-                    ->where('email', 'like', '%' . $filters['search'] . '%')
-                    ->where('phone_number', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('nit', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('email', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('phone_number', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('address', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

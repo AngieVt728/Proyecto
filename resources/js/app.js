@@ -1,3 +1,4 @@
+import "gooddialogs/dist/base.min.css";
 import "vue3-toastify/dist/index.css";
 import "../css/app.css";
 import "./bootstrap";

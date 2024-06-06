@@ -27,7 +27,8 @@ class Revenue extends Model
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
                 $query->where('revenue_date', 'like', '%' . $filters['search'] . '%')
-                    ->where('description', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('quantity', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

@@ -12,6 +12,7 @@
         "@popperjs/core": "^2.11.8",
         "axios": "^1.7.2",
         "chart.js": "^4.4.3",
+        "gooddialogs": "^0.4.4",
         "oh-vue-icons": "^1.0.0-rc3",
         "vue": "^3.4.27",
         "vue-chartjs": "^5.3.1",

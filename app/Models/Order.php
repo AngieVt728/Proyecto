@@ -32,7 +32,8 @@ class Order extends Model
     {
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
-                $query->where('order_date', 'like', '%' . $filters['search'] . '%')
+                $query->where('detail', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('order_date', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('deliver_date', 'like', '%' . $filters['search'] . '%');
             });
         }

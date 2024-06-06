@@ -2,12 +2,11 @@
 import BaseCard from "@/Components/Cards/BaseCard.vue";
 import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
+import { goodDialogs } from "gooddialogs";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
 
 const props = defineProps(["filters", "users"]);
-const form = useForm({});
 const columns = ref([
     { key: "first_name", label: "Nombres", trucate: true },
     { key: "last_name", label: "Apellidos", trucate: true },
@@ -46,23 +45,34 @@ const options = ref([
 ]);
 const addButton = reactive({ name: "Usuario", route: "users" });
 
-const action = (action) => {
+const action = async (action) => {
     switch (action.action) {
         case "show":
-            form.get(route("users.show", { id: action.id }));
+            router.get(route("users.show", { id: action.id }));
             break;
         case "edit":
-            form.get(route("users.edit", { id: action.id }));
+            router.get(route("users.edit", { id: action.id }));
             break;
         case "destroy":
-            form.delete(route("users.destroy", { id: action.id }), {
-                onSuccess: () => {
-                    toast.success("Usuario eliminado");
-                    form.get(route("users.index"));
-                },
+            const resDialog = await goodDialogs.confirm("¿Eliminar usuario?", {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!resDialog)
+                return goodDialogs.cancelled("Se cancelo la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            router.delete(route("users.destroy", { id: action.id }), {
+                onSuccess: () =>
+                    goodDialogs.createNotification(
+                        "Usuario eliminado con éxito",
+                        { type: "success" }
+                    ),
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;

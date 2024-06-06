@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('revenue_date');
             $table->integer('quantity');
             $table->text('description')->nullable()->max(300);
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->timestamps();
         });
     }

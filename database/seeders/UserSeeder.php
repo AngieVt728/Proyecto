@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
         $staff->assignRole('staff');
 
         User::factory()
-            ->count(5)
+            ->count(25)
             ->create()
             ->each(function (User $user) {
                 $role = rand(0, 1) === 0 ? 'staff' : 'admin';

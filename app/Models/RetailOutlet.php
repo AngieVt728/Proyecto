@@ -37,7 +37,9 @@ class RetailOutlet extends Model
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
                 $query->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('nit', 'like', '%' . $filters['search'] . '%');
+                    ->orWhere('nit', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('address', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

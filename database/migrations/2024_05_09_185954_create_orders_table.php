@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('detail')->nullable()->max(300);
             $table->date('order_date');
             $table->date('deliver_date');
-            $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->timestamps();
         });
     }

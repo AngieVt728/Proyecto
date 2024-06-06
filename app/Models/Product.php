@@ -14,9 +14,9 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'price',
-        'stock'
+        'stock',
+        'description'
     ];
 
     public function rawMaterials(): BelongsToMany
@@ -43,7 +43,10 @@ class Product extends Model
     {
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
-                $query->where('name', 'like', '%' . $filters['search'] . '%');
+                $query->where('name', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('price', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('stock', 'like', '%' . $filters['search'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });
         }
     }

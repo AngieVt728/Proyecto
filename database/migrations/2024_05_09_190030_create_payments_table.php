@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('detail')->nullable()->max(300);
             $table->date('payment_date');
             $table->decimal('payment_balance', 10, 2);
-            $table->foreignId('order_id')->constrained('orders');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('outflow_date');
             $table->integer('quantity');
-            $table->foreignId('raw_material_id')->constrained('raw_materials');
+            $table->foreignId('raw_material_id')->constrained('raw_materials')->onDelete('cascade');
             $table->timestamps();
         });
     }

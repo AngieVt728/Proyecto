@@ -16,8 +16,8 @@ return new class extends Migration
             $table->text('description')->nullable()->max(300);
             $table->integer('quantity');
             $table->decimal('total_price', 10, 2);
-            $table->foreignId('product_id')->constrained('products');
-            $table->foreignId('retail_outlet_id')->constrained('retail_outlets');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('retail_outlet_id')->constrained('retail_outlets')->onDelete('cascade');
             $table->timestamps();
         });
     }
