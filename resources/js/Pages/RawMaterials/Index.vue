@@ -9,6 +9,7 @@ import { toast } from "vue3-toastify";
 const props = defineProps(["filters", "rawMaterials"]);
 const form = useForm({});
 const columns = ref([
+    { key: "image", label: "Imagen de referencia", img: true },
     { key: "name", label: "Nombre materia prima", truncate: true },
     { key: "price", label: "Precio" },
     { key: "stock", label: "Stock" },

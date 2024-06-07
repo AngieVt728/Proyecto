@@ -29,6 +29,7 @@ class RetailOutletController extends Controller
                 'owner_name' => $outlet->customer->first_name . ' ' . $outlet->customer->last_name,
                 'address' => $outlet->address,
                 'description' => $outlet->description,
+                'image' => $outlet->image,
                 'created_at' => $outlet->created_at,
                 'updated_at' => $outlet->updated_at
             ]);

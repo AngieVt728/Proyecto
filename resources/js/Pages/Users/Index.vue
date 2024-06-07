@@ -8,8 +8,9 @@ import { reactive, ref } from "vue";
 
 const props = defineProps(["filters", "users"]);
 const columns = ref([
-    { key: "first_name", label: "Nombres", trucate: true },
-    { key: "last_name", label: "Apellidos", trucate: true },
+    { key: "avatar", label: "Avatar", img: true },
+    { key: "first_name", label: "Nombres", truncate: true },
+    { key: "last_name", label: "Apellidos", truncate: true },
     { key: "ci", label: "Carnet de identidad" },
     {
         key: "email",

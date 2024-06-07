@@ -36,6 +36,7 @@ class UserController extends Controller
                 'phone_number' => $user->phone_number,
                 'role' =>  $user->roles->first()->name,
                 'address' => $user->address,
+                'avatar' => $user->avatar,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at
             ]);
@@ -85,7 +86,7 @@ class UserController extends Controller
     public function show(User $user): Response
     {
         return Inertia::render('Users/Create', [
-            'user' => $user->makeHidden('password')
+            'user' => $user
         ]);
     }
 
@@ -95,7 +96,7 @@ class UserController extends Controller
     public function edit(User $user): Response
     {
         return Inertia::render('Users/Create', [
-            'user' => $user->makeHidden('password')
+            'user' => $user
         ]);
     }
 

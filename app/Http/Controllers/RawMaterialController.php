@@ -28,6 +28,7 @@ class RawMaterialController extends Controller
                 'price' => $material->price,
                 'stock' => $material->stock,
                 'description' => $material->description,
+                'image' => $material->image,
                 'created_at' => $material->created_at,
                 'updated_at' => $material->updated_at
             ]);

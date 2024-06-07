@@ -27,6 +27,7 @@ class ProductController extends Controller
                 'price' => $product->price,
                 'stock' => $product->stock,
                 'description' => $product->description,
+                'image' => $product->image,
                 'created_at' => $product->created_at,
                 'updated_at' => $product->updated_at
             ]);

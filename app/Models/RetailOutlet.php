@@ -19,6 +19,7 @@ class RetailOutlet extends Model
         'address',
         'lat',
         'lng',
+        'image',
         'customer_id'
     ];
 

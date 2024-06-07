@@ -11,7 +11,11 @@ const dropdownOpen = ref(false);
             class="relative z-10 block w-8 h-8 overflow-hidden rounded-full shadow focus:outline-none"
             @click="dropdownOpen = !dropdownOpen"
         >
-            <v-icon name="hi-solid-user" />
+            <img
+                class="w-8 h-8 rounded-full"
+                :src="$page.props.auth.user.avatar"
+                alt="user avatar"
+            />
         </button>
         <div
             v-show="dropdownOpen"

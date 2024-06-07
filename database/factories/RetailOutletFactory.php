@@ -24,7 +24,8 @@ class RetailOutletFactory extends Factory
             'address' => fake()->address(),
             'lat' => fake()->latitude(),
             'lng' => fake()->longitude(),
-            'customer_id' => Customer::factory(),
+            'image' => fake()->imageUrl(),
+            'customer_id' => Customer::factory()
         ];
     }
 }

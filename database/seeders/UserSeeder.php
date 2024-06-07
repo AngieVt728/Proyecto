@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'ci' => '00000001',
             'email' => 'admin@user.com',
             'password' => Hash::make('password'),
+            'avatar' => fake()->imageUrl()
         ]);
         $admin->assignRole('admin');
 
@@ -29,6 +30,7 @@ class UserSeeder extends Seeder
             'ci' => '00000002',
             'email' => 'staff@user.com',
             'password' => Hash::make('password'),
+            'avatar' => fake()->imageUrl()
         ]);
         $staff->assignRole('staff');
 

@@ -16,7 +16,8 @@ class Product extends Model
         'name',
         'price',
         'stock',
-        'description'
+        'description',
+        'image'
     ];
 
     public function rawMaterials(): BelongsToMany

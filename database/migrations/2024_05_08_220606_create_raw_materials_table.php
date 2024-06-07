@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable()->max(300);
             $table->decimal('price', 10, 2);
             $table->integer('stock')->default(0);
+            $table->string('image', 255)->nullable();
             $table->timestamps();
         });
     }

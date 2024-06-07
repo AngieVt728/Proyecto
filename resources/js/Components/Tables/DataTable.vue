@@ -111,11 +111,20 @@ const reset = () => {
                                 v-for="column in columns"
                                 :key="column.key"
                                 :class="{
-                                    'px-6 py-4 text-nowrap max-w-28': true,
+                                    'text-nowrap max-w-28': true,
                                     truncate: column.truncate ?? false,
+                                    'px-6 py-4': !column.img,
+                                    'pl-8': column.img,
                                 }"
                             >
-                                <span v-if="column.verify">
+                                <span v-if="column.img">
+                                    <img
+                                        class="w-10 h-10 rounded-full"
+                                        :src="item[column.key]"
+                                        alt="user avatar"
+                                    />
+                                </span>
+                                <span v-else-if="column.verify">
                                     <v-icon
                                         :class="
                                             item[column.verify]

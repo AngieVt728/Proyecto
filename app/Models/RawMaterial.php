@@ -16,7 +16,8 @@ class RawMaterial extends Model
         'name',
         'price',
         'stock',
-        'description'
+        'description',
+        'image'
     ];
 
     public function suppliers(): BelongsToMany
