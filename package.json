@@ -8,6 +8,7 @@
     "dependencies": {
         "@formkit/tempo": "^0.1.1",
         "@googlemaps/js-api-loader": "^1.16.6",
+        "@headlessui/vue": "^1.7.22",
         "@inertiajs/vue3": "^1.1.0",
         "@popperjs/core": "^2.11.8",
         "axios": "^1.7.2",

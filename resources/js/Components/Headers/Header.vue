@@ -30,7 +30,7 @@ const { isOpen } = useSidebar();
                 </svg>
             </button>
         </div>
-        <div class="flex items-center justify-between">
+        <!-- <div class="flex items-center justify-between">
             <div class="text-gray-700 text-sm hidden md:block">
                 Bienvenido:
                 <span class="font-semibold">{{
@@ -40,6 +40,7 @@ const { isOpen } = useSidebar();
                 }}</span>
             </div>
             <Avatar />
-        </div>
+        </div> -->
+        <Avatar />
     </header>
 </template>

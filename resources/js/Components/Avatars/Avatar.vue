@@ -1,81 +1,90 @@
 <script setup>
-import { ref } from "vue";
-import { Link } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
+import { Link, usePage } from "@inertiajs/vue3";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+
+const user = computed(() => usePage().props.auth.user);
 
 const dropdownOpen = ref(false);
 </script>
 
 <template>
-    <div class="relative mx-4">
-        <button
-            class="relative z-10 block w-8 h-8 overflow-hidden rounded-full shadow focus:outline-none"
-            @click="dropdownOpen = !dropdownOpen"
-        >
-            <img
-                class="w-8 h-8 rounded-full"
-                :src="$page.props.auth.user.avatar"
-                alt="user avatar"
-            />
-        </button>
-        <div
-            v-show="dropdownOpen"
-            class="fixed inset-0 z-10 w-full h-full"
-            @click="dropdownOpen = false"
-        />
-        <transition
-            enter-active-class="transition duration-150 ease-out transform"
-            enter-from-class="scale-95 opacity-0"
-            enter-to-class="scale-100 opacity-100"
-            leave-active-class="transition duration-150 ease-in transform"
-            leave-from-class="scale-100 opacity-100"
-            leave-to-class="scale-95 opacity-0"
-        >
-            <div
-                v-show="dropdownOpen"
-                class="absolute right-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-xl"
+    <Menu as="div" class="relative inline-block text-left z-50">
+        <div>
+            <MenuButton
+                class="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
             >
-                <div class="px-4 py-2 text-sm md:hidden text-gray-700 border-b">
-                    Bienvenido:
-                    <span class="block text-xs font-semibold">{{
-                        $page.props.auth.user.first_name +
-                        " " +
-                        $page.props.auth.user.last_name
-                    }}</span>
+                {{ `${user.first_name} ${user.last_name}` }}
+                <v-icon
+                    class="-mr-1 ml-2 h-5 w-5 text-gray-700 hover:text-indigo-500"
+                    name="hi-chevron-down"
+                />
+            </MenuButton>
+        </div>
+
+        <transition
+            enter-active-class="transition duration-100 ease-out"
+            enter-from-class="transform scale-95 opacity-0"
+            enter-to-class="transform scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in"
+            leave-from-class="transform scale-100 opacity-100"
+            leave-to-class="transform scale-95 opacity-0"
+        >
+            <MenuItems
+                class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+            >
+                <div class="px-1 py-1">
+                    <MenuItem v-slot="{ active }">
+                        <Link
+                            :class="[
+                                active
+                                    ? 'bg-indigo-500 text-white'
+                                    : 'text-gray-900',
+                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                            ]"
+                            :href="route('dashboard')"
+                        >
+                            <v-icon
+                                class="mr-2 h-5 w-5"
+                                name="hi-information-circle"
+                            />
+                            Mi información
+                        </Link>
+                    </MenuItem>
+                    <MenuItem v-slot="{ active }">
+                        <Link
+                            :class="[
+                                active
+                                    ? 'bg-indigo-500 text-white'
+                                    : 'text-gray-900',
+                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                            ]"
+                            :href="route('dashboard')"
+                        >
+                            <v-icon class="mr-2 h-5 w-5" name="hi-key" />
+                            Actualizar contraseña
+                        </Link>
+                    </MenuItem>
                 </div>
-                <span
-                    class="px-4 py-2 text-sm text-center font-semibold text-gray-700 border-b hidden md:block"
-                    >Acciones</span
-                >
-                <Link
-                    :href="route('dashboard')"
-                    as="button"
-                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
-                >
-                    <v-icon name="hi-solid-information-circle" /><span
-                        class="ml-1"
-                        >Mi información</span
-                    >
-                </Link>
-                <Link
-                    :href="route('dashboard')"
-                    as="button"
-                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
-                >
-                    <v-icon name="hi-solid-key" /><span class="ml-1"
-                        >Actualizar contraseña</span
-                    >
-                </Link>
-                <Link
-                    :href="route('logout')"
-                    method="post"
-                    as="button"
-                    class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-indigo-600 hover:text-white"
-                >
-                    <v-icon name="hi-solid-logout" /><span class="ml-1"
-                        >Desconectarse</span
-                    >
-                </Link>
-            </div>
+                <div class="px-1 py-1">
+                    <MenuItem v-slot="{ active }">
+                        <Link
+                            :class="[
+                                active
+                                    ? 'bg-indigo-500 text-white'
+                                    : 'text-gray-900',
+                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                            ]"
+                            :href="route('logout')"
+                            method="post"
+                            as="button"
+                        >
+                            <v-icon class="mr-2 h-5 w-5" name="hi-logout" />
+                            Cerrar sesión
+                        </Link>
+                    </MenuItem>
+                </div>
+            </MenuItems>
         </transition>
-    </div>
+    </Menu>
 </template>
