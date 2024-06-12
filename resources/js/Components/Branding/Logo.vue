@@ -6,6 +6,11 @@ const props = defineProps({
         default: false,
         required: true,
     },
+    isCustom: {
+        type: Boolean,
+        default: false,
+        requited: false,
+    },
 });
 
 const imgClass = props.isLogin
@@ -20,14 +25,14 @@ const spanText = props.isLogin
 </script>
 
 <template>
-    <Link :href="route('dashboard')"
-        ><div class="flex items-center justify-center flex-col">
+    <Link :href="route('dashboard')">
+        <div class="flex items-center justify-center flex-col">
             <img
                 :class="imgClass"
                 src="/images/logoimbae2.png"
                 alt="logo imbae png"
             />
-            <span :class="spanClass">{{ spanText }}</span>
-        </div></Link
-    >
+            <span v-if="!isCustom" :class="spanClass">{{ spanText }}</span>
+        </div>
+    </Link>
 </template>
