@@ -42,13 +42,10 @@ const dropdownOpen = ref(false);
                                     : 'text-gray-900',
                                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                             ]"
-                            :href="route('dashboard')"
+                            :href="route('profile.about')"
                         >
-                            <v-icon
-                                class="mr-2 h-5 w-5"
-                                name="hi-information-circle"
-                            />
-                            Mi información
+                            <v-icon class="mr-2 h-5 w-5" name="hi-user" />
+                            Perfil de usuario
                         </Link>
                     </MenuItem>
                     <MenuItem v-slot="{ active }">
@@ -59,10 +56,24 @@ const dropdownOpen = ref(false);
                                     : 'text-gray-900',
                                 'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                             ]"
-                            :href="route('dashboard')"
+                            :href="route('profile.edit')"
+                        >
+                            <v-icon class="mr-2 h-5 w-5" name="hi-pencil" />
+                            Modificar perfil
+                        </Link>
+                    </MenuItem>
+                    <MenuItem v-slot="{ active }">
+                        <Link
+                            :class="[
+                                active
+                                    ? 'bg-indigo-500 text-white'
+                                    : 'text-gray-900',
+                                'group flex w-full items-center rounded-md px-2 py-2 text-sm',
+                            ]"
+                            :href="route('profile.edit')"
                         >
                             <v-icon class="mr-2 h-5 w-5" name="hi-key" />
-                            Actualizar contraseña
+                            Cambiar contraseña
                         </Link>
                     </MenuItem>
                 </div>
