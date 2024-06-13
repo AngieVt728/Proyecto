@@ -13,19 +13,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::select('*')
-            ->orderBy('updated_at', 'desc')
-            ->paginate(10)->withQueryString()
-            ->through(fn ($product) => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'stock' => $product->stock,
-                'description' => $product->description,
-                'image' => $product->image,
-                'created_at' => $product->created_at,
-                'updated_at' => $product->updated_at
-            ]);
+        $products = Product::all();
 
         return response()->json($products);
     }
