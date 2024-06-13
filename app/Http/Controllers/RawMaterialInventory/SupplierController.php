@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\RawMaterialInventory;
 
+use App\Http\Controllers\Controller;
 use App\Models\RawMaterial;
 use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;

@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\CommercialManagement\CustomerController;
+use App\Http\Controllers\CommercialManagement\PaymentController;
+use App\Http\Controllers\CommercialManagement\RetailOutletController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EntryController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\OutflowController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RawMaterialController;
-use App\Http\Controllers\RetailOutletController;
-use App\Http\Controllers\RevenueController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\ProductInventory\RevenueController;
+use App\Http\Controllers\ProductInventory\SaleController;
+use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\RawMaterialInventory\EntryController;
+use App\Http\Controllers\RawMaterialInventory\OutflowController;
+use App\Http\Controllers\RawMaterialInventory\RawMaterialController;
+use App\Http\Controllers\RawMaterialInventory\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 

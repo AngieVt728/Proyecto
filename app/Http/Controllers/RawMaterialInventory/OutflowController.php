@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\RawMaterialInventory;
 
-use App\Models\Entry;
+use App\Http\Controllers\Controller;
+use App\Models\Outflow;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class EntryController extends Controller
+class OutflowController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,22 +16,22 @@ class EntryController extends Controller
     public function index(): Response
     {
         $filters = Request::all('search');
-        $entries = Entry::select('*')
+        $outflows = Outflow::select('*')
             ->orderBy('updated_at', 'desc')
             ->filter(Request::only('search'))
             ->paginate(10)
             ->withQueryString()
             ->through(fn ($entry) => [
                 'id' => $entry->id,
-                'entry_date' => $entry->entry_date,
+                'outflow_date' => $entry->outflow_date,
                 'quantity' => $entry->quantity,
                 'created_at' => $entry->created_at,
                 'updated_at' => $entry->updated_at
             ]);
 
-        return Inertia::render('Entries/Index', [
+        return Inertia::render('Outflows/Index', [
             'filters' => $filters,
-            'entries' => $entries
+            'outflows' => $outflows
         ]);
     }
 
@@ -39,7 +40,7 @@ class EntryController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Entries/Create');
+        return Inertia::render('Outflows/Create');
     }
 
     /**
@@ -53,7 +54,7 @@ class EntryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Entry $entry)
+    public function show(Outflow $outflow)
     {
         //
     }
@@ -61,7 +62,7 @@ class EntryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Entry $entry)
+    public function edit(Outflow $outflow)
     {
         //
     }
@@ -69,7 +70,7 @@ class EntryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Entry $entry)
+    public function update(Request $request, Outflow $outflow)
     {
         //
     }
@@ -77,7 +78,7 @@ class EntryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Entry $entry)
+    public function destroy(Outflow $outflow)
     {
         //
     }

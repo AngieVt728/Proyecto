@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\RawMaterialInventory;
 
-use App\Models\Order;
+use App\Http\Controllers\Controller;
+use App\Models\Entry;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class OrderController extends Controller
+class EntryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,23 +16,22 @@ class OrderController extends Controller
     public function index(): Response
     {
         $filters = Request::all('search');
-        $orders = Order::select('*')
+        $entries = Entry::select('*')
             ->orderBy('updated_at', 'desc')
             ->filter(Request::only('search'))
             ->paginate(10)
             ->withQueryString()
-            ->through(fn ($order) => [
-                'id' => $order->id,
-                'detail' => $order->detail,
-                'order_date' => $order->order_date,
-                'deliver_date' => $order->deliver_date,
-                'created_at' => $order->created_at,
-                'updated_at' => $order->updated_at
+            ->through(fn ($entry) => [
+                'id' => $entry->id,
+                'entry_date' => $entry->entry_date,
+                'quantity' => $entry->quantity,
+                'created_at' => $entry->created_at,
+                'updated_at' => $entry->updated_at
             ]);
 
-        return Inertia::render('Orders/Index', [
+        return Inertia::render('Entries/Index', [
             'filters' => $filters,
-            'orders' => $orders
+            'entries' => $entries
         ]);
     }
 
@@ -40,7 +40,7 @@ class OrderController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Orders/Create');
+        return Inertia::render('Entries/Create');
     }
 
     /**
@@ -54,7 +54,7 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Entry $entry)
     {
         //
     }
@@ -62,7 +62,7 @@ class OrderController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Order $order)
+    public function edit(Entry $entry)
     {
         //
     }
@@ -70,7 +70,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, Entry $entry)
     {
         //
     }
@@ -78,7 +78,7 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function destroy(Entry $entry)
     {
         //
     }

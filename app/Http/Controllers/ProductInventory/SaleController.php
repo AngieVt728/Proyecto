@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ProductInventory;
 
-use App\Models\Revenue;
+use App\Http\Controllers\Controller;
+use App\Models\Sale;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RevenueController extends Controller
+class SaleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,23 +16,23 @@ class RevenueController extends Controller
     public function index(): Response
     {
         $filters = Request::all('search');
-        $revenues = Revenue::select('*')
+        $sales = Sale::select('*')
             ->orderBy('updated_at', 'desc')
             ->filter(Request::only('search'))
             ->paginate(10)
             ->withQueryString()
-            ->through(fn ($revenue) => [
-                'id' => $revenue->id,
-                'revenue_date' => $revenue->revenue_date,
-                'quantity' => $revenue->quantity,
-                'description' => $revenue->description,
-                'created_at' => $revenue->created_at,
-                'updated_at' => $revenue->updated_at
+            ->through(fn ($sale) => [
+                'id' => $sale->id,
+                'quantity' => $sale->quantity,
+                'total_price' => $sale->total_price,
+                'description' => $sale->description,
+                'created_at' => $sale->created_at,
+                'updated_at' => $sale->updated_at
             ]);
 
-        return Inertia::render('Revenues/Index', [
+        return Inertia::render('Sales/Index', [
             'filters' => $filters,
-            'revenues' => $revenues
+            'sales' => $sales
         ]);
     }
 
@@ -40,7 +41,7 @@ class RevenueController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Revenues/Create');
+        return Inertia::render('Sales/Create');
     }
 
     /**
@@ -54,7 +55,7 @@ class RevenueController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Revenue $revenue)
+    public function show(Sale $sale)
     {
         //
     }
@@ -62,7 +63,7 @@ class RevenueController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Revenue $revenue)
+    public function edit(Sale $sale)
     {
         //
     }
@@ -70,7 +71,7 @@ class RevenueController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Revenue $revenue)
+    public function update(Request $request, Sale $sale)
     {
         //
     }
@@ -78,7 +79,7 @@ class RevenueController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Revenue $revenue)
+    public function destroy(Sale $sale)
     {
         //
     }
