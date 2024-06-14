@@ -17,17 +17,17 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             UserSeeder::class,
-            CustomerSeeder::class,
-            RetailOutletSeeder::class,
-            SupplierSeeder::class,
-            RawMaterialSeeder::class,
-            ProductSeeder::class,
-            OrderSeeder::class,
-            SaleSeeder::class,
-            PaymentSeeder::class,
-            RevenueSeeder::class,
-            EntrySeeder::class,
-            OutflowSeeder::class
+            // CustomerSeeder::class,
+            // RetailOutletSeeder::class,
+            // SupplierSeeder::class,
+            // RawMaterialSeeder::class,
+            // ProductSeeder::class,
+            // OrderSeeder::class,
+            // SaleSeeder::class,
+            // PaymentSeeder::class,
+            // RevenueSeeder::class,
+            // EntrySeeder::class,
+            // OutflowSeeder::class
         ]);
     }
 }
