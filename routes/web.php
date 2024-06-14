@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\OrderController;
-use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\CommercialManagement\CustomerController;
 use App\Http\Controllers\CommercialManagement\PaymentController;
 use App\Http\Controllers\CommercialManagement\RetailOutletController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductInventory\ProductController;
 use App\Http\Controllers\ProductInventory\RevenueController;
 use App\Http\Controllers\ProductInventory\SaleController;
 use App\Http\Controllers\Profile\ProfileController;

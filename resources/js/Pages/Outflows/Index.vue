@@ -4,7 +4,7 @@ import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
+import { goodDialogs } from "gooddialogs";
 
 const props = defineProps({ filters: Object, outflows: Object });
 const form = useForm({});
@@ -36,7 +36,7 @@ const options = ref([
 ]);
 const addButton = reactive({ name: "Salida", route: "outflows" });
 
-const action = (action) => {
+const action = async (action) => {
     switch (action.action) {
         case "show":
             form.get(route("outflows.show", { id: action.id }));
@@ -45,14 +45,27 @@ const action = (action) => {
             form.get(route("outflows.edit", { id: action.id }));
             break;
         case "destroy":
+            const resDialog = await goodDialogs.confirm("¿Eliminar salida?", {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!resDialog) {
+                return goodDialogs.cancelled("Se canceló la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            }
             form.delete(route("outflows.destroy", { id: action.id }), {
                 onSuccess: () => {
-                    toast.success("Salida eliminada");
+                    goodDialogs.createNotification("Salida eliminada con éxito", {
+                        type: "success",
+                    });
                     form.get(route("outflows.index"));
                 },
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;

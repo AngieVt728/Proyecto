@@ -4,7 +4,7 @@ import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
+import { goodDialogs } from "gooddialogs";
 
 const props = defineProps(["filters", "suppliers"]);
 const form = useForm({});
@@ -40,7 +40,7 @@ const options = ref([
 ]);
 const addButton = reactive({ name: "Proveedor", route: "suppliers" });
 
-const action = (action) => {
+const action = async (action) => {
     switch (action.action) {
         case "show":
             form.get(route("suppliers.show", { id: action.id }));
@@ -49,14 +49,27 @@ const action = (action) => {
             form.get(route("suppliers.edit", { id: action.id }));
             break;
         case "destroy":
+            const resDialog = await goodDialogs.confirm("¿Eliminar proveedor?", {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!resDialog) {
+                return goodDialogs.cancelled("Se canceló la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            }
             form.delete(route("suppliers.destroy", { id: action.id }), {
                 onSuccess: () => {
-                    toast.success("Proveedor eliminado");
+                    goodDialogs.createNotification("Proveedor eliminado con éxito", {
+                        type: "success",
+                    });
                     form.get(route("suppliers.index"));
                 },
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;

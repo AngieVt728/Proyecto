@@ -4,7 +4,7 @@ import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
+import { goodDialogs } from "gooddialogs";
 
 const props = defineProps({ filters: Object, sales: Object });
 const form = useForm({});
@@ -37,7 +37,7 @@ const options = ref([
 ]);
 const addButton = reactive({ name: "Venta", route: "sales" });
 
-const action = (action) => {
+const action = async (action) => {
     switch (action.action) {
         case "show":
             form.get(route("sales.show", { id: action.id }));
@@ -46,14 +46,27 @@ const action = (action) => {
             form.get(route("sales.edit", { id: action.id }));
             break;
         case "destroy":
+            const resDialog = await goodDialogs.confirm("¿Eliminar venta?", {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!resDialog) {
+                return goodDialogs.cancelled("Se canceló la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            }
             form.delete(route("sales.destroy", { id: action.id }), {
                 onSuccess: () => {
-                    toast.success("Venta eliminado");
+                    goodDialogs.createNotification("Venta eliminada con éxito", {
+                        type: "success",
+                    });
                     form.get(route("sales.index"));
                 },
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;
@@ -64,9 +77,9 @@ const action = (action) => {
 </script>
 
 <template>
-    <Head title="Ingresos" />
+    <Head title="Ventas" />
     <authenticated-layout>
-        <base-card title="Ingresos">
+        <base-card title="Ventas">
             <data-table
                 :columns="columns"
                 :content="sales"

@@ -4,7 +4,7 @@ import DataTable from "@/Components/Tables/DataTable.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { reactive, ref } from "vue";
-import { toast } from "vue3-toastify";
+import { goodDialogs } from "gooddialogs";
 
 const props = defineProps(["filters", "products"]);
 const form = useForm({});
@@ -39,7 +39,7 @@ const options = ref([
 ]);
 const addButton = reactive({ name: "Producto", route: "products" });
 
-const action = (action) => {
+const action = async (action) => {
     switch (action.action) {
         case "show":
             form.get(route("products.show", { id: action.id }));
@@ -48,14 +48,27 @@ const action = (action) => {
             form.get(route("products.edit", { id: action.id }));
             break;
         case "destroy":
+            const resDialog = await goodDialogs.confirm("¿Eliminar producto?", {
+                confirmButtonText: "Confirmar",
+                cancelButtonText: "Cancelar",
+            });
+            if (!resDialog) {
+                return goodDialogs.cancelled("Se canceló la acción", {
+                    confirmButtonText: "Aceptar",
+                });
+            }
             form.delete(route("products.destroy", { id: action.id }), {
                 onSuccess: () => {
-                    toast.success("Producto eliminado");
+                    goodDialogs.createNotification("Producto eliminado con éxito", {
+                        type: "success",
+                    });
                     form.get(route("products.index"));
                 },
                 onError: (errors) =>
                     Object.values(errors).forEach((message) => {
-                        toast.error(message);
+                        goodDialogs.createNotification(message, {
+                            type: "error",
+                        });
                     }),
             });
             break;
