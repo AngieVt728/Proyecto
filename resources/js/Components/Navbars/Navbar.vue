@@ -7,7 +7,7 @@ import { Link } from "@inertiajs/vue3";
         <div
             class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
         >
-            <Link>
+            <Link :href="route('user.home')">
                 <img
                     class="w-20 drop-shadow-md"
                     src="/images/logoimbae2.png"
@@ -53,9 +53,9 @@ import { Link } from "@inertiajs/vue3";
                         <Link :href="route('user.orders')">Pedidos</Link>
                     </li>
                     <li>
-                        <Link :href="route('logout')" method="post" as="button"
-                            >Desconectarse</Link
-                        >
+                        <Link :href="route('logout')" method="post" as="button">
+                            Desconectarse
+                        </Link>
                     </li>
                 </ul>
             </div>
