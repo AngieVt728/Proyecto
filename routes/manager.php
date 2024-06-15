@@ -16,7 +16,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:manager'])->prefix('manager')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'dashboard']);
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('manager.dashboard');
     Route::resource('users', UserController::class);
     Route::resource('customer', CustomerController::class);
     Route::resource('entries', EntryController::class);
