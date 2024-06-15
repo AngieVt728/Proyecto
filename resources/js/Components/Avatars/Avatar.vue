@@ -2,8 +2,9 @@
 import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { getUsername } from "@/Composables/usePage";
 
-const user = computed(() => usePage().props.auth.user);
+const username = getUsername();
 
 const dropdownOpen = ref(false);
 </script>
@@ -14,7 +15,7 @@ const dropdownOpen = ref(false);
             <MenuButton
                 class="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
             >
-                {{ `${user.first_name} ${user.last_name}` }}
+                {{ username }}
                 <v-icon
                     class="-mr-1 ml-2 h-5 w-5 text-gray-700 hover:text-indigo-500"
                     name="hi-chevron-down"
@@ -33,7 +34,7 @@ const dropdownOpen = ref(false);
             <MenuItems
                 class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
             >
-                <div class="px-1 py-1">
+                <!-- <div class="px-1 py-1">
                     <MenuItem v-slot="{ active }">
                         <Link
                             :class="[
@@ -76,7 +77,7 @@ const dropdownOpen = ref(false);
                             Cambiar contraseña
                         </Link>
                     </MenuItem>
-                </div>
+                </div> -->
                 <div class="px-1 py-1">
                     <MenuItem v-slot="{ active }">
                         <Link
