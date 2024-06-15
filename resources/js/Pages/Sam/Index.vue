@@ -6,10 +6,11 @@ import { Head, router } from "@inertiajs/vue3";
 import { goodDialogs } from "gooddialogs";
 import { reactive, ref } from "vue";
 
-const props = defineProps(["filters", "customers"]);
+const props = defineProps(["filters", "users"]);
 const columns = ref([
-    { key: "first_name", label: "Nombres", trucate: true },
-    { key: "last_name", label: "Apellidos", trucate: true },
+    { key: "avatar", label: "Avatar", img: true },
+    { key: "first_name", label: "Nombres", truncate: true },
+    { key: "last_name", label: "Apellidos", truncate: true },
     { key: "ci", label: "Carnet de identidad" },
     {
         key: "email",
@@ -18,6 +19,7 @@ const columns = ref([
         truncate: true,
     },
     { key: "phone_number", label: "Teléfono o celular", truncate: true },
+    { key: "role", label: "Rol" },
     { key: "address", label: "Dirección", truncate: true },
     { key: "created_at", label: "Fecha de creación", date: true },
     { key: "updated_at", label: "Ultima actualización", date: true },
@@ -42,18 +44,18 @@ const options = ref([
         color: "text-red-500",
     },
 ]);
-const addButton = reactive({ name: "Clientes", route: "customers" });
+const addButton = reactive({ name: "Usuario", route: "users" });
 
 const action = async (action) => {
     switch (action.action) {
         case "show":
-            router.get(route("customers.show", { id: action.id }));
+            router.get(route("users.show", { id: action.id }));
             break;
         case "edit":
-            router.get(route("customers.edit", { id: action.id }));
+            router.get(route("users.edit", { id: action.id }));
             break;
         case "destroy":
-            const resDialog = await goodDialogs.confirm("¿Eliminar cliente?", {
+            const resDialog = await goodDialogs.confirm("¿Eliminar usuario?", {
                 confirmButtonText: "Confirmar",
                 cancelButtonText: "Cancelar",
             });
@@ -61,10 +63,10 @@ const action = async (action) => {
                 return goodDialogs.cancelled("Se cancelo la acción", {
                     confirmButtonText: "Aceptar",
                 });
-            router.delete(route("customers.destroy", { id: action.id }), {
+            router.delete(route("users.destroy", { id: action.id }), {
                 onSuccess: () =>
                     goodDialogs.createNotification(
-                        "Cliente eliminado con éxito",
+                        "Usuario eliminado con éxito",
                         { type: "success" }
                     ),
                 onError: (errors) =>
@@ -82,12 +84,12 @@ const action = async (action) => {
 </script>
 
 <template>
-    <Head title="Clientes" />
+    <Head title="Usuarios" />
     <authenticated-layout>
-        <base-card title="Clientes">
+        <base-card title="Usuarios">
             <data-table
                 :columns="columns"
-                :content="customers"
+                :content="users"
                 :filters="filters"
                 :add="addButton"
                 :options="options"
