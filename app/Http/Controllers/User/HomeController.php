@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -12,7 +11,13 @@ class HomeController extends Controller
 {
     public function home(): Response
     {
-        return Inertia::render('Home/Home');
+        $products = Product::orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return Inertia::render('Home/Home', [
+            'products' => $products
+        ]);
     }
 
     public function products(): Response
@@ -26,6 +31,20 @@ class HomeController extends Controller
 
     public function orders(): Response
     {
-        return Inertia::render('Home/Order');
+        $auth = auth()->user();
+        $orders = $auth->orders();
+
+        return Inertia::render('Home/Order', [
+            'orders' => $orders
+        ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('Home/NewOrder');
+    }
+
+    public function store()
+    {
     }
 }

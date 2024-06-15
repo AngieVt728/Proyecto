@@ -36,7 +36,7 @@ class UserController extends Controller
                 'email' => $user->email,
                 'email_verified_at' => $user->email_verified_at,
                 'phone_number' => $user->phone_number,
-                'role' =>  $user->roles->first()->name,
+                'role' =>  $user->roles->first()->name ?? '',
                 'address' => $user->address,
                 'avatar' => $user->avatar,
                 'created_at' => $user->created_at,

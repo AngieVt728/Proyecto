@@ -70,5 +70,13 @@ class UserSeeder extends Seeder
             'avatar' => fake()->imageUrl(),
             'remember_token' => Str::random(10)
         ])->assignRole('user');
+
+        User::factory()
+            ->count(25)
+            ->create()
+            ->each(function (User $user) {
+                $role = rand(0, 1) === 0 ? 'manager' : 'user';
+                $user->assignRole($role);
+            });
     }
 }

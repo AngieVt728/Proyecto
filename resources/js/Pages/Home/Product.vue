@@ -15,27 +15,27 @@ const props = defineProps<{
     }[];
 }>();
 
-// Crea una referencia reactiva para almacenar los productos
-const products = ref(props.products);
+// // Crea una referencia reactiva para almacenar los productos
+// const products = ref(props.products);
 
-// Productos de ejemplo para mostrar mientras no se usa la API
-const exampleProducts = [
-  {
-    id: 1,
-    image: 'https://via.placeholder.com/150',
-    name: 'Producto 1',
-    description: 'Descripción del producto 1',
-  },
-  {
-    id: 2,
-    image: 'https://via.placeholder.com/150',
-    name: 'Producto 2',
-    description: 'Descripción del producto 2',
-  },
-  // Agrega más productos de ejemplo según sea necesario
-];
+// // Productos de ejemplo para mostrar mientras no se usa la API
+// const exampleProducts = [
+//   {
+//     id: 1,
+//     image: 'https://via.placeholder.com/150',
+//     name: 'Producto 1',
+//     description: 'Descripción del producto 1',
+//   },
+//   {
+//     id: 2,
+//     image: 'https://via.placeholder.com/150',
+//     name: 'Producto 2',
+//     description: 'Descripción del producto 2',
+//   },
+//   // Agrega más productos de ejemplo según sea necesario
+// ];
 
-products.value = exampleProducts;
+// products.value = exampleProducts;
 </script>
 
 <template>
@@ -46,7 +46,7 @@ products.value = exampleProducts;
                 <!-- Itera sobre cada producto en la lista de productos -->
                 <div v-for="product in products" :key="product.id">
                     <!-- Renderiza una tarjeta para cada producto -->
-                    <Card :imgSrc="product.image" :imgAlt="product.name" :title="product.name" :description="product.description" />
+                    <Card :image="product.image" :imgAlt="product.name" :title="product.name" :description="product.description" />
                 </div>
             </div>
         </div>
