@@ -13,3 +13,7 @@ export const getFullName = () => {
 export const getUsername = () => {
     return user.value.username;
 };
+
+export const getRole = () => {
+    return auth.value.roles[0];
+};

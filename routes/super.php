@@ -15,10 +15,10 @@ use App\Http\Controllers\RawMaterialInventory\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:super-admin'])->prefix('super')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('super.dashboard');
+Route::middleware(['auth', 'role:super-admin'])->prefix('super-admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('super-admin.dashboard');
     Route::resource('users', UserController::class);
-    Route::resource('customer', CustomerController::class);
+    Route::resource('customers', CustomerController::class);
     Route::resource('entries', EntryController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('outflows', OutflowController::class);

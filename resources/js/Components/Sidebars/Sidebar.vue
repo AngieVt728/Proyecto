@@ -3,7 +3,9 @@ import Anchor from "@/Components/Anchors/Anchor.vue";
 import AnchorAccordion from "@/Components/Anchors/AnchorAccordion.vue";
 import Logo from "@/Components/Branding/Logo.vue";
 import { useSidebar } from "@/Composables/useSidebar";
+import { getRole } from "@/Composables/usePage";
 
+const prefix = getRole();
 const { isOpen } = useSidebar();
 </script>
 
@@ -23,8 +25,8 @@ const { isOpen } = useSidebar();
             <Logo :is-login="false" />
             <nav class="mt-10">
                 <Anchor
-                    :href="route('dashboard')"
-                    :active="route().current('dashboard')"
+                    :href="route(`${prefix}.dashboard`)"
+                    :active="route().current(`${prefix}.dashboard`)"
                     icon="hi-solid-chart-pie"
                     name="Panel de control"
                 />

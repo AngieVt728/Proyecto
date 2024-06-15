@@ -5,28 +5,28 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { toast } from "vue3-toastify";
 
-const props = defineProps(["customer"]);
+const props = defineProps(["roles", "permissions", "user"]);
 const form = useForm({
-    first_name: props.customer ? props.customer.first_name : "",
-    last_name: props.customer ? props.customer.last_name : "",
-    ci: props.customer ? props.customer.ci : "",
-    email: props.customer ? props.customer.email : "",
-    phone_number: props.customer ? props.customer.phone_number : "",
-    address: props.customer ? props.customer.address : "",
+    first_name: props.user?.first_name ?? "",
+    last_name: props.user?.last_name ?? "",
+    ci: props.user?.ci ?? "",
+    email: props.user?.email ?? "",
+    phone_number: props.user?.phone_number ?? "",
+    address: props.user?.address ?? "",
 });
 
 const handleSubmit = () => {
-    if (props.customer?.id)
-        form.patch(route("customers.update", { customer: props.customer }), {
-            onSuccess: () => toast.success("Cliente actualizado"),
+    if (props.user?.id)
+        form.patch(route("users.update", { id: props.user.id }), {
+            onSuccess: () => toast.success("Usuario actualizado"),
             onError: (errors) =>
                 Object.values(errors).forEach((message) => {
                     toast.error(message);
                 }),
         });
     else
-        form.post(route("customers.store"), {
-            onSuccess: () => toast.success("Cliente creado"),
+        form.post(route("users.store"), {
+            onSuccess: () => toast.success("Usuario creado"),
             onError: (errors) =>
                 Object.values(errors).forEach((message) => {
                     toast.error(message);
@@ -36,9 +36,9 @@ const handleSubmit = () => {
 </script>
 
 <template>
-    <Head title="Crear nuevo cliente" />
+    <Head title="Crear nuevo usuario" />
     <authenticated-layout>
-        <Form title="Cliente" @handle-submit="handleSubmit">
+        <Form title="Empleado" @handle-submit="handleSubmit">
             <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
                 <Input
                     id="first_name"
@@ -64,8 +64,8 @@ const handleSubmit = () => {
                 <Input
                     id="email"
                     label-text="Correo electrónico"
-                    v-model="form.email"
                     :error="form.errors.email"
+                    v-model="form.email"
                     type="email"
                 />
                 <Input
