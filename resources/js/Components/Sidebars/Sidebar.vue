@@ -116,3 +116,21 @@ const { isOpen } = useSidebar();
         </div>
     </div>
 </template>
+
+<style scoped>
+::-webkit-scrollbar {
+    width: 0;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: transparent;
+}
+</style>

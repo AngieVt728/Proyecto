@@ -18,9 +18,9 @@ class Order extends Model
         'deliver_date'
     ];
 
-    public function customer(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 
     public function payment(): HasOne

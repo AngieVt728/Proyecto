@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\CommercialManagement;
 
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
 use App\Models\RetailOutlet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
@@ -46,12 +45,12 @@ class RetailOutletController extends Controller
      */
     public function create(): Response
     {
-        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-            ->orderBy('first_name', 'asc')
-            ->get();
+        // $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+        //     ->orderBy('first_name', 'asc')
+        //     ->get();
 
         return Inertia::render('RetailOutlets/Create', [
-            'customers' => $customers
+            // 'customers' => $customers
         ]);
     }
 
@@ -82,12 +81,12 @@ class RetailOutletController extends Controller
      */
     public function show(RetailOutlet $retailOutlet): Response
     {
-        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-            ->orderBy('first_name', 'asc')
-            ->get();
+        // $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+        //     ->orderBy('first_name', 'asc')
+        //     ->get();
 
         return Inertia::render('RetailOutlets/Create', [
-            'customers' => $customers,
+            // 'customers' => $customers,
             'retailOutlet' => $retailOutlet
         ]);
     }
@@ -97,12 +96,12 @@ class RetailOutletController extends Controller
      */
     public function edit(RetailOutlet $retailOutlet)
     {
-        $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
-            ->orderBy('first_name', 'asc')
-            ->get();
+        // $customers = Customer::selectRaw("id, CONCAT(first_name, ' ', last_name) as full_name")
+        //     ->orderBy('first_name', 'asc')
+        //     ->get();
 
         return Inertia::render('RetailOutlets/Create', [
-            'customers' => $customers,
+            // 'customers' => $customers,
             'retailOutlet' => $retailOutlet
         ]);
     }

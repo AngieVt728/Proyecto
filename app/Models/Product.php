@@ -14,10 +14,9 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'price',
+        'image',
         'stock',
         'description',
-        'image'
     ];
 
     public function rawMaterials(): BelongsToMany
@@ -30,12 +29,17 @@ class Product extends Model
         )->withTimestamps();
     }
 
-    public function sale(): HasMany
+    public function productPresentations(): HasMany
+    {
+        return $this->hasMany(ProductPresentation::class);
+    }
+
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
     }
 
-    public function revenue(): HasMany
+    public function revenues(): HasMany
     {
         return $this->hasMany(Revenue::class);
     }
@@ -45,7 +49,6 @@ class Product extends Model
         if (isset($filters['search'])) {
             $query->where(function ($query) use ($filters) {
                 $query->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('price', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('stock', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('description', 'like', '%' . $filters['search'] . '%');
             });

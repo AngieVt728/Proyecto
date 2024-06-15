@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -23,10 +24,11 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'ci',
+        'contact',
+        'address',
+        'username',
         'email',
         'password',
-        'phone_number',
-        'address',
         'avatar'
     ];
 
@@ -51,6 +53,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function retailOutlets(): HasMany
+    {
+        return $this->hasMany(RetailOutlet::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 
     public function scopeFilter(Builder $query, array $filters)

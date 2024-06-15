@@ -38,9 +38,9 @@ class OutflowController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Response
+    public function create()
     {
-        return Inertia::render('Outflows/Create');
+        //
     }
 
     /**
@@ -54,7 +54,7 @@ class OutflowController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Outflow $outflow)
+    public function show(string $id)
     {
         //
     }
@@ -62,7 +62,7 @@ class OutflowController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Outflow $outflow)
+    public function edit(string $id)
     {
         //
     }
@@ -70,7 +70,7 @@ class OutflowController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Outflow $outflow)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -78,7 +78,7 @@ class OutflowController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Outflow $outflow)
+    public function destroy(string $id)
     {
         //
     }

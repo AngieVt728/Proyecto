@@ -55,7 +55,7 @@ class RevenueController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Revenue $revenue)
+    public function show(string $id)
     {
         //
     }
@@ -63,7 +63,7 @@ class RevenueController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Revenue $revenue)
+    public function edit(string $id)
     {
         //
     }
@@ -71,7 +71,7 @@ class RevenueController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Revenue $revenue)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -79,7 +79,7 @@ class RevenueController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Revenue $revenue)
+    public function destroy(string $id)
     {
         //
     }

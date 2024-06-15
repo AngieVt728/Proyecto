@@ -54,7 +54,7 @@ class EntryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Entry $entry)
+    public function show(string $id)
     {
         //
     }
@@ -62,7 +62,7 @@ class EntryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Entry $entry)
+    public function edit(string $id)
     {
         //
     }
@@ -70,7 +70,7 @@ class EntryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Entry $entry)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -78,7 +78,7 @@ class EntryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Entry $entry)
+    public function destroy(string $id)
     {
         //
     }

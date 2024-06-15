@@ -14,10 +14,10 @@ class RawMaterial extends Model
 
     protected $fillable = [
         'name',
+        'image',
         'price',
         'stock',
-        'description',
-        'image'
+        'description'
     ];
 
     public function suppliers(): BelongsToMany
@@ -30,16 +30,6 @@ class RawMaterial extends Model
         )->withTimestamps();
     }
 
-    public function products(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Product::class,
-            'product_raw_material',
-            'product_id',
-            'raw_material_id'
-        )->withTimestamps();
-    }
-
     public function entries(): HasMany
     {
         return $this->hasMany(Entry::class);
@@ -48,6 +38,16 @@ class RawMaterial extends Model
     public function outflows(): HasMany
     {
         return $this->hasMany(Outflow::class);
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'product_raw_material',
+            'product_id',
+            'raw_material_id'
+        )->withTimestamps();
     }
 
     public function scopeFilter(Builder $query, array $filters)

@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -13,32 +15,60 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin =   User::create([
+        User::create([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'ci' => fake()->numberBetween(100000, 99999999),
+            'contact' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'username' => 'sadmin',
+            'email' => 'super.admin@imbae.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'avatar' => fake()->imageUrl(),
+            'remember_token' => Str::random(10)
+        ])->assignRole('super-admin');
+
+        User::create([
             'first_name' => 'Admin',
-            'last_name' => 'User',
-            'ci' => '00000001',
-            'email' => 'admin@user.com',
+            'last_name' => 'Admin',
+            'ci' => fake()->numberBetween(100000, 99999999),
+            'contact' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'username' => 'admin',
+            'email' => 'admin@imbae.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl()
-        ]);
-        $admin->assignRole('admin');
+            'avatar' => fake()->imageUrl(),
+            'remember_token' => Str::random(10)
+        ])->assignRole('admin');
 
-        $staff =  User::create([
-            'first_name' => 'Staff',
-            'last_name' => 'User',
-            'ci' => '00000002',
-            'email' => 'staff@user.com',
+        User::create([
+            'first_name' => 'Manager',
+            'last_name' => 'Manager',
+            'ci' => fake()->numberBetween(100000, 99999999),
+            'contact' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'username' => 'manager',
+            'email' => 'manager@imbae.com',
+            'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl()
-        ]);
-        $staff->assignRole('staff');
+            'avatar' => fake()->imageUrl(),
+            'remember_token' => Str::random(10)
+        ])->assignRole('manager');
 
-        // User::factory()
-        //     ->count(25)
-        //     ->create()
-        //     ->each(function (User $user) {
-        //         $role = rand(0, 1) === 0 ? 'staff' : 'admin';
-        //         $user->assignRole($role);
-        //     });
+        User::create([
+            'first_name' => 'User',
+            'last_name' => 'User',
+            'ci' => fake()->numberBetween(100000, 99999999),
+            'contact' => fake()->phoneNumber(),
+            'address' => fake()->address(),
+            'username' => 'user',
+            'email' => 'user@imbae.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'avatar' => fake()->imageUrl(),
+            'remember_token' => Str::random(10)
+        ])->assignRole('user');
     }
 }
