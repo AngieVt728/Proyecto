@@ -1,25 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { Head, Link } from "@inertiajs/vue3";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 
-defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
-});
+defineProps<{
+    canLogin?: boolean;
+    canRegister?: boolean;
+    laravelVersion: string;
+    phpVersion: string;
+}>();
 </script>
 
 <template>
-    <Head title="Welcome" />
     <guest-layout>
+        <Head title="Pagina de bienvenida" />
+
         <main class="w-full h-full z-50">
             <div
                 class="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-52"
