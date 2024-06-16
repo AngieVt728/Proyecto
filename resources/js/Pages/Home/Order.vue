@@ -64,15 +64,15 @@ console.log(props.orders);
                             <th class="py-2 px-4 border-b border-gray-200">
                                 Fecha de Entrega
                             </th>
-                            <th class="py-2 px-4 border-b border-gray-200">
+                            <!-- <th class="py-2 px-4 border-b border-gray-200">
                                 Productos
-                            </th>
-                            <th class="py-2 px-4 border-b border-gray-200">
+                            </th> -->
+                            <!-- <th class="py-2 px-4 border-b border-gray-200">
                                 Estado del Pedido
-                            </th>
-                            <th class="py-2 px-4 border-b border-gray-200">
+                            </th> -->
+                            <!-- <th class="py-2 px-4 border-b border-gray-200">
                                 Precio Total
-                            </th>
+                            </th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -81,7 +81,13 @@ console.log(props.orders);
                             :key="order.id"
                             class="border-b"
                         >
-                            <td class="py-2 px-4">{{ order.date }}</td>
+                            <td class="py-2 px-4">
+                                {{ order.order_date }}
+                            </td>
+                            <td class="py-2 px-4">
+                                {{ order.deliver_date }}
+                            </td>
+                            <!-- <td class="py-2 px-4">{{ order.date }}</td>
                             <td class="py-2 px-4">{{ order.deliveryDate }}</td>
                             <td class="py-2 px-4">
                                 <ul>
@@ -115,7 +121,7 @@ console.log(props.orders);
                                         0
                                     )
                                 }}
-                            </td>
+                            </td> -->
                         </tr>
                     </tbody>
                 </table>

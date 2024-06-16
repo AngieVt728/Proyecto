@@ -2,6 +2,7 @@
 import HomeLayout from "@/Layouts/HomeLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { ref } from "vue";
+import { format } from "@formkit/tempo";
 
 const props = defineProps(["products"]);
 const form = useForm({
@@ -29,6 +30,8 @@ const handleSubmit = () => {
     });
     // form.detail = JSON.stringify(orders.value);
     // Enviar el formulario usando Inertia.js
+    form.order_date = format(form.order_date, "YYYY-MM-DD");
+    form.delivery_date = format(form.order_date, "YYYY-MM-DD");
     form.post(route("user.order-store"), {
         onSuccess: () => {
             // Limpiar el formulario y cualquier otro estado necesario

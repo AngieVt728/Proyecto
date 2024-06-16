@@ -36,7 +36,7 @@ class HomeController extends Controller
     public function orders(): Response
     {
         $auth = auth()->user();
-        $orders = $auth->orders();
+        $orders = $auth->orders()->get();
 
         return Inertia::render('Home/Order', [
             'orders' => $orders
