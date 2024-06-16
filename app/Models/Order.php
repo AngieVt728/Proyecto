@@ -15,7 +15,8 @@ class Order extends Model
     protected $fillable = [
         'detail',
         'order_date',
-        'deliver_date'
+        'deliver_date',
+        'user_id'
     ];
 
     public function user(): BelongsTo

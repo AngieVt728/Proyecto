@@ -1,4 +1,111 @@
+<script setup>
+import HomeLayout from "@/Layouts/HomeLayout.vue";
+import { Head, useForm } from "@inertiajs/vue3";
+import { ref } from "vue";
+
+const props = defineProps(["products"]);
+const form = useForm({
+    detail: "", // Aquí se almacenará el detalle como una cadena JSON
+    order_date: new Date(),
+    deliver_date: new Date(),
+});
+const orders = ref([]);
+const selectedProduct = ref("");
+
+const addProduct = () => {
+    const product = props.products.find(
+        (p) => p.id === parseInt(selectedProduct.value)
+    );
+    if (product) {
+        orders.value.push(product);
+    }
+    selectedProduct.value = ""; // Limpiar la selección
+};
+
+const handleSubmit = () => {
+    // Convertir orders a cadena JSON y asignarlo a form.detail
+    orders.value.forEach((product) => {
+        form.detail += " " + product.id;
+    });
+    // form.detail = JSON.stringify(orders.value);
+    // Enviar el formulario usando Inertia.js
+    form.post(route("user.order-store"), {
+        onSuccess: () => {
+            // Limpiar el formulario y cualquier otro estado necesario
+            orders.value = [];
+            form.detail = "";
+        },
+        onError: (errors) => {
+            console.log(errors);
+        },
+    });
+};
+
+console.log(props.products);
+</script>
+
 <template>
+    <home-layout>
+        <Head title="Nuevo pedido" />
+        <div class="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-6 text-center">Nuevo Pedido</h2>
+            <form class="space-y-6" @submit.prevent="handleSubmit">
+                <div class="flex justify-between items-center">
+                    <label class="font-semibold text-sm" for="delivery_date">
+                        Fecha de entrega estimada
+                    </label>
+                    <input
+                        class="w-full mt-4 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                        type="date"
+                        name="delivery_date"
+                        id="delivery_date"
+                        v-model="form.deliver_date"
+                    />
+                </div>
+                <div class="flex justify-between items-center">
+                    <select
+                        v-model="selectedProduct"
+                        class="mt-4 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                    >
+                        <option disabled value="">
+                            Seleccionar una opción
+                        </option>
+                        <option
+                            v-for="product in products"
+                            :key="product.id"
+                            :value="product.id"
+                        >
+                            {{ product.name }}
+                        </option>
+                    </select>
+                    <button
+                        class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        type="button"
+                        @click="addProduct"
+                    >
+                        Agregar producto
+                    </button>
+                </div>
+                <div>
+                    <h2>Productos agregados</h2>
+                    <ul>
+                        <li v-for="order in orders" :key="order.id">
+                            {{ order.name }}
+                        </li>
+                    </ul>
+                </div>
+                <button
+                    class="w-full mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    type="submit"
+                >
+                    Hacer pedido
+                </button>
+            </form>
+        </div>
+    </home-layout>
+</template>
+
+<!-- <template>
     <div class="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-6 text-center">Nuevo Pedido</h2>
         <form class="space-y-6">
@@ -93,4 +200,4 @@ body {
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-</style>
+</style> -->
