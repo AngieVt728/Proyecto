@@ -1,38 +1,28 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
-const props = defineProps({
-    isLogin: {
-        type: Boolean,
-        default: false,
-        required: true,
+
+defineProps({
+    subtitle: {
+        type: String,
+        required: false,
     },
-    isCustom: {
-        type: Boolean,
-        default: false,
-        requited: false,
+    shadow: {
+        type: String,
+        required: false,
     },
 });
-
-const imgClass = props.isLogin
-    ? "w-[150px] drop-shadow-md"
-    : "w-[150px] lg:w-[200px] mt-4";
-const spanClass = props.isLogin
-    ? "text-sm font-semibold text-gray-400"
-    : "text-md font-semibold text-gray-400";
-const spanText = props.isLogin
-    ? "Ingresa tus credenciales para iniciar sesión"
-    : "Panel de administración";
 </script>
 
 <template>
-    <Link :href="route('dashboard')">
+    <Link :href="route('login')">
         <div class="flex items-center justify-center flex-col">
             <img
-                :class="imgClass"
+                class="w-[150px]"
+                :class="shadow"
                 src="/images/logoimbae2.png"
                 alt="logo imbae png"
             />
-            <span v-if="!isCustom" :class="spanClass">{{ spanText }}</span>
+            <p class="font-semibold text-xs text-gray-500">{{ subtitle }}</p>
         </div>
     </Link>
 </template>

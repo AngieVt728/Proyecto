@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import GuestLayout from "@/Layouts/GuestLayout.vue";
-import Input from "@/Components/Inputs/Input.vue";
-import Checkbox from "@/Components/Inputs/Checkbox.vue";
 import Logo from "@/Components/Branding/Logo.vue";
+import Checkbox from "@/Components/Inputs/Checkbox.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import GuestLayout from "@/Layouts/GuestLayout.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
 
 defineProps<{
@@ -30,7 +30,10 @@ const submit = () => {
         <Head title="Inicio de sesión" />
 
         <main class="w-full max-w-sm p-6 bg-white rounded-md shadow-md z-50">
-            <Logo :is-login="true" />
+            <Logo
+                subtitle="Ingresa tus credenciales para iniciar sesión"
+                shadow="drop-shadow-md"
+            />
 
             <form class="mt-4" @submit.prevent="submit">
                 <Input

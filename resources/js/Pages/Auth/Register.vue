@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import Logo from "@/Components/Branding/Logo.vue";
+import Input from "@/Components/Inputs/Input.vue";
+import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { Head, Link, useForm } from "@inertiajs/vue3";
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    contact: "",
+    address: "",
 });
 
 const submit = () => {
-    form.post(route('register'), {
+    form.post(route("register"), {
         onFinish: () => {
-            form.reset('password', 'password_confirmation');
+            form.reset("password", "password_confirmation");
         },
     });
 };
@@ -24,82 +25,80 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Registro de usuarios" />
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
-
-                <TextInput
-                    id="name"
+        <main
+            class="w-full max-w-[500px] my-8 mx-8 lg:mx-0 pt-2 pb-6 px-6 bg-white rounded-md shadow-md z-50"
+        >
+            <Logo
+                subtitle="Llena todos los campos obligatorios (*)"
+                shadow="drop-shadow-md"
+            />
+            <form class="mt-4" @submit.prevent="submit">
+                <Input
+                    id="firstName"
+                    label-text="Nombres *"
+                    v-model="form.firstName"
+                    :error="form.errors.firstName"
                     type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
                 />
-
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
+                <Input
+                    id="lastName"
+                    label-text="Apellidos *"
+                    v-model="form.lastName"
+                    :error="form.errors.lastName"
+                    type="text"
+                />
+                <Input
                     id="email"
-                    type="email"
-                    class="mt-1 block w-full"
+                    label-text="Correo electrónico *"
                     v-model="form.email"
-                    required
-                    autocomplete="username"
+                    :error="form.errors.email"
+                    type="email"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
+                <Input
                     id="password"
-                    type="password"
-                    class="mt-1 block w-full"
+                    label-text="Contraseña *"
                     v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
+                    :error="form.errors.password"
                     type="password"
-                    class="mt-1 block w-full"
+                />
+                <Input
+                    id="password_confirmation"
+                    label-text="Confirmar contraseña *"
                     v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
+                    :error="form.errors.password_confirmation"
+                    type="password"
+                />
+                <Input
+                    id="contact"
+                    label-text="Teléfono o celular"
+                    v-model="form.contact"
+                    :error="form.errors.contact"
+                    type="text"
+                />
+                <Input
+                    id="address"
+                    label-text="Dirección"
+                    v-model="form.address"
+                    :error="form.errors.address"
+                    type="text"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
                 <Link
                     :href="route('login')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-right"
                 >
-                    Already registered?
+                    ¿Ya estas registrado?
                 </Link>
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
+                <button
+                    type="submit"
+                    class="w-full mt-4 px-4 py-2 text-sm text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
+                >
+                    Registrarse
+                </button>
+            </form>
+        </main>
     </GuestLayout>
 </template>

@@ -55,6 +55,24 @@ class User extends Authenticatable
         ];
     }
 
+    public static function generateUsername($firstName, $lastName)
+    {
+        $firstName = strtolower($firstName);
+        $lastName = strtolower($lastName);
+
+        $baseUsername = substr($firstName, 0, 1) . $lastName;
+
+        $username = $baseUsername;
+        $counter = 1;
+
+        while (self::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
     public function retailOutlets(): HasMany
     {
         return $this->hasMany(RetailOutlet::class);

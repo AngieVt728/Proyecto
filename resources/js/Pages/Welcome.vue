@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Head, Link } from "@inertiajs/vue3";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
+import { Head, Link } from "@inertiajs/vue3";
 
 defineProps<{
     canLogin?: boolean;
@@ -47,7 +47,7 @@ defineProps<{
                         <template v-else>
                             <Link
                                 :href="route('login')"
-                                class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
+                                class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500 mr-4 lg:mr-0"
                             >
                                 Ir a inicio de sesión
                                 <v-icon

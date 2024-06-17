@@ -1,11 +1,15 @@
 <template>
     <div
-        class="relative flex items-center justify-center h-screen bg-center bg-no-repeat bg-[url(https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg)] bg-gray-700 bg-blend-multiply"
+        class="relative flex flex-col items-center justify-center min-h-screen bg-center bg-no-repeat bg-[url(https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg)] bg-gray-700 bg-blend-multiply"
     >
         <div
-            class="absolute w-full h-full bg-gradient-to-br from-purple-300 via-indigo-400 to-purple-300 opacity-15"
+            class="absolute inset-0 bg-gradient-to-br from-purple-300 via-indigo-400 to-purple-300 opacity-15"
         ></div>
-        <slot />
+        <div
+            class="relative z-10 flex flex-col items-center justify-center w-full h-full"
+        >
+            <slot />
+        </div>
     </div>
 </template>
 
