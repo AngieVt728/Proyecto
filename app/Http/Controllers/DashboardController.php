@@ -8,7 +8,6 @@ use App\Models\RawMaterial;
 use App\Models\RetailOutlet;
 use App\Models\Sale;
 use Carbon\Carbon;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,8 +19,6 @@ class DashboardController extends Controller
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
         ]);
     }
 

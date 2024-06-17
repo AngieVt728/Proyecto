@@ -5,13 +5,11 @@ import GuestLayout from "@/Layouts/GuestLayout.vue";
 defineProps<{
     canLogin?: boolean;
     canRegister?: boolean;
-    laravelVersion: string;
-    phpVersion: string;
 }>();
 </script>
 
 <template>
-    <guest-layout>
+    <GuestLayout>
         <Head title="Pagina de bienvenida" />
 
         <main class="w-full h-full z-50">
@@ -46,20 +44,28 @@ defineProps<{
                             />
                         </Link>
 
-                        <div v-else>
+                        <template v-else>
                             <Link
                                 :href="route('login')"
                                 class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
                             >
-                                Ir a inicio de sesión<v-icon
+                                Ir a inicio de sesión
+                                <v-icon
                                     class="ml-1 font-medium"
                                     name="hi-arrow-right"
                                 />
                             </Link>
-                        </div>
+                            <Link
+                                v-if="canRegister"
+                                :href="route('register')"
+                                class="inline-flex justify-center hover:text-gray-900 items-center py-3 px-5 sm:ms-4 text-base font-medium text-center text-white rounded-lg border border-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-400"
+                            >
+                                Registrarse
+                            </Link>
+                        </template>
                     </div>
                 </div>
             </div>
         </main>
-    </guest-layout>
+    </GuestLayout>
 </template>
