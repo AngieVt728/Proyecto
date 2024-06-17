@@ -22,7 +22,7 @@ const { isOpen } = useSidebar();
             "
             class="fixed inset-y-0 left-0 z-30 w-72 overflow-y-auto transition duration-300 transform bg-gray-900 lg:translate-x-0 lg:static lg:inset-0"
         >
-            <Logo :is-login="false" />
+            <Logo subtitle="Panel de administración" img-class="mt-4" />
             <nav class="mt-10">
                 <Anchor
                     :href="route(`${prefix}.dashboard`)"

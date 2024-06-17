@@ -32,7 +32,7 @@ const submit = () => {
         <main class="w-full max-w-sm p-6 bg-white rounded-md shadow-md z-50">
             <Logo
                 subtitle="Ingresa tus credenciales para iniciar sesión"
-                shadow="drop-shadow-md"
+                img-class="drop-shadow-md"
             />
 
             <form class="mt-4" @submit.prevent="submit">

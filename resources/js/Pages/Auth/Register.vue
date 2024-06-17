@@ -32,7 +32,7 @@ const submit = () => {
         >
             <Logo
                 subtitle="Llena todos los campos obligatorios (*)"
-                shadow="drop-shadow-md"
+                img-class="drop-shadow-md"
             />
             <form class="mt-4" @submit.prevent="submit">
                 <Input

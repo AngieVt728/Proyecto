@@ -6,7 +6,7 @@ defineProps({
         type: String,
         required: false,
     },
-    shadow: {
+    imgClass: {
         type: String,
         required: false,
     },
@@ -18,7 +18,7 @@ defineProps({
         <div class="flex items-center justify-center flex-col">
             <img
                 class="w-[150px]"
-                :class="shadow"
+                :class="imgClass"
                 src="/images/logoimbae2.png"
                 alt="logo imbae png"
             />
