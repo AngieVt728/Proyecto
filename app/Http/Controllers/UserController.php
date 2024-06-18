@@ -82,15 +82,18 @@ class UserController extends Controller
             'role' => 'required|integer|exists:roles,id',
         ]);
 
-        $imageURL = !$validated['avatar']
-            ? Cloudinary::upload($request->file('avatar')->getRealPath())->getSecurePath()
+        $imageURL = Request::hasFile('avatar')
+            ? Cloudinary::upload(Request::file('avatar')->getRealPath())->getSecurePath()
             : null;
+
+        // if (Request::hasFile('avatar')) {
+        //     $imageURL = Request::file('avatar')->store('avatars', 'public');
+        // }
 
         $validated['password'] = $validated['password'] ? Hash::make($validated['password']) : Hash::make($validated['ci']);
         $validated['contact'] = $validated['contact'] ?? 'Sin registro';
         $validated['address'] = $validated['address'] ?? 'Sin registro';
         $validated['username'] = $validated['username'] ?? User::generateUsername($validated['firstName'], $validated['lastName']);
-
 
         $roles = [
             1 => 'super-admin',
