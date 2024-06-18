@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'email' => 'super.admin@imbae.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
             'remember_token' => Str::random(10)
         ])->assignRole('super-admin');
 
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@imbae.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
             'remember_token' => Str::random(10)
         ])->assignRole('admin');
 
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             'email' => 'manager@imbae.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
             'remember_token' => Str::random(10)
         ])->assignRole('manager');
 
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
             'email' => 'user@imbae.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
-            'avatar' => fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
             'remember_token' => Str::random(10)
         ])->assignRole('user');
 

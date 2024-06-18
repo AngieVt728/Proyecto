@@ -1,39 +1,33 @@
-<script setup>
+<script setup lang="ts">
 defineEmits(["update:modelValue", "blur"]);
 const props = defineProps({
     id: {
         type: String,
         required: true,
     },
+    name:{
+        type:String,
+        required:true
+    },
     labelText: {
         type: String,
         required: true,
     },
     modelValue: {
-        type: [String, Number, Boolean],
+        type: [String, Number, Boolean,File],
         required: true,
     },
     error: {
         type: String,
-    },
-    type: {
-        type: String,
-        default: "text",
-    },
-    placeholder: {
-        type: String,
-        default: " ",
     },
     disabled: {
         type: Boolean,
         required: false,
         default: false,
     },
-    min: {
-        type: Number,
-    },
-    max: {
-        type: Number,
+    accept: {
+        type: String,
+        required: true,
     },
 });
 </script>
@@ -49,16 +43,14 @@ const props = defineProps({
             </p>
         </div>
         <input
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
+            @input="$emit('update:modelValue', $event.target.files[0])"
             @blur="$emit('blur')"
             :id="id"
-            :type="type"
-            :placeholder="placeholder"
-            class="block w-full border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+            :name="name"
+            type="file"
+            :accept="accept"
+            class="block w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 focus:outline-none file:cursor-pointer"
             :disabled="disabled"
-            :min="min"
-            :max="max"
         />
     </div>
 </template>
