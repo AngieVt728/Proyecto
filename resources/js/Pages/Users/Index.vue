@@ -8,17 +8,12 @@ import { reactive, ref } from "vue";
 
 const props = defineProps(["filters", "users"]);
 const columns = ref([
-    { key: "username", label: "Nombre se usuario", truncate: true },
     { key: "image_url", label: "Avatar", img: true },
+    { key: "username", label: "Nombre se usuario", truncate: true },
     { key: "first_name", label: "Nombres", truncate: true },
     { key: "last_name", label: "Apellidos", truncate: true },
     { key: "ci", label: "Carnet de identidad" },
-    {
-        key: "email",
-        label: "Correo electrónico",
-        verify: "email_verified_at",
-        truncate: true,
-    },
+    { key: "email", label: "Correo electrónico", truncate: true },
     { key: "contact", label: "Teléfono o celular", truncate: true },
     { key: "role", label: "Rol" },
     { key: "address", label: "Dirección", truncate: true },

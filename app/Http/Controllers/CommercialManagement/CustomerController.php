@@ -7,10 +7,10 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class CustomerController extends Controller
 {
@@ -34,12 +34,12 @@ class CustomerController extends Controller
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'ci' => $user->ci,
+                'username' => $user->username,
                 'email' => $user->email,
-                'email_verified_at' => $user->email_verified_at,
-                'phone_number' => $user->phone_number,
+                'contact' => $user->contact,
                 'role' =>  $user->roles->first()->name ?? '',
                 'address' => $user->address,
-                'avatar' => $user->avatar,
+                'image_url' => $user->image_url,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at
             ]);
@@ -55,10 +55,7 @@ class CustomerController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Users/Create', [
-            'roles' => Role::all(),
-            'permissions' => Permission::all()
-        ]);
+        return Inertia::render('Customers/Create');
     }
 
     /**
@@ -67,67 +64,110 @@ class CustomerController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request::validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'ci' => 'required|string|unique:users,ci|max:10|min:8',
-            'email' => 'required|email|max:100|unique:users,email',
-            'phone_number' => 'nullable|string|max:20',
+            'firstName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'lastName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'ci' => 'required|string|unique:users,ci|max:10|min:4|regex:/^[0-9]+$/',
+            'contact' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'address' => 'nullable|string|max:255',
+            'username' => 'nullable|string|max:20|regex:/^[a-z0-9]+$/',
+            'email' => 'required|email|max:100|unique:users,email',
+            'password' => 'nullable|string|min:6',
         ]);
-        $validated['password'] = Hash::make($validated['ci']);
-        $validated['phone_number'] = $validated['phone_number'] ?? 'No registrado';
-        $validated['address'] = $validated['address'] ?? 'No registrado';
 
-        User::create($validated);
+        $validated['password'] = $validated['password'] ? Hash::make($validated['password']) : Hash::make($validated['ci']);
+        $validated['username'] = $validated['username'] ?? User::generateUsername($validated['firstName'], $validated['lastName']);
 
-        return redirect()->route('users.index');
+        $imageURL = null;
+        if ($request::hasFile('avatar')) {
+            $imagePath = $request::file('avatar');
+            $imageSaveName = $validated['username'] . '.' . $request::file('avatar')->getClientOriginalExtension();
+            $imageURL = $request::hasFile('avatar')
+                ? url(Storage::url($imagePath->storeAs('users', $imageSaveName, 'public')))
+                : null;
+        }
+
+        $user = User::create([
+            'first_name' => $validated['firstName'],
+            'last_name' => $validated['lastName'],
+            'ci' => $validated['ci'],
+            'contact' => $validated['contact'],
+            'address' => $validated['address'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'image_url' => $imageURL,
+        ]);
+
+        $user->assignRole('user');
+
+        return redirect()->route('customers.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user): Response
+    public function show(User $customer): Response
     {
-        return Inertia::render('Users/Show', [
-            'user' => $user
+        return Inertia::render('Customers/Show', [
+            'user' => $customer
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user): Response
+    public function edit(User $customer): Response
     {
-        return Inertia::render('Users/Edit', [
-            'user' => $user
+        return Inertia::render('Customers/Edit', [
+            'user' => $customer
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user): RedirectResponse
+    public function update(Request $request, User $customer): RedirectResponse
     {
         $validated = $request::validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $user['id'],
-            'email' => 'required|email|max:100|unique:users,email,' . $user['id'],
-            'phone_number' => 'nullable|string|max:20',
+            'firstName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'lastName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'ci' => [
+                'required',
+                'string',
+                'max:10',
+                'min:4',
+                'regex:/^[0-9]+$/',
+                Rule::unique('users')->ignore($customer->id),
+            ],
+            'contact' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'address' => 'nullable|string|max:255',
+            'username' => [
+                'nullable',
+                'string',
+                'max:20',
+                'regex:/^[a-z0-9]+$/',
+                Rule::unique('users')->ignore($customer->id),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('users')->ignore($customer->id),
+            ],
         ]);
-        $user->update($validated);
 
-        return redirect()->route('users.index');
+        $customer->update($validated);
+
+        return redirect()->route('customers.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $customer): RedirectResponse
     {
-        $user->delete();
+        $customer->delete();
 
-        return redirect()->route('users.index');
+        return redirect()->route('customers.index');
     }
 }

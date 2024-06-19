@@ -1,88 +1,103 @@
-<script setup>
+<script setup lang="ts">
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
-import { toast } from "vue3-toastify";
+import { Head, router } from "@inertiajs/vue3";
 
-const props = defineProps(["customer"]);
-const form = useForm({
-    first_name: props.customer ? props.customer.first_name : "",
-    last_name: props.customer ? props.customer.last_name : "",
-    ci: props.customer ? props.customer.ci : "",
-    email: props.customer ? props.customer.email : "",
-    phone_number: props.customer ? props.customer.phone_number : "",
-    address: props.customer ? props.customer.address : "",
-});
+const props = defineProps<{ user }>();
 
 const handleSubmit = () => {
-    if (props.customer?.id)
-        form.patch(route("customers.update", { customer: props.customer }), {
-            onSuccess: () => toast.success("Cliente actualizado"),
-            onError: (errors) =>
-                Object.values(errors).forEach((message) => {
-                    toast.error(message);
-                }),
-        });
-    else
-        form.post(route("customers.store"), {
-            onSuccess: () => toast.success("Cliente creado"),
-            onError: (errors) =>
-                Object.values(errors).forEach((message) => {
-                    toast.error(message);
-                }),
-        });
+    router.get(route("customers.edit", { id: props.user.id }));
 };
 </script>
 
 <template>
-    <Head title="Crear nuevo cliente" />
-    <authenticated-layout>
-        <Form title="Cliente" @handle-submit="handleSubmit">
-            <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                <Input
-                    id="first_name"
-                    label-text="Nombre/s"
-                    v-model="form.first_name"
-                    :error="form.errors.first_name"
-                    type="text"
-                />
-                <Input
-                    id="last_name"
-                    label-text="Apellidos"
-                    v-model="form.last_name"
-                    :error="form.errors.last_name"
-                    type="text"
-                />
-                <Input
-                    id="ci"
-                    label-text="Carnet de identidad"
-                    v-model="form.ci"
-                    :error="form.errors.ci"
-                    type="text"
-                />
+    <AuthenticatedLayout>
+        <Head :title="user.username" />
+        <Form
+            title="Información de cliente"
+            type-submit="edit"
+            @handle-submit="handleSubmit"
+        >
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Datos personales
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8">
+                <div class="flex justify-center items-center my-4">
+                    <img
+                        class="rounded-full w-72 h-72 object-cover"
+                        :src="user.image_url"
+                        :alt="`${user.username} profile`"
+                    />
+                </div>
+                <div class="flex flex-wrap justify-around gap-4">
+                    <Input
+                        id="firstName"
+                        label-text="Nombre/s"
+                        v-model="user.first_name"
+                        type="text"
+                        :disabled="true"
+                    />
+                    <Input
+                        id="lastName"
+                        label-text="Apellidos"
+                        v-model="user.last_name"
+                        type="text"
+                        :disabled="true"
+                    />
+                    <Input
+                        id="ci"
+                        label-text="Carnet de identidad"
+                        v-model="user.ci"
+                        type="text"
+                        :disabled="true"
+                    />
+                </div>
+            </div>
+            <h2
+                class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Información de cuenta
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8">
                 <Input
                     id="email"
                     label-text="Correo electrónico"
-                    v-model="form.email"
-                    :error="form.errors.email"
+                    v-model="user.email"
                     type="email"
+                    :disabled="true"
                 />
                 <Input
-                    id="phone_number"
-                    label-text="Numero teléfono celular"
-                    v-model="form.phone_number"
-                    :error="form.errors.phone_number"
+                    id="username"
+                    label-text="Nombre de usuario"
+                    v-model="user.username"
                     type="text"
+                    :disabled="true"
+                />
+            </div>
+            <h2
+                class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Información de contacto
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8 mb-4">
+                <Input
+                    id="contact"
+                    label-text="Teléfono o celular"
+                    v-model="user.contact"
+                    type="text"
+                    :disabled="true"
                 />
                 <Input
                     id="address"
-                    label-text="Dirección domicilio"
-                    v-model="form.address"
-                    :error="form.errors.address"
+                    label-text="Dirección"
+                    v-model="user.address"
                     type="text"
+                    :disabled="true"
                 />
             </div>
         </Form>
-    </authenticated-layout>
+    </AuthenticatedLayout>
 </template>

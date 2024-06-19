@@ -10,15 +10,18 @@ const role = getRole();
 const props = defineProps<{ user: Object; roles: Object }>();
 
 const handleSubmit = () => {
-    console.log("ir a editar");
     router.get(route("users.edit", { id: props.user.id }));
 };
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Ver usuario" />
-        <Form title="Usuario" type-submit="edit" @handle-submit="handleSubmit">
+        <Head :title="user.username" />
+        <Form
+            title="Información de usuario"
+            type-submit="edit"
+            @handle-submit="handleSubmit"
+        >
             <h2
                 class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
             >

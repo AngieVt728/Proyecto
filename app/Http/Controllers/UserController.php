@@ -37,7 +37,6 @@ class UserController extends Controller
                 'ci' => $user->ci,
                 'username' => $user->username,
                 'email' => $user->email,
-                'email_verified_at' => $user->email_verified_at,
                 'contact' => $user->contact,
                 'role' =>  $user->roles->first()->name ?? '',
                 'address' => $user->address,
@@ -87,11 +86,14 @@ class UserController extends Controller
         $validated['password'] = $validated['password'] ? Hash::make($validated['password']) : Hash::make($validated['ci']);
         $validated['username'] = $validated['username'] ?? User::generateUsername($validated['firstName'], $validated['lastName']);
 
-        $imagePath = $request::file('avatar');
-        $imageSaveName = $validated['username'] . '.' . $request::file('avatar')->getClientOriginalExtension();
-        $imageURL = $request::hasFile('avatar')
-            ? url(Storage::url($imagePath->storeAs('users', $imageSaveName, 'public')))
-            : null;
+        $imageURL = null;
+        if ($request::hasFile('avatar')) {
+            $imagePath = $request::file('avatar');
+            $imageSaveName = $validated['username'] . '.' . $request::file('avatar')->getClientOriginalExtension();
+            $imageURL = $request::hasFile('avatar')
+                ? url(Storage::url($imagePath->storeAs('users', $imageSaveName, 'public')))
+                : null;
+        }
 
         $roles = [
             1 => 'super-admin',
@@ -202,18 +204,8 @@ class UserController extends Controller
                 'max:100',
                 Rule::unique('users')->ignore($user->id),
             ],
-            'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
             'role' => 'required|integer|exists:roles,id',
         ]);
-
-        if ($request::hasFile('avatar')) {
-            $imagePath = $request::file('avatar');
-            $imageSaveName = $validated['username'] . '.' . $imagePath->getClientOriginalExtension();
-            $imageStoredPath = $imagePath->storeAs('users', $imageSaveName, 'public');
-            $validated['avatar'] = Storage::url($imageStoredPath);
-        } else {
-            unset($validated['avatar']);
-        }
 
         $roles = [
             1 => 'super-admin',
