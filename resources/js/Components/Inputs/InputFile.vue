@@ -5,16 +5,16 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    name:{
-        type:String,
-        required:true
+    name: {
+        type: String,
+        required: true,
     },
     labelText: {
         type: String,
         required: true,
     },
     modelValue: {
-        type: [String, Number, Boolean,File],
+        type: [String, Number, Boolean, File, null],
         required: true,
     },
     error: {

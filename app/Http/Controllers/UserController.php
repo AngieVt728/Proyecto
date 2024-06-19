@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -76,7 +77,7 @@ class UserController extends Controller
             'ci' => 'required|string|unique:users,ci|max:10|min:4|regex:/^[0-9]+$/',
             'contact' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'address' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:20|regex:/^[a-zA-Z0-9]+$/',
+            'username' => 'nullable|string|max:20|regex:/^[a-z0-9]+$/',
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'nullable|string|min:6',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
@@ -84,8 +85,6 @@ class UserController extends Controller
         ]);
 
         $validated['password'] = $validated['password'] ? Hash::make($validated['password']) : Hash::make($validated['ci']);
-        $validated['contact'] = $validated['contact'] ?? 'Sin registro';
-        $validated['address'] = $validated['address'] ?? 'Sin registro';
         $validated['username'] = $validated['username'] ?? User::generateUsername($validated['firstName'], $validated['lastName']);
 
         $imagePath = $request::file('avatar');
@@ -123,32 +122,50 @@ class UserController extends Controller
      * Display the specified resource.
      */
     public function show(User $user): Response
-{
-    return Inertia::render('Users/Show', [
-        'user' => [
-            'id' => $user->id,
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'ci' => $user->ci,
-            'username' => $user->username,
-            'email' => $user->email,
-            'contact' => $user->contact,
-            'role' => $user->roles->first()->name ?? '',
-            'address' => $user->address,
-            'image_url' => $user->image_url,
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at
-        ]
-    ]);
-}
+    {
+        return Inertia::render('Users/Show', [
+            'user' => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'ci' => $user->ci,
+                'username' => $user->username,
+                'email' => $user->email,
+                'contact' => $user->contact,
+                'role' => $user->roles->first()->name ?? '',
+                'address' => $user->address,
+                'image_url' => $user->image_url,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at
+            ]
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(User $user): Response
     {
+        $roles = Role::where('name', '!=', 'user')->get();
+        $permissions = Permission::all();
+
         return Inertia::render('Users/Edit', [
-            'user' => $user
+            'user' => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'ci' => $user->ci,
+                'username' => $user->username,
+                'email' => $user->email,
+                'contact' => $user->contact,
+                'role' => $user->roles->first()->id ?? '',
+                'address' => $user->address,
+                'image_url' => $user->image_url,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at
+            ],
+            'roles' => $roles,
+            'permissions' => $permissions
         ]);
     }
 
@@ -158,14 +175,55 @@ class UserController extends Controller
     public function update(Request $request, User $user): RedirectResponse
     {
         $validated = $request::validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'ci' => 'required|string|max:10|min:8|unique:users,ci,' . $user['id'],
-            'email' => 'required|email|max:100|unique:users,email,' . $user['id'],
-            'phone_number' => 'nullable|string|max:20',
+            'firstName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'lastName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'ci' => [
+                'required',
+                'string',
+                'max:10',
+                'min:4',
+                'regex:/^[0-9]+$/',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'contact' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'address' => 'nullable|string|max:255',
+            'username' => [
+                'nullable',
+                'string',
+                'max:20',
+                'regex:/^[a-z0-9]+$/',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:100',
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
+            'role' => 'required|integer|exists:roles,id',
         ]);
+
+        if ($request::hasFile('avatar')) {
+            $imagePath = $request::file('avatar');
+            $imageSaveName = $validated['username'] . '.' . $imagePath->getClientOriginalExtension();
+            $imageStoredPath = $imagePath->storeAs('users', $imageSaveName, 'public');
+            $validated['avatar'] = Storage::url($imageStoredPath);
+        } else {
+            unset($validated['avatar']);
+        }
+
+        $roles = [
+            1 => 'super-admin',
+            2 => 'admin',
+            3 => 'manager',
+        ];
+
+        $validated['role'] = $roles[$validated['role']];
+
         $user->update($validated);
+
+        $user->syncRoles([$validated['role']]);
 
         return redirect()->route('users.index');
     }

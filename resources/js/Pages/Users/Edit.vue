@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
-import InputFile from "@/Components/Inputs/InputFile.vue";
 import Select from "@/Components/Inputs/Select.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
@@ -9,28 +8,27 @@ import { getRole } from "@/Composables/usePage";
 import { goodDialogs } from "gooddialogs";
 
 const role = getRole();
-const props = defineProps<{ roles: Object }>();
+const props = defineProps<{ user?: Object; roles?: Object }>();
 const form = useForm({
-    firstName: "",
-    lastName: "",
-    ci: "",
-    contact: "",
-    address: "",
-    username: "",
-    email: "",
-    password: "",
-    avatar: "",
-    role: "",
+    firstName: props.user?.first_name,
+    lastName: props.user?.last_name,
+    ci: props.user?.ci,
+    contact: props.user?.contact ?? "",
+    address: props.user?.address ?? "",
+    username: props.user?.username,
+    email: props.user?.email,
+    role: props.user?.role,
 });
 
 const handleSubmit = () => {
-    form.post(route("users.store"), {
+    form.patch(route("users.update", { user: props.user }), {
+        forceFormData: false,
         onSuccess: () =>
-            goodDialogs.createNotification("Usuario creado con éxito", {
+            goodDialogs.createNotification("Usuario actualizado con éxito", {
                 type: "success",
             }),
         onError: (errors) =>
-            goodDialogs.createNotification("No se pudo crear el usuario", {
+            goodDialogs.createNotification("No se pudo actualizar el usuario", {
                 type: "error",
             }),
     });
@@ -68,14 +66,6 @@ const handleSubmit = () => {
                     :error="form.errors.ci"
                     type="text"
                 />
-                <InputFile
-                    id="avatar"
-                    label-text="Fotografía (max. 2 MB)"
-                    v-model="form.avatar"
-                    name="avatar"
-                    :error="form.errors.avatar"
-                    accept="jpg, png"
-                />
             </div>
             <h2
                 class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500"
@@ -96,13 +86,6 @@ const handleSubmit = () => {
                     v-model="form.username"
                     :error="form.errors.username"
                     type="text"
-                />
-                <Input
-                    id="password"
-                    label-text="Contraseña (dejar vacio para asignar el CI)"
-                    v-model="form.password"
-                    :error="form.errors.password"
-                    type="password"
                 />
                 <Select
                     v-if="role === 'super-admin' || role === 'admin'"
