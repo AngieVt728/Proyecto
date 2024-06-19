@@ -123,18 +123,31 @@ class UserController extends Controller
      * Display the specified resource.
      */
     public function show(User $user): Response
-    {
-        return Inertia::render('Users/Create', [
-            'user' => $user
-        ]);
-    }
+{
+    return Inertia::render('Users/Show', [
+        'user' => [
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'ci' => $user->ci,
+            'username' => $user->username,
+            'email' => $user->email,
+            'contact' => $user->contact,
+            'role' => $user->roles->first()->name ?? '',
+            'address' => $user->address,
+            'image_url' => $user->image_url,
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at
+        ]
+    ]);
+}
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(User $user): Response
     {
-        return Inertia::render('Users/Create', [
+        return Inertia::render('Users/Edit', [
             'user' => $user
         ]);
     }

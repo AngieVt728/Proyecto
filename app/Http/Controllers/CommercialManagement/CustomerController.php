@@ -88,7 +88,7 @@ class CustomerController extends Controller
      */
     public function show(User $user): Response
     {
-        return Inertia::render('Users/Create', [
+        return Inertia::render('Users/Show', [
             'user' => $user
         ]);
     }
@@ -98,7 +98,7 @@ class CustomerController extends Controller
      */
     public function edit(User $user): Response
     {
-        return Inertia::render('Users/Create', [
+        return Inertia::render('Users/Edit', [
             'user' => $user
         ]);
     }

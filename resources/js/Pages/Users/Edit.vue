@@ -4,108 +4,135 @@ import Input from "@/Components/Inputs/Input.vue";
 import InputFile from "@/Components/Inputs/InputFile.vue";
 import Select from "@/Components/Inputs/Select.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, useForm } from "@inertiajs/vue3";
 import { getRole } from "@/Composables/usePage";
-import { ref } from "vue";
+import { goodDialogs } from "gooddialogs";
 
 const role = getRole();
-const props = defineProps<{ user: Object, roles: Object }>();
-const user = ref(props.user);
+const props = defineProps<{ roles: Object }>();
+const form = useForm({
+    firstName: "",
+    lastName: "",
+    ci: "",
+    contact: "",
+    address: "",
+    username: "",
+    email: "",
+    password: "",
+    avatar: "",
+    role: "",
+});
 
+const handleSubmit = () => {
+    form.post(route("users.store"), {
+        onSuccess: () =>
+            goodDialogs.createNotification("Usuario creado con éxito", {
+                type: "success",
+            }),
+        onError: (errors) =>
+            goodDialogs.createNotification("No se pudo crear el usuario", {
+                type: "error",
+            }),
+    });
+};
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <Head title="Ver usuario" />
-        <Form title="Usuario">
-            <h2 class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500">
+        <Head title="Crear nuevo usuario" />
+        <Form title="Usuario" @handle-submit="handleSubmit">
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
                 Datos personales
             </h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8">
                 <Input
                     id="firstName"
                     label-text="Nombre/s"
-                    v-model="user.first_name"
+                    v-model="form.firstName"
+                    :error="form.errors.firstName"
                     type="text"
-                    :readonly="true"
                 />
                 <Input
                     id="lastName"
                     label-text="Apellidos"
-                    v-model="user.last_name"
+                    v-model="form.lastName"
+                    :error="form.errors.lastName"
                     type="text"
-                    :readonly="true"
                 />
                 <Input
                     id="ci"
                     label-text="Carnet de identidad"
-                    v-model="user.ci"
+                    v-model="form.ci"
+                    :error="form.errors.ci"
                     type="text"
-                    :readonly="true"
                 />
                 <InputFile
                     id="avatar"
-                    label-text="Fotografía"
-                    v-model="user.image_url"
+                    label-text="Fotografía (max. 2 MB)"
+                    v-model="form.avatar"
                     name="avatar"
+                    :error="form.errors.avatar"
                     accept="jpg, png"
-                    :readonly="true"
                 />
             </div>
-            <h2 class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500">
+            <h2
+                class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
                 Información de cuenta
             </h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8">
                 <Input
                     id="email"
                     label-text="Correo electrónico"
-                    v-model="user.email"
+                    v-model="form.email"
+                    :error="form.errors.email"
                     type="email"
-                    :readonly="true"
                 />
                 <Input
                     id="username"
-                    label-text="Nombre de usuario"
-                    v-model="user.username"
+                    label-text="Nombre de usuario (dejar vació para asignar automáticamente)"
+                    v-model="form.username"
+                    :error="form.errors.username"
                     type="text"
-                    :readonly="true"
                 />
                 <Input
                     id="password"
-                    label-text="Contraseña"
-                    v-model="user.password"
+                    label-text="Contraseña (dejar vacio para asignar el CI)"
+                    v-model="form.password"
+                    :error="form.errors.password"
                     type="password"
-                    :readonly="true"
-                    :disabled="true"
                 />
                 <Select
                     v-if="role === 'super-admin' || role === 'admin'"
                     id="role"
-                    label-text="Rol del usuario"
-                    v-model="user.role"
+                    label-text="Elegir el rol del usuario"
+                    v-model="form.role"
                     :options="roles"
+                    :error="form.errors.role || ''"
                     name="name"
-                    :readonly="true"
-                    :disabled="true"
                 />
             </div>
-            <h2 class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500">
+            <h2
+                class="ml-4 mt-6 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
                 Información de contacto
             </h2>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8 mb-4">
                 <Input
                     id="contact"
                     label-text="Teléfono o celular"
-                    v-model="user.contact"
+                    v-model="form.contact"
+                    :error="form.errors.contact"
                     type="text"
-                    :readonly="true"
                 />
                 <Input
                     id="address"
                     label-text="Dirección"
-                    v-model="user.address"
+                    v-model="form.address"
+                    :error="form.errors.address"
                     type="text"
-                    :readonly="true"
                 />
             </div>
         </Form>

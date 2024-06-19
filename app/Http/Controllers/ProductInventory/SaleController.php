@@ -39,9 +39,12 @@ class SaleController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Sale $sale): Response
+
     {
-        //
+        return Inertia::render('Sales/Create', [
+            'sale' => $sale
+        ]);
     }
 
     /**
@@ -55,17 +58,29 @@ class SaleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+   /* public function show(string $id)
     {
         //
+    }*/
+    public function show(Sale $sale): Response
+    {
+        return Inertia::render('Sales/Show', [
+            'sale' => $sale
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+   /* public function edit(string $id)
     {
         //
+    }*/
+    public function edit(Sale $sale): Response
+    {
+        return Inertia::render('Sales/Edit', [
+            'sale' => $sale
+        ]);
     }
 
     /**

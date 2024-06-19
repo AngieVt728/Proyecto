@@ -39,33 +39,34 @@ class OutflowController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        //
-    }
+{
+    return Inertia::render('Outflows/Create');
+}
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+/**
+ * Store a newly created resource in storage.
+ */
+public function store(Request $request)
+{
+    // Implementar la lógica para almacenar el recurso aquí
+}
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+/**
+ * Display the specified resource.
+ */
+public function show()
+{
+    return Inertia::render('Outflows/Show');
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+/**
+ * Show the form for editing the specified resource.
+ */
+public function edit()
+{
+    return Inertia::render('Outflows/Edit');
+}
+
 
     /**
      * Update the specified resource in storage.
