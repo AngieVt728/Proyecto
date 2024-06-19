@@ -121,7 +121,7 @@ const reset = () => {
                                     <img
                                         class="w-10 h-10 rounded-full"
                                         :src="item[column.key]"
-                                        alt="user avatar"
+                                        alt="image"
                                     />
                                 </span>
                                 <span v-else-if="column.verify">

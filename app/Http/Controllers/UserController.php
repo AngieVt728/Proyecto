@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -34,6 +34,7 @@ class UserController extends Controller
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
                 'ci' => $user->ci,
+                'username' => $user->username,
                 'email' => $user->email,
                 'email_verified_at' => $user->email_verified_at,
                 'contact' => $user->contact,
@@ -70,30 +71,28 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request::validate([
-            'firstName' => 'required|string|max:50',
-            'lastName' => 'required|string|max:50',
-            'ci' => 'required|string|unique:users,ci|max:10|min:8',
-            'contact' => 'nullable|string|max:20',
+            'firstName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'lastName' => 'required|string|max:50|regex:/^[a-zA-Z]+$/',
+            'ci' => 'required|string|unique:users,ci|max:10|min:4|regex:/^[0-9]+$/',
+            'contact' => 'nullable|string|max:20|regex:/^[0-9]+$/',
             'address' => 'nullable|string|max:255',
-            'username' => 'nullable|string|max:20',
+            'username' => 'nullable|string|max:20|regex:/^[a-zA-Z0-9]+$/',
             'email' => 'required|email|max:100|unique:users,email',
             'password' => 'nullable|string|min:6',
             'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
             'role' => 'required|integer|exists:roles,id',
         ]);
 
-        $imageURL = Request::hasFile('avatar')
-            ? Cloudinary::upload(Request::file('avatar')->getRealPath())->getSecurePath()
-            : null;
-
-        // if (Request::hasFile('avatar')) {
-        //     $imageURL = Request::file('avatar')->store('avatars', 'public');
-        // }
-
         $validated['password'] = $validated['password'] ? Hash::make($validated['password']) : Hash::make($validated['ci']);
         $validated['contact'] = $validated['contact'] ?? 'Sin registro';
         $validated['address'] = $validated['address'] ?? 'Sin registro';
         $validated['username'] = $validated['username'] ?? User::generateUsername($validated['firstName'], $validated['lastName']);
+
+        $imagePath = $request::file('avatar');
+        $imageSaveName = $validated['username'] . '.' . $request::file('avatar')->getClientOriginalExtension();
+        $imageURL = $request::hasFile('avatar')
+            ? url(Storage::url($imagePath->storeAs('users', $imageSaveName, 'public')))
+            : null;
 
         $roles = [
             1 => 'super-admin',

@@ -6,6 +6,7 @@ import Select from "@/Components/Inputs/Select.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
 import { getRole } from "@/Composables/usePage";
+import { goodDialogs } from "gooddialogs";
 
 const role = getRole();
 const props = defineProps<{ roles: Object }>();
@@ -23,8 +24,16 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    console.log(form.avatar, form.role);
-    form.post(route("users.store"), {});
+    form.post(route("users.store"), {
+        onSuccess: () =>
+            goodDialogs.createNotification("Usuario creado con éxito", {
+                type: "success",
+            }),
+        onError: (errors) =>
+            goodDialogs.createNotification("No se pudo crear el usuario", {
+                type: "error",
+            }),
+    });
 };
 </script>
 
@@ -61,7 +70,7 @@ const handleSubmit = () => {
                 />
                 <InputFile
                     id="avatar"
-                    label-text="Fotografía"
+                    label-text="Fotografía (max. 2 MB)"
                     v-model="form.avatar"
                     name="avatar"
                     :error="form.errors.avatar"
