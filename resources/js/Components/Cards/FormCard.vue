@@ -1,6 +1,8 @@
 <script setup>
 import ButtonReturn from "@/Components/Buttons/ButtonReturn.vue";
 import ButtonSave from "@/Components/Buttons/ButtonSave.vue";
+import EditButton from "@/Components/Buttons/EditButton.vue";
+import UpdateButton from "@/Components/Buttons/UpdateButton.vue";
 
 const emit = defineEmits(["handleSubmit"]);
 const props = defineProps({
@@ -11,6 +13,10 @@ const props = defineProps({
     description: {
         type: String,
         default: "",
+    },
+    typeSubmit: {
+        type: String,
+        default: "save",
     },
 });
 
@@ -31,8 +37,17 @@ function handleSubmit(e) {
                 <div class="flex justify-start mt-4">
                     <ButtonReturn />
                 </div>
-                <div class="flex justify-end mt-4">
+                <div v-if="typeSubmit === 'save'" class="flex justify-end mt-4">
                     <ButtonSave />
+                </div>
+                <div v-if="typeSubmit === 'edit'" class="flex justify-end mt-4">
+                    <EditButton />
+                </div>
+                <div
+                    v-if="typeSubmit === 'update'"
+                    class="flex justify-end mt-4"
+                >
+                    <UpdateButton />
                 </div>
             </div>
         </form>

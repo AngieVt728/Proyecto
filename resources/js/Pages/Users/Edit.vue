@@ -38,7 +38,11 @@ const handleSubmit = () => {
 <template>
     <AuthenticatedLayout>
         <Head title="Crear nuevo usuario" />
-        <Form title="Usuario" @handle-submit="handleSubmit">
+        <Form
+            title="Usuario"
+            type-submit="update"
+            @handle-submit="handleSubmit"
+        >
             <h2
                 class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
             >

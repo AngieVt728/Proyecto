@@ -123,6 +123,9 @@ class UserController extends Controller
      */
     public function show(User $user): Response
     {
+        $roles = Role::where('name', '!=', 'user')->get();
+        $permissions = Permission::all();
+
         return Inertia::render('Users/Show', [
             'user' => [
                 'id' => $user->id,
@@ -132,12 +135,14 @@ class UserController extends Controller
                 'username' => $user->username,
                 'email' => $user->email,
                 'contact' => $user->contact,
-                'role' => $user->roles->first()->name ?? '',
+                'role' => $user->roles->first()->id ?? '',
                 'address' => $user->address,
                 'image_url' => $user->image_url,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at
-            ]
+            ],
+            'roles' => $roles,
+            'permissions' => $permissions,
         ]);
     }
 
@@ -160,12 +165,9 @@ class UserController extends Controller
                 'contact' => $user->contact,
                 'role' => $user->roles->first()->id ?? '',
                 'address' => $user->address,
-                'image_url' => $user->image_url,
-                'created_at' => $user->created_at,
-                'updated_at' => $user->updated_at
             ],
             'roles' => $roles,
-            'permissions' => $permissions
+            'permissions' => $permissions,
         ]);
     }
 
