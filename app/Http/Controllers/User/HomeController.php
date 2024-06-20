@@ -92,4 +92,9 @@ class HomeController extends Controller
 
         return redirect()->route('user.orders');
     }
+
+    public function profile()
+    {
+        return Inertia::render('Home/Profile');
+    }
 }

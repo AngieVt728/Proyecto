@@ -28,7 +28,7 @@ import {
                 <fwb-navbar-link :link="route('user.orders')">
                     Pedidos
                 </fwb-navbar-link>
-                <fwb-navbar-link :link="route('logout')">
+                <fwb-navbar-link :link="route('user.profile')">
                     Mi cuenta
                 </fwb-navbar-link>
             </fwb-navbar-collapse>

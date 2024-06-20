@@ -11,4 +11,5 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/new-order', [HomeController::class, 'order'])->name('user.new-order');
     Route::post('/new-order', [HomeController::class, 'store'])->name('user.store-order');
     Route::resource('bags', BagController::class);
+    Route::get('/profile', [HomeController::class, 'profile'])->name('user.profile');
 });
