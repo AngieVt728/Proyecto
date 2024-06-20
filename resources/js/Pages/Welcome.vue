@@ -35,26 +35,30 @@ const role = getRole();
                     class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0"
                 >
                     <div v-if="canLogin">
-                        <Link
-                            v-if="$page.props.auth.user && role != 'user'"
-                            :href="route('dashboard')"
-                            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
-                        >
-                            Ir al panel de control<v-icon
-                                class="ml-1 font-medium"
-                                name="hi-arrow-right"
-                            />
-                        </Link>
-                        <Link
-                            v-if="$page.props.auth.user"
-                            :href="route('user.home')"
-                            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
-                        >
-                            Ir al inicio<v-icon
-                                class="ml-1 font-medium"
-                                name="hi-arrow-right"
-                            />
-                        </Link>
+                        <div v-if="role != 'user'">
+                            <Link
+                                v-if="$page.props.auth.user"
+                                :href="route('dashboard')"
+                                class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
+                            >
+                                Ir al panel de control<v-icon
+                                    class="ml-1 font-medium"
+                                    name="hi-arrow-right"
+                                />
+                            </Link>
+                        </div>
+                        <div v-else>
+                            <Link
+                                v-if="$page.props.auth.user"
+                                :href="route('user.home')"
+                                class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
+                            >
+                                Ir al inicio<v-icon
+                                    class="ml-1 font-medium"
+                                    name="hi-arrow-right"
+                                />
+                            </Link>
+                        </div>
 
                         <template v-else>
                             <Link
