@@ -35,9 +35,9 @@ const role = getRole();
                     class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0"
                 >
                     <div v-if="canLogin">
-                        <div v-if="role != 'user'">
+                        <div v-if="$page.props.auth.user">
                             <Link
-                                v-if="$page.props.auth.user"
+                                v-if="role != 'user'"
                                 :href="route('dashboard')"
                                 class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
                             >
@@ -46,10 +46,8 @@ const role = getRole();
                                     name="hi-arrow-right"
                                 />
                             </Link>
-                        </div>
-                        <div v-else>
                             <Link
-                                v-if="$page.props.auth.user"
+                                v-else
                                 :href="route('user.home')"
                                 class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white bg-indigo-600 rounded-md focus:outline-none hover:bg-indigo-500"
                             >
