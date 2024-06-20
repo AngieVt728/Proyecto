@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bag;
 use Illuminate\Http\Request;
 
 class BagController extends Controller
@@ -28,7 +29,12 @@ class BagController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'product_id' => 'required|exists:products,id',
+        ]);
+
+        Bag::create($validatedData);
     }
 
     /**
@@ -60,6 +66,7 @@ class BagController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $bag = Bag::findOrFail($id);
+        $bag->delete();
     }
 }

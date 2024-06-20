@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bag;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
@@ -27,9 +28,11 @@ class HomeController extends Controller
     public function products(): Response
     {
         $products = Product::all();
+        $bags = Bag::all();
 
         return Inertia::render('Home/Product', [
-            'products' => $products
+            'products' => $products,
+            'bags' => $bags,
         ]);
     }
 
