@@ -4,8 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderProduct;
 use App\Models\Product;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -45,29 +45,43 @@ class HomeController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function order(): Response
     {
-        $products = Product::all();
+        $bags = Auth::user()->bags()->get();
+        $productIdsInBags = $bags->pluck('product_id');
+
+        $productsInBags = Product::whereIn('id', $productIdsInBags)->get();
 
         return Inertia::render('Home/NewOrder', [
-            'products' => $products
+            'products' => $productsInBags,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'detail' => 'required|string|max:300',
-            'order_date' => 'required|date',
-            'deliver_date' => 'required|date|after_or_equal:order_date',
+            'deliver_date' => 'required|date|after_or_equal:today',
+            'products' => 'required|array',
+            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Agregar el user_id del usuario autenticado
-        $validated['user_id'] = Auth::id();
+        $order = Order::create([
+            'deliver_date' => $validated['deliver_date'],
+            'status' => 'Por aceptar',
+            'user_id' => Auth::id(),
+        ]);
 
-        // Crear la orden
-        Order::create($validated);
+        foreach ($validated['products'] as $product) {
+            OrderProduct::create([
+                'order_id' => $order->id,
+                'product_id' => $product['product_id'],
+                'quantity' => $product['quantity'],
+            ]);
+        }
 
-        return redirect()->route('user.home');
+        Auth::user()->bags()->delete();
+
+        return redirect()->route('user.orders');
     }
 }

@@ -1,206 +1,125 @@
-<script setup>
+<script setup lang="ts">
 import HomeLayout from "@/Layouts/HomeLayout.vue";
-import { Head, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
-import { format } from "@formkit/tempo";
+import { Head, useForm, Link } from "@inertiajs/vue3";
+import {
+    FwbA,
+    FwbTable,
+    FwbTableBody,
+    FwbTableCell,
+    FwbTableHead,
+    FwbTableHeadCell,
+    FwbTableRow,
+} from "flowbite-vue";
+import { ref, reactive } from "vue";
+import { getUser } from "@/Composables/usePage";
+import { goodDialogs } from "gooddialogs";
 
-const props = defineProps(["products"]);
+const user = getUser();
+const props = defineProps<{ products: Object }>();
 const form = useForm({
-    detail: "", // Aquí se almacenará el detalle como una cadena JSON
-    order_date: new Date(),
-    deliver_date: new Date(),
+    deliver_date: "",
+    products: reactive(
+        props.products.map((product) => ({
+            product_id: product.id,
+            quantity: 1,
+        }))
+    ),
 });
-const orders = ref([]);
-const selectedProduct = ref("");
-
-const addProduct = () => {
-    const product = props.products.find(
-        (p) => p.id === parseInt(selectedProduct.value)
-    );
-    if (product) {
-        orders.value.push(product);
-    }
-    selectedProduct.value = ""; // Limpiar la selección
-};
 
 const handleSubmit = () => {
-    // Convertir orders a cadena JSON y asignarlo a form.detail
-    orders.value.forEach((product) => {
-        form.detail += " " + product.id;
-    });
-    // form.detail = JSON.stringify(orders.value);
-    // Enviar el formulario usando Inertia.js
-    form.order_date = format(form.order_date, "YYYY-MM-DD");
-    form.delivery_date = format(form.order_date, "YYYY-MM-DD");
-    form.post(route("user.order-store"), {
-        onSuccess: () => {
-            // Limpiar el formulario y cualquier otro estado necesario
-            orders.value = [];
-            form.detail = "";
-        },
-        onError: (errors) => {
-            console.log(errors);
-        },
+    console.log(form);
+    console.log("Hacer pedido");
+    if (form.products.some((p) => p.quantity < 1)) {
+        goodDialogs.createNotification(
+            "La cantidad no puede ser negativa o cero.",
+            {
+                type: "error",
+            }
+        );
+        return;
+    }
+    form.post(route("user.store-order"), {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: () =>
+            goodDialogs.createNotification("Pedido realizado con éxito", {
+                type: "success",
+            }),
+        onError: (errors) =>
+            Object.values(errors).forEach((message) => {
+                goodDialogs.createNotification(message, {
+                    type: "error",
+                });
+            }),
     });
 };
-
-console.log(props.products);
 </script>
 
 <template>
-    <home-layout>
+    <HomeLayout>
         <Head title="Nuevo pedido" />
-        <div class="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold mb-6 text-center">Nuevo Pedido</h2>
-            <form class="space-y-6" @submit.prevent="handleSubmit">
-                <div class="flex justify-between items-center">
-                    <label class="font-semibold text-sm" for="delivery_date">
-                        Fecha de entrega estimada
-                    </label>
+        <h2 class="text-2xl my-8 font-semibold text-gray-700 text-center">
+            Productos a pedir
+        </h2>
+        <form @submit.prevent="handleSubmit">
+            <div class="flex justify-around items-center flex-wrap my-4">
+                <div class="grid grid-cols-1 gap-1">
+                    <label
+                        class="text-xs text-center text-gray-700"
+                        for="deliver_date"
+                        >Fecha estimada de entrega</label
+                    >
                     <input
-                        class="w-full mt-4 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
-                        type="date"
-                        name="delivery_date"
-                        id="delivery_date"
+                        class="border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
                         v-model="form.deliver_date"
+                        type="date"
+                        name="deliver_date"
+                        id="deliver_date"
                     />
                 </div>
-                <div class="flex justify-between items-center">
-                    <select
-                        v-model="selectedProduct"
-                        class="mt-4 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
-                    >
-                        <option disabled value="">
-                            Seleccionar una opción
-                        </option>
-                        <option
-                            v-for="product in products"
-                            :key="product.id"
-                            :value="product.id"
-                        >
-                            {{ product.name }}
-                        </option>
-                    </select>
-                    <button
-                        class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        type="button"
-                        @click="addProduct"
-                    >
-                        Agregar producto
-                    </button>
-                </div>
-                <div>
-                    <h2>Productos agregados</h2>
-                    <ul>
-                        <li v-for="order in orders" :key="order.id">
-                            {{ order.name }}
-                        </li>
-                    </ul>
-                </div>
                 <button
-                    class="w-full mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    class="flex items-center px-6 py-2 font-medium tracking-wide text-white transition-colors duration-200 transform bg-indigo-600 rounded-md hover:bg-indigo-500 focus:outline-none focus:bg-indigo-500"
                     type="submit"
                 >
                     Hacer pedido
                 </button>
-            </form>
-        </div>
-    </home-layout>
-</template>
-
-<!-- <template>
-    <div class="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-6 text-center">Nuevo Pedido</h2>
-        <form class="space-y-6">
-            <div>
-                <label for="customerName" class="block text-sm font-medium text-gray-700">Nombre del Cliente</label>
-                <input type="text" id="customerName" v-model="customerName" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
             </div>
+            <div class="flex justify-center items-center">
+                <fwb-table class="w-[90%] lg:w-1/2">
+                    <fwb-table-head>
+                        <fwb-table-head-cell
+                            >Nombre del producto</fwb-table-head-cell
+                        >
+                        <fwb-table-head-cell>Descripción</fwb-table-head-cell>
 
-            <div>
-                <label for="address" class="block text-sm font-medium text-gray-700">Dirección del Punto de Venta</label>
-                <input type="text" id="address" v-model="address" disabled class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-
-            <div>
-                <label for="orderDate" class="block text-sm font-medium text-gray-700">Fecha de Pedido</label>
-                <input type="date" id="orderDate" v-model="orderForm.orderDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-
-            <div>
-                <label for="deliveryDate" class="block text-sm font-medium text-gray-700">Fecha de Entrega</label>
-                <input type="date" id="deliveryDate" v-model="orderForm.deliveryDate" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-            </div>
-
-            <div>
-                <h3 class="text-lg font-medium text-gray-700">Productos</h3>
-                <div v-for="(product, index) in orderForm.products" :key="index" class="mt-4 space-y-2">
-                    <div class="flex items-center space-x-4">
-                        <input type="text" v-model="product.name" placeholder="Nombre del Producto" class="flex-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                        <input type="number" v-model="product.quantity" min="1" placeholder="Cantidad" class="w-20 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                        <input type="number" v-model="product.price" min="0" step="0.01" placeholder="Precio" class="w-24 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
-                        <button type="button" @click="removeProduct(index)" class="text-red-600 hover:text-red-800 focus:outline-none">
-                            &times;
-                        </button>
-                    </div>
-                </div>
-                <button type="button" @click="addProduct" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    Agregar Producto
-                </button>
-            </div>
-
-            <div>
-                <label for="status" class="block text-sm font-medium text-gray-700">Estado del Pedido</label>
-                <select id="status" v-model="orderForm.status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option>Pendiente</option>
-                    <option>Entregado</option>
-                </select>
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    Guardar Pedido
-                </button>
+                        <fwb-table-head-cell>Precio Bs.</fwb-table-head-cell>
+                        <fwb-table-head-cell>Cantidad</fwb-table-head-cell>
+                    </fwb-table-head>
+                    <fwb-table-body>
+                        <fwb-table-row
+                            v-for="(product, index) in props.products"
+                            :key="product.id"
+                        >
+                            <fwb-table-cell>{{ product.name }}</fwb-table-cell>
+                            <fwb-table-cell>{{
+                                product.description
+                            }}</fwb-table-cell>
+                            <fwb-table-cell>{{ product.price }}</fwb-table-cell>
+                            <fwb-table-cell>
+                                <input
+                                    v-model.number="
+                                        form.products[index].quantity
+                                    "
+                                    class="w-24 text-center border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
+                                    type="number"
+                                    min="1"
+                                    required
+                                />
+                            </fwb-table-cell>
+                        </fwb-table-row>
+                    </fwb-table-body>
+                </fwb-table>
             </div>
         </form>
-    </div>
+    </HomeLayout>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-
-const customerName = ref('Juan Pérez');
-const address = ref('Calle Falsa 123, Ciudad Ejemplo');
-
-const orderForm = ref({
-    orderDate: '',
-    deliveryDate: '',
-    products: [{ name: '', quantity: 1, price: 0 }],
-    status: 'Pendiente'
-});
-
-const addProduct = () => {
-    orderForm.value.products.push({ name: '', quantity: 1, price: 0 });
-};
-
-const removeProduct = (index) => {
-    orderForm.value.products.splice(index, 1);
-};
-</script>
-
-<style>
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.container {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-</style> -->
