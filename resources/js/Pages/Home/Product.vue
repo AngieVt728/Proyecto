@@ -1,55 +1,41 @@
 <script setup lang="ts">
 import HomeLayout from "@/Layouts/HomeLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import { ref, onMounted } from 'vue'; // Importa las funciones onMounted y ref de Vue
-import Card from '@/Components/Customer/Card.vue'; // Importa el componente de tarjeta personalizado
+import { FwbCard } from "flowbite-vue";
+import { ref } from "vue";
 
-const props = defineProps<{
-    products: {
-        id: number;
-        name: string;
-        image: string;
-        price: number;
-        stock: number;
-        description: string;
-    }[];
-}>();
-
-// // Crea una referencia reactiva para almacenar los productos
-// const products = ref(props.products);
-
-// // Productos de ejemplo para mostrar mientras no se usa la API
-// const exampleProducts = [
-//   {
-//     id: 1,
-//     image: 'https://via.placeholder.com/150',
-//     name: 'Producto 1',
-//     description: 'Descripción del producto 1',
-//   },
-//   {
-//     id: 2,
-//     image: 'https://via.placeholder.com/150',
-//     name: 'Producto 2',
-//     description: 'Descripción del producto 2',
-//   },
-//   // Agrega más productos de ejemplo según sea necesario
-// ];
-
-// products.value = exampleProducts;
+const props = defineProps<{ products: Object }>();
 </script>
 
 <template>
-    <home-layout>
+    <HomeLayout>
         <Head title="Productos" />
-        <div class="flex justify-center">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Itera sobre cada producto en la lista de productos -->
-                <div v-for="product in products" :key="product.id">
-                    <!-- Renderiza una tarjeta para cada producto -->
-                    <Card :image="product.image" :imgAlt="product.name" :title="product.name" :description="product.description" />
-                </div>
+        <h2
+            class="text-3xl my-8 font-semibold text-gray-700 text-center uppercase"
+        >
+            Todos nuestros productos
+        </h2>
+        <div class="flex flex-wrap justify-around items-center gap-6 px-10">
+            <div v-for="product in products">
+                <fwb-card :img-alt="product.name" :img-src="product.image">
+                    <div class="p-4">
+                        <h5
+                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900"
+                        >
+                            {{ product.name }}
+                        </h5>
+                        <p class="font-normal text-xs text-gray-700">
+                            {{ product.description }}
+                        </p>
+                        <div class="flex justify-end mt-2">
+                            <span class="text-2xl font-semibold text-indigo-700"
+                                >{{ product.price
+                                }}<span class="text-lg"> Bs.</span></span
+                            >
+                        </div>
+                    </div>
+                </fwb-card>
             </div>
         </div>
-    </home-layout>
+    </HomeLayout>
 </template>
-

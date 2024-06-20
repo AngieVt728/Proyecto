@@ -1,52 +1,56 @@
+<script setup lang="ts">
+import HomeLayout from "@/Layouts/HomeLayout.vue";
+import { Head } from "@inertiajs/vue3";
+import { FwbCarousel, FwbCard } from "flowbite-vue";
+import { ref } from "vue";
+
+const props = defineProps<{ products: Object }>();
+const pictures = ref([]);
+
+props.products.forEach((product) => {
+    const picture = { src: product.image, alt: product.name };
+    pictures.value.push(picture);
+});
+</script>
+
 <template>
-    <home-layout>
-      <Head title="Inicio" />
-      <div class="container mx-auto px-4">
-        <h2 class="text-2xl font-bold mb-4">PRODUCTOS DISPONIBLES</h2>
-        <Carousel :pictures="pictures" />
-
-
-        <!-- Mostrar las cards de productos con Card2.vue -->
-        <h2 class="text-2xl font-bold my-4">Descripción de Productos </h2>
-        <div class="flex flex-wrap">
-          <Card2
-            v-for="product in products"
-            :key="product.id"
-            :title="product.name"
-            :description="product.description"
-            class="m-4"
-          />
+    <HomeLayout>
+        <Head title="Inicio" />
+        <div>
+            <fwb-carousel :pictures="pictures" slide />
         </div>
-
-        <!-- Añadir el footer -->
-        <Footer />
-      </div>
-    </home-layout>
-  </template>
-
-  <script setup lang="ts">
-  import HomeLayout from "@/Layouts/HomeLayout.vue";
-  import { Head } from "@inertiajs/vue3";
-  import { ref } from "vue";
-  import Carousel from "@/Components/Customer/Carousel.vue";
-  import Card from "@/Components/Customer/Card.vue"; // Importa el componente Card.vue
-  import Card2 from "@/Components/Customer/Card2.vue"; // Importa el componente Card2.vue
-  import Footer from "@/Components/Customer/Footer.vue"; // Importa el componente Footer.vue
-
-  const props = defineProps<{
-    products: {
-      id: number;
-      name: string;
-      image: string;
-      price: number;
-      stock: number;
-      description: string;
-    }[];
-  }>();
-
-  const pictures = ref(props.products.map(product => ({ src: product.image, alt: product.name })));
-  </script>
-
-  <style>
-  /* Añade aquí cualquier estilo adicional si es necesario */
-  </style>
+        <h2
+            class="text-2xl my-8 font-semibold text-gray-700 text-center uppercase"
+        >
+            Detalles de los últimos productos agregados
+        </h2>
+        <div class="flex flex-wrap justify-around gap-6 items-center px-10">
+            <div v-for="product in products">
+                <fwb-card
+                    :img-alt="product.name"
+                    :img-src="product.image"
+                    variant="horizontal"
+                >
+                    <div class="p-4">
+                        <h5
+                            class="mb-2 text-2xl font-bold tracking-tight text-gray-900"
+                        >
+                            {{ product.name }}
+                        </h5>
+                        <p
+                            class="font-normal text-xs text-gray-700 truncate text-wrap max-h-8"
+                        >
+                            {{ product.description }}
+                        </p>
+                        <div class="flex justify-end mt-2">
+                            <span class="text-2xl font-semibold text-indigo-700"
+                                >{{ product.price
+                                }}<span class="text-lg"> Bs.</span></span
+                            >
+                        </div>
+                    </div>
+                </fwb-card>
+            </div>
+        </div>
+    </HomeLayout>
+</template>

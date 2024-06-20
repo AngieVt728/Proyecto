@@ -1,6 +1,7 @@
 import "gooddialogs/dist/base.min.css";
 import "vue3-toastify/dist/index.css";
 import "../css/app.css";
+import "../../node_modules/flowbite-vue/dist/index.css";
 import "./bootstrap";
 
 import { createInertiaApp } from "@inertiajs/vue3";
