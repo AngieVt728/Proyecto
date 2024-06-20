@@ -62,12 +62,12 @@ const handleSubmit = () => {
                     :error="form.errors.email"
                     type="email"
                 />
-                <Input
-                    id="phone_number"
-                    label-text="Número de teléfono"
-                    v-model="form.phone_number"
-                    :error="form.errors.phone_number"
-                    type="text"
+                <Textarea
+                    id="description"
+                    label-text="Descripción"
+                    v-model="form.description"
+                    :error="form.errors.description"
+                    class="lg:row-span-2"
                 />
                 <Input
                     id="address"
@@ -76,11 +76,12 @@ const handleSubmit = () => {
                     :error="form.errors.address"
                     type="text"
                 />
-                <Textarea
-                    id="description"
-                    label-text="Descripción"
-                    v-model="form.description"
-                    :error="form.errors.description"
+                <Input
+                    id="phone_number"
+                    label-text="Número de teléfono"
+                    v-model="form.phone_number"
+                    :error="form.errors.phone_number"
+                    type="text"
                 />
             </div>
         </Form>

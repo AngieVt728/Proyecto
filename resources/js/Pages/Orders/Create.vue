@@ -27,35 +27,37 @@ const handleSubmit = () => {
     <Head title="Crear nuevo pedido" />
     <authenticated-layout>
         <Form title="Pedido" @handle-submit="handleSubmit">
-            <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                <Input
-                    id="detail"
-                    label-text="Detalle"
-                    v-model="form.detail"
-                    :error="form.errors.detail"
-                    type="text"
-                />
-                <Input
-                    id="order_date"
-                    label-text="Fecha del Pedido"
-                    v-model="form.order_date"
-                    :error="form.errors.order_date"
-                    type="date"
-                />
-                <Input
-                    id="delivery_deadline"
-                    label-text="Fecha de Entrega"
-                    v-model="form.deliver_date"
-                    :error="form.errors.deliver_date"
-                    type="date"
-                />
-                <Input
-                    id="customer_id"
-                    label-text="ID del Cliente"
-                    v-model="form.customer_id"
-                    :error="form.errors.customer_id"
-                    type="number"
-                />
+            <div class="flex">
+                <div class="flex flex-col gap-6 mt-4 w-1/2">
+                    <Input
+                        id="detail"
+                        label-text="Detalle"
+                        v-model="form.detail"
+                        :error="form.errors.detail"
+                        type="text"
+                    />
+                    <Input
+                        id="order_date"
+                        label-text="Fecha del Pedido"
+                        v-model="form.order_date"
+                        :error="form.errors.order_date"
+                        type="date"
+                    />
+                    <Input
+                        id="delivery_deadline"
+                        label-text="Fecha de Entrega"
+                        v-model="form.deliver_date"
+                        :error="form.errors.deliver_date"
+                        type="date"
+                    />
+                    <Input
+                        id="customer_id"
+                        label-text="ID del Cliente"
+                        v-model="form.customer_id"
+                        :error="form.errors.customer_id"
+                        type="number"
+                    />
+                </div>
             </div>
         </Form>
     </authenticated-layout>
