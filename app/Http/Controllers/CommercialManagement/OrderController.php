@@ -4,6 +4,8 @@ namespace App\Http\Controllers\CommercialManagement;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,9 +25,8 @@ class OrderController extends Controller
             ->withQueryString()
             ->through(fn ($order) => [
                 'id' => $order->id,
-                'detail' => $order->detail,
-                'order_date' => $order->order_date,
                 'deliver_date' => $order->deliver_date,
+                'status' => $order->status,
                 'created_at' => $order->created_at,
                 'updated_at' => $order->updated_at
             ]);
@@ -49,29 +50,65 @@ class OrderController extends Controller
         // Implementar la lógica para almacenar el recurso aquí
     }
 
-    public function show(): Response
+    public function show(Order $order): Response
     {
-        return Inertia::render('Orders/Show');
+        $orderProducts = $order->products()->withPivot('quantity')->get();
+        $totalPrice = number_format($orderProducts->sum(function ($product) {
+            return $product->price * $product->pivot->quantity;
+        }), 2);
+        $mappedProducts = $orderProducts->map(function ($product) {
+            return [
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => $product->price,
+                'quantity' => $product->pivot->quantity,
+            ];
+        });
+
+        return Inertia::render('Orders/Show', [
+            'order' => $order,
+            'orderProducts' => $orderProducts,
+            'products' => $mappedProducts,
+            'totalPrice' => $totalPrice,
+        ]);
     }
 
-    public function edit(): Response
+    public function edit(Order $order): Response
     {
-        return Inertia::render('Orders/Edit');
+        return Inertia::render('Orders/Edit', [
+            'order' => $order,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Order $order): RedirectResponse
     {
-        //
+        $validated = $request::validate([
+            'deliver_date' => 'required|date|after_or_equal:today',
+            'status' => 'required|numeric'
+        ]);
+
+        $statusEnum = [
+            1 => 'Por aceptar',
+            2 => 'En proceso',
+            3 => 'Entregado',
+        ];
+        $validated['status'] = $statusEnum[$validated['status']];
+
+        $order->update($validated);
+        return redirect()->route('orders.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
-        //
+        $order = Order::findOrFail($id);
+        $order->delete();
+
+        return redirect()->route('orders.index');
     }
 }

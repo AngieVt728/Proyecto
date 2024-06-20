@@ -27,7 +27,7 @@ class DashboardController extends Controller
         $rawMaterials = $this->generateColors(RawMaterial::select('id', 'name', 'stock')->get());
         $products = $this->generateColors(Product::select('id', 'name', 'stock')->get());
         $totalProducts = Product::where('stock', '>=', 0)->count();
-        $totalOrders = Order::whereDate('order_date', Carbon::now()->toDateString())->count();
+        $totalOrders = Order::whereDate('created_at', Carbon::now()->toDateString())->count();
         $totalSales = Sale::whereDate('created_at', Carbon::now()->toDateString())->count();
         $retailOutlets = RetailOutlet::select('id', 'name', 'lat', 'lng')
             ->orderBy('name', 'asc')

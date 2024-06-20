@@ -1,62 +1,68 @@
-<script setup>
+<script setup lang="ts">
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { toast } from "vue3-toastify";
+import { format } from "@formkit/tempo";
+import Select from "@/Components/Inputs/Select.vue";
+import { ref } from "vue";
+import { goodDialogs } from "gooddialogs";
 
+const props = defineProps<{ order: Object }>();
 const form = useForm({
-    detail: "",
-    order_date: "",
     deliver_date: "",
-    customer_id: "",
+    status: "",
 });
+const statusArray = ref([
+    { id: 1, name: "Por aceptar" },
+    { id: 2, name: "En proceso" },
+    { id: 3, name: "Entregado" },
+]);
 
 const handleSubmit = () => {
-    form.post(route("orders.store"), {
-        onSuccess: () => toast.success("Pedido creado"),
+    form.patch(route("orders.update", { order: props.order }), {
+        onSuccess: () =>
+            goodDialogs.createNotification("Pedido actualizado con éxito", {
+                type: "success",
+            }),
         onError: (errors) =>
-            Object.values(errors).forEach((message) => {
-                toast.error(message);
+            goodDialogs.createNotification("No se pudo actualizar el pedido", {
+                type: "error",
             }),
     });
 };
 </script>
 
 <template>
-    <Head title="Crear nuevo pedido" />
-    <authenticated-layout>
-        <Form title="Pedido" @handle-submit="handleSubmit">
-            <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
+    <AuthenticatedLayout>
+        <Head :title="order.deliver_date" />
+        <Form
+            title="Editar pedido"
+            type-submit="update"
+            @handle-submit="handleSubmit"
+        >
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Datos de pedido
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8 py-10">
                 <Input
-                    id="detail"
-                    label-text="Detalle"
-                    v-model="form.detail"
-                    :error="form.errors.detail"
-                    type="text"
-                />
-                <Input
-                    id="order_date"
-                    label-text="Fecha del Pedido"
-                    v-model="form.order_date"
-                    :error="form.errors.order_date"
-                    type="date"
-                />
-                <Input
-                    id="delivery_deadline"
-                    label-text="Fecha de Entrega"
+                    id="deliver_date"
+                    label-text="Fecha de entrega"
                     v-model="form.deliver_date"
                     :error="form.errors.deliver_date"
                     type="date"
                 />
-                <Input
-                    id="customer_id"
-                    label-text="ID del Cliente"
-                    v-model="form.customer_id"
-                    :error="form.errors.customer_id"
-                    type="number"
+                <Select
+                    id="roles"
+                    label-text="Estado de pedido"
+                    v-model="form.status"
+                    :options="statusArray"
+                    :error="form.errors.status"
+                    name="name"
                 />
             </div>
         </Form>
-    </authenticated-layout>
+    </AuthenticatedLayout>
 </template>

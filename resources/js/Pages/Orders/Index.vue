@@ -9,11 +9,9 @@ import { goodDialogs } from "gooddialogs";
 const props = defineProps({ filters: Object, orders: Object });
 const form = useForm({});
 const columns = ref([
-    { key: "detail", label: "Detalle", truncate: true },
-    { key: "order_date", label: "Fecha del Pedido" },
-    { key: "deliver_date", label: "Fecha de Entrega" },
     { key: "created_at", label: "Fecha de Creación", date: true },
-    { key: "updated_at", label: "Fecha de Actualización", date: true },
+    { key: "deliver_date", label: "Fecha de Entrega" },
+    { key: "status", label: "Estado de pedido" },
 ]);
 const options = ref([
     {
@@ -57,9 +55,12 @@ const action = async (action) => {
             }
             form.delete(route("orders.destroy", { id: action.id }), {
                 onSuccess: () => {
-                    goodDialogs.createNotification("Pedido eliminado con éxito", {
-                        type: "success",
-                    });
+                    goodDialogs.createNotification(
+                        "Pedido eliminado con éxito",
+                        {
+                            type: "success",
+                        }
+                    );
                     form.get(route("orders.index"));
                 },
                 onError: (errors) =>
@@ -84,7 +85,6 @@ const action = async (action) => {
                 :columns="columns"
                 :content="orders"
                 :filters="filters"
-                :add="addButton"
                 :options="options"
                 @action="action"
             />

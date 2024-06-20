@@ -56,6 +56,12 @@ class Product extends Model
         return $this->hasMany(OrderProduct::class);
     }
 
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_products')
+            ->withPivot('quantity'); // Incluye la cantidad de la tabla pivote
+    }
+
     public function scopeFilter(Builder $query, array $filters)
     {
         if (isset($filters['search'])) {
