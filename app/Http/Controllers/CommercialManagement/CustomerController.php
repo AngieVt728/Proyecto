@@ -157,7 +157,15 @@ class CustomerController extends Controller
             ],
         ]);
 
-        $customer->update($validated);
+        $customer->update([
+            'first_name' => $validated['firstName'],
+            'last_name' => $validated['lastName'],
+            'ci' => $validated['ci'],
+            'contact' => $validated['contact'],
+            'address' => $validated['address'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+        ]);
 
         return redirect()->route('customers.index');
     }

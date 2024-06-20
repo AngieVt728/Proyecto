@@ -215,7 +215,15 @@ class UserController extends Controller
 
         $validated['role'] = $roles[$validated['role']];
 
-        $user->update($validated);
+        $user->update([
+            'first_name' => $validated['firstName'],
+            'last_name' => $validated['lastName'],
+            'ci' => $validated['ci'],
+            'contact' => $validated['contact'],
+            'address' => $validated['address'],
+            'username' => $validated['username'],
+            'email' => $validated['email'],
+        ]);
 
         $user->syncRoles([$validated['role']]);
 
