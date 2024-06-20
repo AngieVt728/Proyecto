@@ -12,6 +12,7 @@ import {
 } from "flowbite-vue";
 import { ref, reactive } from "vue";
 import { goodDialogs } from "gooddialogs";
+import { format } from "@formkit/tempo";
 
 const props = defineProps<{ orders: Object }>();
 console.log(props.orders);
@@ -36,9 +37,11 @@ console.log(props.orders);
                         v-for="(order, index) in props.orders"
                         :key="order.id"
                     >
-                        <fwb-table-cell>{{ order.created_at }}</fwb-table-cell>
                         <fwb-table-cell>{{
-                            order.deliver_date
+                            format(order.created_at)
+                        }}</fwb-table-cell>
+                        <fwb-table-cell>{{
+                            format(order.deliver_date)
                         }}</fwb-table-cell>
                         <fwb-table-cell>{{ order.status }}</fwb-table-cell>
                     </fwb-table-row>
