@@ -51,6 +51,11 @@ class Product extends Model
         return $this->belongsTo(Bag::class);
     }
 
+    public function orderProducts(): HasMany
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
+
     public function scopeFilter(Builder $query, array $filters)
     {
         if (isset($filters['search'])) {

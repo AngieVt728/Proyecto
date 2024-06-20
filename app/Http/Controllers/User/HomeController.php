@@ -37,11 +37,19 @@ class HomeController extends Controller
 
     public function orders(): Response
     {
-        $auth = auth()->user();
-        $orders = $auth->orders()->get();
+        $orders = Auth::user()->orders()
+            ->with('orderProducts')
+            ->orderBy('deliver_date', 'asc')
+            ->get();
+
+        // $products = [];
+        // foreach ($orders['order_products'] as $order) {
+        //     $products[] = $order;
+        // }
 
         return Inertia::render('Home/Order', [
-            'orders' => $orders
+            'orders' => $orders,
+            // 'products' => $products
         ]);
     }
 

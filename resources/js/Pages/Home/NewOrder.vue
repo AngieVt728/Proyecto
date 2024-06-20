@@ -11,10 +11,8 @@ import {
     FwbTableRow,
 } from "flowbite-vue";
 import { ref, reactive } from "vue";
-import { getUser } from "@/Composables/usePage";
 import { goodDialogs } from "gooddialogs";
 
-const user = getUser();
 const props = defineProps<{ products: Object }>();
 const form = useForm({
     deliver_date: "",
@@ -27,8 +25,6 @@ const form = useForm({
 });
 
 const handleSubmit = () => {
-    console.log(form);
-    console.log("Hacer pedido");
     if (form.products.some((p) => p.quantity < 1)) {
         goodDialogs.createNotification(
             "La cantidad no puede ser negativa o cero.",
