@@ -16,6 +16,7 @@ class Order extends Model
         'detail',
         'order_date',
         'deliver_date',
+        'status',
         'user_id'
     ];
 

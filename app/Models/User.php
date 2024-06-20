@@ -83,6 +83,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
+    public function bags(): HasMany
+    {
+        return $this->hasMany(Bag::class);
+    }
+
     public function scopeFilter(Builder $query, array $filters)
     {
         if (isset($filters['search'])) {
