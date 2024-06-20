@@ -8,10 +8,14 @@ import { reactive, ref } from "vue";
 
 const props = defineProps(["filters", "retailOutlets"]);
 const columns = ref([
-    { key: "image", label: "Imagen de referencia", img: true },
+    { key: "image_url", label: "Imagen de referencia", img: true },
     { key: "name", label: "Nombre", truncate: true },
     { key: "nit", label: "NIT" },
-    { key: "owner_name", label: "Nombre del Cliente Propietario" },
+    {
+        key: "owner_name",
+        label: "Nombre del Cliente Propietario",
+        truncate: true,
+    },
     { key: "address", label: "Dirección", truncate: true },
     { key: "description", label: "Descripción", truncate: true },
     { key: "created_at", label: "Fecha creación", date: true },

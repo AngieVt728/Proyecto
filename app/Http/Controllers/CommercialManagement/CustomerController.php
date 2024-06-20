@@ -71,6 +71,7 @@ class CustomerController extends Controller
             'address' => 'nullable|string|max:255',
             'username' => 'nullable|string|max:20|regex:/^[a-z0-9]+$/',
             'email' => 'required|email|max:100|unique:users,email',
+            'avatar' => 'nullable|image|mimes:jpg,png|max:2048',
             'password' => 'nullable|string|min:6',
         ]);
 
@@ -82,7 +83,7 @@ class CustomerController extends Controller
             $imagePath = $request::file('avatar');
             $imageSaveName = $validated['username'] . '.' . $request::file('avatar')->getClientOriginalExtension();
             $imageURL = $request::hasFile('avatar')
-                ? url(Storage::url($imagePath->storeAs('users', $imageSaveName, 'public')))
+                ? url(Storage::url($imagePath->storeAs('customers', $imageSaveName, 'public')))
                 : null;
         }
 

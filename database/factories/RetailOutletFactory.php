@@ -24,7 +24,7 @@ class RetailOutletFactory extends Factory
             'address' => fake()->address(),
             'lat' => fake()->latitude(),
             'lng' => fake()->longitude(),
-            'image' => fake()->imageUrl(),
+            'image_url' => fake()->imageUrl(),
             'user_id' => User::factory()
         ];
     }

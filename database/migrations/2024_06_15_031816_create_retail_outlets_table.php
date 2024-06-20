@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 150);
             $table->string('nit', 20);
-            $table->string('image', 255)->nullable();
+            $table->string('image_url', 255)->nullable();
             $table->string('address', 255);
             $table->decimal('lat', 20, 15);
             $table->decimal('lng', 20, 15);

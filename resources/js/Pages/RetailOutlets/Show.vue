@@ -1,25 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
+import InputFile from "@/Components/Inputs/InputFile.vue";
+import Textarea from "@/Components/Inputs/Textarea.vue";
 import Select from "@/Components/Inputs/Select.vue";
-import { useGeolocation } from "@/Composables/useGeolocation";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head, router } from "@inertiajs/vue3";
+import { goodDialogs } from "gooddialogs";
+import { useGeolocation } from "@/Composables/useGeolocation";
 import { Loader } from "@googlemaps/js-api-loader";
-import { Head, useForm } from "@inertiajs/vue3";
 import { computed, onMounted, ref } from "vue";
-import { toast } from "vue3-toastify";
 
-const props = defineProps(["customers", "retailOutlet"]);
-const form = useForm({
-    name: props.retailOutlet?.name ?? "",
-    nit: props.retailOutlet?.nit ?? "",
-    description: props.retailOutlet?.description ?? "",
-    address: props.retailOutlet?.address ?? "",
-    lat: props.retailOutlet?.lat ?? "",
-    lng: props.retailOutlet?.lng ?? "",
-    customer_id: props.retailOutlet?.customer_id ?? "",
-});
-
+const props = defineProps<{ retailOutlet: Object; customers: Object }>();
 const MAPS_API_KEY = import.meta.env.VITE_MAPS_API_KEY;
 const { coords } = useGeolocation();
 const currPos = computed(() => ({
@@ -37,25 +29,7 @@ const loader = new Loader({
 const mapDiv = ref(null);
 
 const handleSubmit = () => {
-    if (props.retailOutlet?.id)
-        form.patch(
-            route("retail-outlets.update", { id: props.retailOutlet.id }),
-            {
-                onSuccess: () => toast.success("Punto de venta actualizado"),
-                onError: (errors) =>
-                    Object.values(errors).forEach((message) => {
-                        toast.error(message);
-                    }),
-            }
-        );
-    else
-        form.post(route("retail-outlets.store"), {
-            onSuccess: () => toast.success("Punto de venta registrado"),
-            onError: (errors) =>
-                Object.values(errors).forEach((message) => {
-                    toast.error(message);
-                }),
-        });
+    router.get(route("retail-outlets.edit", { id: props.retailOutlet.id }));
 };
 
 onMounted(async () => {
@@ -86,74 +60,99 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Head title="Crear nuevo punto de venta" />
-    <authenticated-layout>
-        <Form title="Punto de Venta" @handle-submit="handleSubmit">
-            <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                <Select
-                    id="customer_id"
-                    label-text="Propietario"
-                    v-model="form.customer_id"
-                    :options="customers"
-                    :error="form.errors.customer_id || ''"
-                    name="full_name"
-                    :disabled="retailOutlet?.customer_id ? true : false"
-                />
-                <Input
-                    id="name"
-                    label-text="Razón social"
-                    v-model="form.name"
-                    :error="form.errors.name"
-                    type="text"
-                /><Input
-                    id="nit"
-                    label-text="NIT"
-                    v-model="form.nit"
-                    :error="form.errors.nit"
-                    type="text"
-                    :disabled="retailOutlet?.nit ? true : false"
-                />
-                <Input
-                    id="description"
-                    label-text="Descripción"
-                    v-model="form.description"
-                    :error="form.errors.description"
-                    type="text"
-                />
+    <AuthenticatedLayout>
+        <Head :title="retailOutlet.name" />
+        <Form
+            title="Información de punto de venta"
+            type-submit="edit"
+            @handle-submit="handleSubmit"
+        >
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Datos del punto de venta
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8 mb-4">
+                <div class="flex justify-center items-center my-4">
+                    <img
+                        class="rounded-lg w-96 h-64 object-cover"
+                        :src="retailOutlet.image_url"
+                        :alt="`${retailOutlet.username} image`"
+                    />
+                </div>
+                <div class="flex flex-wrap justify-around gap-4">
+                    <Select
+                        id="user_id"
+                        label-text="Propietario"
+                        v-model="retailOutlet.user_id"
+                        :options="customers"
+                        name="full_name"
+                        :disabled="true"
+                    />
+                    <Input
+                        id="nit"
+                        label-text="NIT"
+                        v-model="retailOutlet.nit"
+                        type="text"
+                        :disabled="true"
+                    />
+                    <Input
+                        id="name"
+                        label-text="Razón social"
+                        v-model="retailOutlet.name"
+                        type="text"
+                        :disabled="true"
+                    />
+                </div>
             </div>
-            <div class="grid grid-cols-1 gap-6 mt-4">
+            <div class="grid grid-cols-1 gap-4 mx-8">
                 <Input
                     id="address"
                     label-text="Dirección"
-                    v-model="form.address"
-                    :error="form.errors.address"
+                    v-model="retailOutlet.address"
                     type="text"
+                    :disabled="true"
                 />
             </div>
-            <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
-                <Input
-                    id="lat"
-                    label-text="Latitud"
-                    v-model="form.lat"
-                    :error="form.errors.lat"
-                    type="text"
-                    disabled
-                />
-                <Input
-                    id="lng"
-                    label-text="Longitud"
-                    v-model="form.lng"
-                    :error="form.errors.lng"
-                    type="text"
-                    disabled
-                />
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Datos de ubicación
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mx-8">
+                <div class="grid grid-cols-1 mt-4">
+                    <Input
+                        id="lat"
+                        label-text="Latitud"
+                        v-model="retailOutlet.lat"
+                        type="text"
+                        disabled
+                    />
+                    <Input
+                        id="lng"
+                        label-text="Longitud"
+                        v-model="retailOutlet.lng"
+                        type="text"
+                        disabled
+                    />
+                </div>
+                <div class="grid grid-cols-1 -mt-2 lg:mt-4">
+                    <Textarea
+                        id="description"
+                        label-text="Descripción"
+                        v-model="retailOutlet.description"
+                    />
+                </div>
             </div>
-            <h2 class="font-semibold mb-4 text-gray-700">
-                Busque la ubicación del punto de venta
+            <h2
+                class="ml-4 mt-4 mb-2 font-semibold text-sm uppercase text-gray-500"
+            >
+                Punto en el mapa
             </h2>
             <div class="mb-4">
                 <div ref="mapDiv" style="width: 100%; height: 400px" />
             </div>
         </Form>
-    </authenticated-layout>
+    </AuthenticatedLayout>
 </template>

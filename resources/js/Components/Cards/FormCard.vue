@@ -28,7 +28,7 @@ function handleSubmit(e) {
 
 <template>
     <div class="m-4 p-6 bg-white rounded-md shadow-md">
-        <h2 class="text-lg font-semibold text-gray-700 capitalize">
+        <h2 class="text-lg font-semibold text-gray-700">
             {{ title }}
         </h2>
         <form :onSubmit="handleSubmit">
