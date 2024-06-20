@@ -15,6 +15,7 @@ class Payment extends Model
         'detail',
         'payment_date',
         'payment_balance',
+        'order_id',
     ];
 
     public function order(): BelongsTo

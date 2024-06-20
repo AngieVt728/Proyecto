@@ -22,12 +22,12 @@ const options = ref([
         icon: "hi-solid-eye",
         color: "text-green-500",
     },
-    {
-        id: "edit",
-        name: "Actualizar",
-        icon: "hi-solid-pencil",
-        color: "text-blue-500",
-    },
+    // {
+    //     id: "edit",
+    //     name: "Actualizar",
+    //     icon: "hi-solid-pencil",
+    //     color: "text-blue-500",
+    // },
     {
         id: "destroy",
         name: "Eliminar",

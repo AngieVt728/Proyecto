@@ -1,10 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import Form from "@/Components/Cards/FormCard.vue";
 import Input from "@/Components/Inputs/Input.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { toast } from "vue3-toastify";
+import { goodDialogs } from "gooddialogs";
+import Select from "@/Components/Inputs/Select.vue";
+import { format } from "@formkit/tempo";
 
+const props = defineProps<{ orders: Object }>();
 const form = useForm({
     payment_date: "",
     payment_balance: "",
@@ -14,19 +17,22 @@ const form = useForm({
 
 const handleSubmit = () => {
     form.post(route("payments.store"), {
-        onSuccess: () => toast.success("Pago creado"),
+        onSuccess: () =>
+            goodDialogs.createNotification("Pago creado con éxito", {
+                type: "success",
+            }),
         onError: (errors) =>
-            Object.values(errors).forEach((message) => {
-                toast.error(message);
+            goodDialogs.createNotification("No se pudo crear el pago", {
+                type: "error",
             }),
     });
 };
 </script>
 
 <template>
-    <Head title="Crear nuevo pago" />
     <authenticated-layout>
-        <Form title="Pago" @handle-submit="handleSubmit">
+        <Head title="Crear nuevo pago" />
+        <Form title="Registrar pago" @handle-submit="handleSubmit">
             <div class="grid grid-cols-1 gap-6 mt-4 lg:grid-cols-2">
                 <Input
                     id="payment_date"
@@ -49,12 +55,13 @@ const handleSubmit = () => {
                     :error="form.errors.details"
                     type="text"
                 />
-                <Input
-                    id="order_id"
-                    label-text="ID del Pedido"
+                <Select
+                    id="role"
+                    label-text="Elegir pedido fecha"
                     v-model="form.order_id"
+                    :options="orders"
                     :error="form.errors.order_id"
-                    type="number"
+                    name="created_at"
                 />
             </div>
         </Form>

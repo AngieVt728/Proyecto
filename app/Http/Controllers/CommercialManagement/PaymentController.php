@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CommercialManagement;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
@@ -41,7 +42,11 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Payments/Create');
+        $orders = Order::all();
+
+        return Inertia::render('Payments/Create', [
+            'orders' => $orders
+        ]);
     }
 
     /**
@@ -49,15 +54,29 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request::validate([
+            'payment_date' => 'required|date|after_or_equal:today',
+            'payment_balance' => 'required|numeric',
+            'details' => 'nullable|max:300',
+            'order_id' => 'required|integer|exists:orders,id',
+        ]);
+
+        Payment::create($validated);
+
+        return redirect()->route('payments.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Payment $payment)
     {
-        return Inertia::render('Payments/Show');
+        $orders = Order::all();
+
+        return Inertia::render('Payments/Show', [
+            'payment' => $payment,
+            'orders' => $orders
+        ]);
     }
 
     /**
